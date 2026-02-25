@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/global :: head}"></head>
+<body>
+    <header th:replace="~{fragmentos/global :: header}"></header>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-secondary" th:text="${titulo}"></h4>
+            </div>
+            <div class="card-body">
+                <h4 th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+                    <a class="btn btn-grey btn-xs" th:href="@{/productonuevo}">agregar un nuevo producto</a>
+                </h4>                
+                <table class="table table-striped table-bordered table-sm" th:if="${not #lists.isEmpty(productos)}">
+                    <tr>
+                        <th class="text-center">Id</th>
+                        <th>Producto</th>
+                        <th class="text-end">Precio</th>
+                        <th class="text-end">Existencia</th>
+                        <th class="text-center">Fecha de ingreso</th>
+                        <th class="text-center">Proveedor</th>
+                    </tr>
+                    <tr th:each="prod : ${productos}">
+                        <td class="text-center" th:text="${prod.id}"></td>
+                        <td class="ps-2" th:text="${prod.nombreProducto}"></td>
+                        <td class="text-end pe-2" th:text="${#numbers.formatInteger(prod.precioUnitario, 1, 'COMMA')}"></td>
+                        <td class="text-end pe-2" th:text="${prod.existencia}"></td>
+                        <td class="text-center" th:text="${#temporals.format(prod.fechaIngreso, 'dd/MM/yyy')}"></td>
+                        <td class="ps-2" th:text="${prod.proveedor.nombreProveedor}"></td>
+                    </tr>
+                </table>
+                <div class="alert alert-info" th:if="${#lists.isEmpty(productos)}">No hay productos para mostrar</div>
+            </div>            
+        </div>
+    </div>
+    <footer th:replace="~{fragmentos/global :: footer}"></footer>
+</body>
+</html>

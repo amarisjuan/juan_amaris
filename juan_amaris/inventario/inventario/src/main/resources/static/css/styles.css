@@ -1,0 +1,28 @@
+.icono1 {
+    width: 40px;
+}
+
+.icono2 {
+    width: 60px;
+}
+
+.btn-group-xs>.btn, .btn-xs {
+  padding: .5rem .5rem;
+  font-size: .875rem;
+  line-height: .5;
+  border-radius: .2rem;
+}
+
+.btn-grey {
+    background-color: #C3C3C3; /* Color de fondo personalizado */
+    border-color: #ABABAB; /* Color de borde personalizado */
+    color: #353535; /* Color del texto */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    border-radius: 0.25rem; /* Bordes redondeados */
+    transition: background-color 0.3s; /* Animación suave al pasar el ratón */
+}
+
+.btn-grey:hover {
+    background-color: #646464; /* Color de fondo al pasar el ratón */
+    color: #F2F2F2;
+}

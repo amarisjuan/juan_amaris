@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/global :: head}"></head>
+<body>
+    <header th:replace="~{fragmentos/global :: header}"></header>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-secondary" th:text="${titulo}"></h4>
+            </div>
+            <div class="card-body">
+                
+                <form method="POST" th:action="@{/guardar}" th:object="${producto}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del producto</label> 
+                        <input type="text" class="form-control form-control-sm" th:field="*{nombreProducto}"/>
+                    </div>
+                                                                                
+                    <div class="mb-3">
+                        <label class="form-label">Precio unitario</label> 
+                        <input type="number" class="form-control form-control-sm" th:field="*{precioUnitario}"/>
+                    </div>
+                                                                                
+                    <div class="mb-3">
+                        <label class="form-label">Existencia</label> 
+                        <input type="number" class="form-control form-control-sm" th:field="*{existencia}"/>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Fecha ingreso</label>
+                        <input type="date" class="form-control form-control-sm" th:field="*{fechaIngreso}"/>
+                    </div>
+            
+                    <div class="mb-3">
+                        <label class="form-label">Proveedor</label> 
+                        <select class="form-control form-control-sm" th:field="*{proveedor}">
+                            <option value="">Seleccionar...</option>
+							<option th:each="p : ${proveedores}" th:value="${p.id}" th:text="${p.nombreProveedor}"></option>                            
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="submit" th:value="${accion}"  class="btn btn-grey btn-xs" />
+                    </div>
+                </form>                
+            </div>
+        </div>
+    </div>
+    <footer th:replace="~{fragmentos/global :: footer}"></footer>
+</body>
+</html>
