@@ -1,0 +1,8 @@
+{
+  "name": "eva",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Eva: agente de busqueda de empleo",
+  "engines": { "node": ">=18" }
+}

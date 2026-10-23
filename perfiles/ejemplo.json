@@ -1,0 +1,9 @@
+{
+  "nombre": "Juan Amaris",
+  "ciudad": "Colombia",
+  "busqueda": ["java", "spring", "developer"],
+  "habilidades": ["java", "spring boot", "mysql", "jpa", "thymeleaf", "python", "html", "css", "git"],
+  "excluir": ["senior", "lead", "principal"],
+  "solo_remoto": true,
+  "idiomas": ["español"]
+}
