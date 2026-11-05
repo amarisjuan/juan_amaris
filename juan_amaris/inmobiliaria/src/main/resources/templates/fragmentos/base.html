@@ -11,6 +11,7 @@
     <a class="marca" th:href="@{/}">🏠 Inmobiliaria</a>
     <nav>
         <a th:href="@{/}">Buscar</a>
+        <a th:href="@{/estudiantes}">🎓 Estudiantes</a>
         <a class="boton" th:href="@{/publicar}">Publicar inmueble</a>
         <th:block sec:authorize="isAuthenticated()">
             <a th:href="@{/mis-inmuebles}">Mis inmuebles</a>
@@ -42,8 +43,13 @@
                 <small th:if="${i.operacion.name() == 'ARRIENDO'}">/mes</small></strong>
             <h3 th:text="${i.titulo}">Título</h3>
             <p class="ubicacion" th:text="${i.barrio != null ? i.barrio + ', ' + i.ciudad : i.ciudad}"></p>
+            <p class="estudiante" th:if="${i.universidadCercana}">🎓
+                <span th:text="${i.minutosAPie != null ? i.minutosAPie + ' min a pie de ' : 'Cerca a '}"></span><strong
+                        th:text="${i.universidadCercana.nombreCorto}"></strong></p>
             <p class="datos">
                 <span th:text="${i.tipo.etiqueta}"></span>
+                <span th:if="${i.amoblado}">Amoblado</span>
+                <span th:if="${i.serviciosIncluidos}">Servicios incl.</span>
                 <span th:if="${i.areaM2}" th:text="${i.areaM2} + ' m²'"></span>
                 <span th:if="${i.habitaciones}" th:text="${i.habitaciones} + ' hab.'"></span>
                 <span th:if="${i.banos}" th:text="${i.banos} + ' baños'"></span>

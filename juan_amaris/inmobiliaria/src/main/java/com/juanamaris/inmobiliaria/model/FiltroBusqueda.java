@@ -11,6 +11,19 @@ public class FiltroBusqueda {
     private Integer habitacionesMin;
     private Integer estrato;
     private String orden = "recientes";
+    private Long universidad;
+    private Integer maxMinutos;
+    private Boolean amoblado;
+    private Boolean serviciosIncluidos;
+
+    public Long getUniversidad() { return universidad; }
+    public void setUniversidad(Long universidad) { this.universidad = universidad; }
+    public Integer getMaxMinutos() { return maxMinutos; }
+    public void setMaxMinutos(Integer maxMinutos) { this.maxMinutos = maxMinutos; }
+    public Boolean getAmoblado() { return amoblado; }
+    public void setAmoblado(Boolean amoblado) { this.amoblado = amoblado; }
+    public Boolean getServiciosIncluidos() { return serviciosIncluidos; }
+    public void setServiciosIncluidos(Boolean serviciosIncluidos) { this.serviciosIncluidos = serviciosIncluidos; }
 
     public String getCiudad() { return ciudad; }
     public void setCiudad(String ciudad) { this.ciudad = ciudad; }

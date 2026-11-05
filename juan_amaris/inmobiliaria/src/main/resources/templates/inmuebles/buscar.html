@@ -33,8 +33,24 @@
             <option value="">Estrato</option>
             <option th:each="n : ${#numbers.sequence(1,6)}" th:value="${n}" th:text="'Estrato ' + ${n}"></option>
         </select>
+        <select th:field="*{universidad}">
+            <option value="">🎓 Cerca a universidad</option>
+            <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
+                <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
+            </optgroup>
+        </select>
+        <select th:field="*{maxMinutos}">
+            <option value="">Distancia a pie</option>
+            <option value="5">Hasta 5 min</option>
+            <option value="10">Hasta 10 min</option>
+            <option value="15">Hasta 15 min</option>
+            <option value="30">Hasta 30 min</option>
+        </select>
+        <label class="check"><input type="checkbox" th:field="*{amoblado}" value="true"> Amoblado</label>
+        <label class="check"><input type="checkbox" th:field="*{serviciosIncluidos}" value="true"> Servicios incluidos</label>
         <select th:field="*{orden}">
             <option value="recientes">Más recientes</option>
+            <option value="cercania">Más cerca a la universidad</option>
             <option value="precio_asc">Menor precio</option>
             <option value="precio_desc">Mayor precio</option>
         </select>
@@ -42,7 +58,10 @@
         <a th:href="@{/}" class="limpiar">Limpiar</a>
     </form>
 
-    <p class="conteo" th:text="${resultados.totalElements} + ' inmuebles encontrados'"></p>
+    <p class="conteo">
+        <span th:text="${resultados.totalElements} + (${resultados.totalElements == 1} ? ' inmueble encontrado' : ' inmuebles encontrados')"></span>
+        <span th:if="${universidadElegida}" th:text="'cerca a ' + ${universidadElegida.nombre}"></span>
+    </p>
 
     <div class="rejilla">
         <th:block th:each="i : ${resultados.content}">
@@ -52,11 +71,9 @@
     <p class="vacio" th:if="${resultados.empty}">No hay inmuebles con esos filtros. Prueba quitando alguno.</p>
 
     <nav class="paginas" th:if="${resultados.totalPages > 1}">
-        <a th:if="${resultados.hasPrevious()}"
-           th:href="@{/(pagina=${resultados.number - 1}, operacion=${filtro.operacion}, ciudad=${filtro.ciudad}, tipo=${filtro.tipo}, texto=${filtro.texto}, precioMin=${filtro.precioMin}, precioMax=${filtro.precioMax}, habitacionesMin=${filtro.habitacionesMin}, estrato=${filtro.estrato}, orden=${filtro.orden})}">← Anterior</a>
+        <a th:if="${resultados.hasPrevious()}" th:href="@{${urlPaginas + (resultados.number - 1)}}">← Anterior</a>
         <span th:text="'Página ' + ${resultados.number + 1} + ' de ' + ${resultados.totalPages}"></span>
-        <a th:if="${resultados.hasNext()}"
-           th:href="@{/(pagina=${resultados.number + 1}, operacion=${filtro.operacion}, ciudad=${filtro.ciudad}, tipo=${filtro.tipo}, texto=${filtro.texto}, precioMin=${filtro.precioMin}, precioMax=${filtro.precioMax}, habitacionesMin=${filtro.habitacionesMin}, estrato=${filtro.estrato}, orden=${filtro.orden})}">Siguiente →</a>
+        <a th:if="${resultados.hasNext()}" th:href="@{${urlPaginas + (resultados.number + 1)}}">Siguiente →</a>
     </nav>
 </main>
 <footer th:replace="~{fragmentos/base :: pie}"></footer>

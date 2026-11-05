@@ -36,6 +36,7 @@ public class InmuebleService {
         Sort orden = switch (filtro.getOrden() == null ? "" : filtro.getOrden()) {
             case "precio_asc" -> Sort.by("precio").ascending();
             case "precio_desc" -> Sort.by("precio").descending();
+            case "cercania" -> Sort.unsorted(); // lo ordena InmuebleSpecs (sin minutos van al final)
             default -> Sort.by("fechaPublicacion").descending();
         };
         Page<Inmueble> page = repo.findAll(InmuebleSpecs.buscar(filtro),
@@ -78,6 +79,7 @@ public class InmuebleService {
     public Inmueble publicar(Inmueble datos, List<MultipartFile> nuevasFotos, Usuario u) {
         datos.setId(null);
         datos.setPropietario(u);
+        if (datos.getUniversidadCercana() == null) datos.setMinutosAPie(null);
         agregarFotos(datos, nuevasFotos);
         return repo.save(datos);
     }
@@ -98,6 +100,10 @@ public class InmuebleService {
         i.setHabitaciones(datos.getHabitaciones());
         i.setBanos(datos.getBanos());
         i.setParqueaderos(datos.getParqueaderos());
+        i.setUniversidadCercana(datos.getUniversidadCercana());
+        i.setMinutosAPie(datos.getUniversidadCercana() == null ? null : datos.getMinutosAPie());
+        i.setAmoblado(datos.isAmoblado());
+        i.setServiciosIncluidos(datos.isServiciosIncluidos());
         if (fotosABorrar != null) {
             for (String f : fotosABorrar) {
                 if (i.getFotos().remove(f)) fotos.eliminar(f);

@@ -18,7 +18,7 @@ public class SeguridadConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         // Cualquiera puede buscar y ver inmuebles
-                        .requestMatchers(HttpMethod.GET, "/", "/inmuebles/{id:\\d+}", "/fotos/**",
+                        .requestMatchers(HttpMethod.GET, "/", "/estudiantes", "/inmuebles/{id:\\d+}", "/fotos/**",
                                 "/css/**", "/registro", "/login", "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/registro").permitAll()
                         // Para publicar o editar hay que iniciar sesión

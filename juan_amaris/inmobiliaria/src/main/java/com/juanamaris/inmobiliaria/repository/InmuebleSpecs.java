@@ -32,6 +32,17 @@ public final class InmuebleSpecs {
             if (f.getPrecioMax() != null) p.add(cb.le(root.get("precio"), f.getPrecioMax()));
             if (f.getHabitacionesMin() != null) p.add(cb.ge(root.get("habitaciones"), f.getHabitacionesMin()));
             if (f.getEstrato() != null) p.add(cb.equal(root.get("estrato"), f.getEstrato()));
+            if (f.getUniversidad() != null) {
+                p.add(cb.equal(root.get("universidadCercana").get("id"), f.getUniversidad()));
+            }
+            if (f.getMaxMinutos() != null) p.add(cb.le(root.get("minutosAPie"), f.getMaxMinutos()));
+            if (Boolean.TRUE.equals(f.getAmoblado())) p.add(cb.isTrue(root.get("amoblado")));
+            if (Boolean.TRUE.equals(f.getServiciosIncluidos())) p.add(cb.isTrue(root.get("serviciosIncluidos")));
+            boolean esConteo = Long.class.equals(query.getResultType());
+            if ("cercania".equals(f.getOrden()) && !esConteo) {
+                query.orderBy(cb.asc(cb.coalesce(root.<Integer>get("minutosAPie"), 9999)),
+                        cb.desc(root.get("fechaPublicacion")));
+            }
             return cb.and(p.toArray(Predicate[]::new));
         };
     }

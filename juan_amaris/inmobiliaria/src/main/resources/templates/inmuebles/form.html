@@ -54,6 +54,26 @@
                 <option th:each="n : ${#numbers.sequence(1,6)}" th:value="${n}" th:text="${n}"></option>
             </select></label>
 
+        <fieldset class="estudiantes">
+            <legend>🎓 ¿Es ideal para estudiantes? (opcional)</legend>
+            <p class="ayuda">Si queda cerca a una universidad, los estudiantes te encontrarán más fácil.</p>
+            <div class="dos">
+                <label>Universidad cercana
+                    <select name="universidadCercana">
+                        <option value="">Ninguna</option>
+                        <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
+                            <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombre}"
+                                    th:selected="${inmueble.universidadCercana != null and inmueble.universidadCercana.id == u.id}"></option>
+                        </optgroup>
+                    </select></label>
+                <label>Minutos caminando
+                    <input type="number" min="1" max="120" th:field="*{minutosAPie}" placeholder="Ej: 10">
+                    <span class="campo-error" th:errors="*{minutosAPie}"></span></label>
+            </div>
+            <label class="check"><input type="checkbox" th:field="*{amoblado}"> Amoblado</label>
+            <label class="check"><input type="checkbox" th:field="*{serviciosIncluidos}"> Servicios incluidos (agua, luz, internet)</label>
+        </fieldset>
+
         <label>Descripción
             <textarea th:field="*{descripcion}" rows="6" maxlength="3000"
                       placeholder="Cuenta lo mejor del inmueble: iluminación, cercanía a transporte, administración incluida…"></textarea></label>

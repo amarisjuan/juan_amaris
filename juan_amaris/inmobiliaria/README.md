@@ -6,6 +6,10 @@ Las personas crean una cuenta, **suben sus inmuebles con fotos** (arriendo o ven
 ## Funciones
 - Búsqueda pública con filtros: arriendo/venta, ciudad, tipo, barrio o palabra clave, precio mínimo y máximo,
   habitaciones, estrato. También ordena por fecha o precio y muestra los resultados por páginas.
+- **Vivienda para estudiantes** (`/estudiantes`): 29 universidades principales de Colombia agrupadas por ciudad.
+  Cada inmueble puede indicar la universidad cercana, los minutos a pie y si es amoblado o tiene servicios incluidos.
+  Se puede filtrar por esos datos y ordenar por "más cerca a la universidad". Para agregar más universidades,
+  edita `CatalogoUniversidades.java`; las nuevas se cargan solas al reiniciar.
 - Página de detalle con galería de fotos, características y botones de WhatsApp (+57) y llamada.
 - Registro con nombre, correo y celular colombiano, e inicio de sesión.
 - Publicar, editar, pausar/activar y eliminar inmuebles propios (hasta 10 fotos JPG/PNG/WEBP de 5 MB c/u).

@@ -5,6 +5,7 @@ import com.juanamaris.inmobiliaria.model.Operacion;
 import com.juanamaris.inmobiliaria.model.TipoInmueble;
 import com.juanamaris.inmobiliaria.model.Usuario;
 import com.juanamaris.inmobiliaria.service.InmuebleService;
+import com.juanamaris.inmobiliaria.service.UniversidadService;
 import com.juanamaris.inmobiliaria.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,8 +24,10 @@ public class PublicacionController {
 
     private final InmuebleService inmuebles;
     private final UsuarioService usuarios;
+    private final UniversidadService universidades;
 
-    public PublicacionController(InmuebleService inmuebles, UsuarioService usuarios) {
+    public PublicacionController(InmuebleService inmuebles, UsuarioService usuarios, UniversidadService universidades) {
+        this.universidades = universidades;
         this.inmuebles = inmuebles;
         this.usuarios = usuarios;
     }
@@ -39,6 +42,7 @@ public class PublicacionController {
     public void listas(Model model) {
         model.addAttribute("tipos", TipoInmueble.values());
         model.addAttribute("operaciones", Operacion.values());
+        model.addAttribute("universidadesPorCiudad", universidades.porCiudad());
     }
 
     @GetMapping("/mis-inmuebles")

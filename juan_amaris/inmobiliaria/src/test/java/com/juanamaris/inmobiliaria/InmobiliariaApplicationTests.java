@@ -21,6 +21,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class InmobiliariaApplicationTests {
 
     @Autowired MockMvc mvc;
+    @Autowired com.juanamaris.inmobiliaria.repository.UniversidadRepository universidades;
+
+    @Test
+    void estudiantesBuscanCercaASuUniversidad() throws Exception {
+        Long uninorte = universidades.findBySigla("Uninorte").orElseThrow().getId();
+        mvc.perform(get("/").param("universidad", uninorte.toString()).param("maxMinutos", "10"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Habitación amoblada a pasos de Uninorte")))
+                .andExpect(content().string(not(containsString("Apartaestudio para estudiantes cerca a la CUC"))));
+
+        // Orden "más cerca": Uninorte (8 min) debe salir antes que la CUC (12 min)
+        String html = mvc.perform(get("/").param("orden", "cercania"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        org.junit.jupiter.api.Assertions.assertTrue(
+                html.indexOf("Habitación amoblada a pasos de Uninorte") < html.indexOf("Apartaestudio para estudiantes cerca a la CUC"));
+
+        mvc.perform(get("/estudiantes"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Universidad del Norte")));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@inmobiliaria.co")
+    void publicarConUniversidadCercana() throws Exception {
+        Long udea = universidades.findBySigla("UdeA").orElseThrow().getId();
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Habitación junto a la UdeA").param("operacion", "ARRIENDO")
+                        .param("tipo", "HABITACION").param("precio", "700000").param("ciudad", "Medellín")
+                        .param("universidadCercana", udea.toString()).param("minutosAPie", "5")
+                        .param("amoblado", "true"))
+                .andExpect(status().is3xxRedirection());
+
+        mvc.perform(get("/").param("universidad", udea.toString()).param("amoblado", "true"))
+                .andExpect(content().string(containsString("Habitación junto a la UdeA")))
+                .andExpect(content().string(containsString("5 min a pie de ")));
+    }
 
     @Test
     void cualquieraPuedeBuscarYFiltrar() throws Exception {

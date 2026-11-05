@@ -81,3 +81,20 @@ fieldset { border:1px solid var(--borde); border-radius:8px; }
   .tabla thead { display:none; }
   .tabla tr, .tabla td { display:block; }
 }
+
+/* --- Estudiantes --- */
+.check { display:flex !important; flex-direction:row !important; align-items:center; gap:8px; font-weight:400 !important; }
+.check input { width:auto; }
+.estudiante { margin:0 0 6px; color:#7c3aed; font-size:.92rem; }
+.estudiante.grande { font-size:1.05rem; }
+fieldset.estudiantes { display:flex; flex-direction:column; gap:12px; background:#faf5ff; border-color:#e9d5ff; }
+.ayuda { margin:0; color:var(--gris); font-weight:400; }
+.ciudad-universidades h2 { margin:24px 0 10px; }
+.universidades { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+.universidad { display:flex; flex-direction:column; gap:4px; background:#fff; border:1px solid var(--borde);
+               border-radius:12px; padding:14px; text-decoration:none; color:inherit; }
+.universidad:hover { border-color:#7c3aed; }
+.universidad strong { color:#7c3aed; font-size:1.1rem; }
+.universidad span { color:var(--gris); font-size:.9rem; }
+.universidad small { margin-top:auto; color:var(--verde); }
+.llamado { text-align:center; background:#fff; border:1px solid var(--borde); border-radius:12px; padding:24px; margin-top:30px; }

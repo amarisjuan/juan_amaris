@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Vivienda para estudiantes')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main>
+    <section class="portada">
+        <h1>🎓 Vivienda cerca a tu universidad</h1>
+        <p>Habitaciones, apartaestudios y apartamentos a pocos minutos caminando de tu campus.</p>
+    </section>
+
+    <section th:each="g : ${universidadesPorCiudad}" class="ciudad-universidades">
+        <h2 th:text="${g.key}">Ciudad</h2>
+        <div class="universidades">
+            <a th:each="u : ${g.value}" class="universidad"
+               th:href="@{/(universidad=${u.id}, operacion='ARRIENDO', orden='cercania')}">
+                <strong th:text="${u.nombreCorto}"></strong>
+                <span th:text="${u.nombre}"></span>
+                <small th:with="n=${conteos.get(u.id)}"
+                       th:text="${n == null ? 'Sé el primero en publicar' : n + (n == 1 ? ' inmueble cerca' : ' inmuebles cerca')}"></small>
+            </a>
+        </div>
+    </section>
+
+    <section class="llamado">
+        <h2>¿Tienes una habitación o apartaestudio cerca a una universidad?</h2>
+        <p>Publícalo gratis e indica la universidad: los estudiantes lo encontrarán al instante.</p>
+        <a class="boton" th:href="@{/publicar}">Publicar para estudiantes</a>
+    </section>
+</main>
+<footer th:replace="~{fragmentos/base :: pie}"></footer>
+</body>
+</html>

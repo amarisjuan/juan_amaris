@@ -56,6 +56,17 @@ public class Inmueble {
     @PositiveOrZero
     private Integer parqueaderos;
 
+    // --- Para estudiantes ---
+    @ManyToOne
+    private Universidad universidadCercana;
+
+    @Min(value = 1, message = "Mínimo 1 minuto") @Max(value = 120, message = "Máximo 120 minutos")
+    private Integer minutosAPie;
+
+    private boolean amoblado;
+
+    private boolean serviciosIncluidos;
+
     @ElementCollection
     @CollectionTable(name = "inmueble_fotos", joinColumns = @JoinColumn(name = "inmueble_id"))
     @OrderColumn(name = "orden")
@@ -70,6 +81,15 @@ public class Inmueble {
     private LocalDateTime fechaPublicacion = LocalDateTime.now();
 
     public String getFotoPrincipal() { return fotos.isEmpty() ? null : fotos.get(0); }
+
+    public Universidad getUniversidadCercana() { return universidadCercana; }
+    public void setUniversidadCercana(Universidad universidadCercana) { this.universidadCercana = universidadCercana; }
+    public Integer getMinutosAPie() { return minutosAPie; }
+    public void setMinutosAPie(Integer minutosAPie) { this.minutosAPie = minutosAPie; }
+    public boolean isAmoblado() { return amoblado; }
+    public void setAmoblado(boolean amoblado) { this.amoblado = amoblado; }
+    public boolean isServiciosIncluidos() { return serviciosIncluidos; }
+    public void setServiciosIncluidos(boolean serviciosIncluidos) { this.serviciosIncluidos = serviciosIncluidos; }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
