@@ -100,6 +100,8 @@ public class InmuebleService {
         i.setHabitaciones(datos.getHabitaciones());
         i.setBanos(datos.getBanos());
         i.setParqueaderos(datos.getParqueaderos());
+        i.setLatitud(datos.getLatitud());
+        i.setLongitud(datos.getLongitud());
         i.setUniversidadCercana(datos.getUniversidadCercana());
         i.setMinutosAPie(datos.getUniversidadCercana() == null ? null : datos.getMinutosAPie());
         i.setAmoblado(datos.isAmoblado());

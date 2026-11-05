@@ -41,27 +41,37 @@ public class DatosDemo implements CommandLineRunner {
         admin.setRol("ADMIN");
         usuarios.save(admin);
 
-        crear(admin, "Apartamento con vista al mar", TipoInmueble.APARTAMENTO, Operacion.ARRIENDO,
-                2_800_000L, "Barranquilla", "Alto Prado", 5, 85, 3, 2, 1);
-        crear(admin, "Casa familiar con patio", TipoInmueble.CASA, Operacion.VENTA,
-                420_000_000L, "Barranquilla", "Villa Country", 4, 160, 4, 3, 2);
+        ubicar(crear(admin, "Apartamento con vista al mar", TipoInmueble.APARTAMENTO, Operacion.ARRIENDO,
+                2_800_000L, "Barranquilla", "Alto Prado", 5, 85, 3, 2, 1), 11.0040, -74.8070);
+        ubicar(crear(admin, "Casa familiar con patio", TipoInmueble.CASA, Operacion.VENTA,
+                420_000_000L, "Barranquilla", "Villa Country", 4, 160, 4, 3, 2), 10.9990, -74.8090);
         estudiantil(crear(admin, "Habitación amoblada a pasos de Uninorte", TipoInmueble.HABITACION, Operacion.ARRIENDO,
-                900_000L, "Barranquilla", "Villa Santos", 5, 16, 1, 1, 0), "Uninorte", 8, true, true);
+                900_000L, "Barranquilla", "Villa Santos", 5, 16, 1, 1, 0), "Uninorte", 8, true, true, 11.0150, -74.8460);
         estudiantil(crear(admin, "Apartaestudio para estudiantes cerca a la CUC", TipoInmueble.APARTAESTUDIO, Operacion.ARRIENDO,
-                1_100_000L, "Barranquilla", "El Prado", 4, 30, 1, 1, 0), "CUC", 12, true, false);
+                1_100_000L, "Barranquilla", "El Prado", 4, 30, 1, 1, 0), "CUC", 12, true, false, 10.9998, -74.7980);
         Inmueble aptoEstudio = crear(admin, "Apartaestudio amoblado cerca a universidades", TipoInmueble.APARTAESTUDIO, Operacion.ARRIENDO,
                 1_300_000L, "Medellín", "Laureles", 4, 35, 1, 1, 0);
-        estudiantil(aptoEstudio, "UPB", 10, true, false);
-        crear(admin, "Apartamento nuevo para estrenar", TipoInmueble.APARTAMENTO, Operacion.VENTA,
-                380_000_000L, "Bogotá", "Cedritos", 4, 68, 2, 2, 1);
-        crear(admin, "Local comercial sobre avenida principal", TipoInmueble.LOCAL, Operacion.ARRIENDO,
-                4_500_000L, "Cartagena", "Bocagrande", 6, 60, 0, 1, 0);
+        estudiantil(aptoEstudio, "UPB", 10, true, false, 6.2450, -75.5960);
+        ubicar(crear(admin, "Apartamento nuevo para estrenar", TipoInmueble.APARTAMENTO, Operacion.VENTA,
+                380_000_000L, "Bogotá", "Cedritos", 4, 68, 2, 2, 1), 4.7240, -74.0390);
+        ubicar(crear(admin, "Local comercial sobre avenida principal", TipoInmueble.LOCAL, Operacion.ARRIENDO,
+                4_500_000L, "Cartagena", "Bocagrande", 6, 60, 0, 1, 0), 10.3990, -75.5560);
         Inmueble habBogota = crear(admin, "Habitación para estudiante con servicios incluidos", TipoInmueble.HABITACION, Operacion.ARRIENDO,
                 750_000L, "Bogotá", "Teusaquillo", 3, 14, 1, 1, 0);
-        estudiantil(habBogota, "UNAL Bogotá", 15, true, true);
+        estudiantil(habBogota, "UNAL Bogotá", 15, true, true, 4.6330, -74.0760);
     }
 
-    private void estudiantil(Inmueble i, String sigla, int minutos, boolean amoblado, boolean servicios) {
+    private void ubicar(Inmueble i, double lat, double lng) {
+        i.setLatitud(lat);
+        i.setLongitud(lng);
+        inmuebles.save(i);
+    }
+
+    private void estudiantil(Inmueble i, String sigla, int minutos, boolean amoblado, boolean servicios,
+                             double lat, double lng) {
+        i.setLatitud(lat);
+        i.setLongitud(lng);
+        inmuebles.save(i);
         universidades.findBySigla(sigla).ifPresent(u -> {
             i.setUniversidadCercana(u);
             i.setMinutosAPie(minutos);

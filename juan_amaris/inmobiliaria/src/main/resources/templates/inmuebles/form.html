@@ -54,12 +54,26 @@
                 <option th:each="n : ${#numbers.sequence(1,6)}" th:value="${n}" th:text="${n}"></option>
             </select></label>
 
+        <fieldset class="ubicacion-mapa">
+            <legend>📍 Ubicación en el mapa (recomendado)</legend>
+            <p class="ayuda">Haz clic en el mapa donde está el inmueble. Puedes arrastrar el pin para ajustarlo.
+                Si eliges una universidad abajo, calculamos los minutos caminando.</p>
+            <div id="mapa-form" class="mapa"></div>
+            <div class="acciones-mapa">
+                <button type="button" class="boton secundario" id="mi-ubicacion">Usar mi ubicación actual</button>
+                <button type="button" class="enlace peligro" id="quitar-ubicacion">Quitar ubicación</button>
+            </div>
+            <input type="hidden" th:field="*{latitud}">
+            <input type="hidden" th:field="*{longitud}">
+            <span class="campo-error" th:errors="*{latitud}"></span>
+        </fieldset>
+
         <fieldset class="estudiantes">
             <legend>🎓 ¿Es ideal para estudiantes? (opcional)</legend>
             <p class="ayuda">Si queda cerca a una universidad, los estudiantes te encontrarán más fácil.</p>
             <div class="dos">
                 <label>Universidad cercana
-                    <select name="universidadCercana">
+                    <select name="universidadCercana" id="universidadCercana">
                         <option value="">Ninguna</option>
                         <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
                             <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombre}"
@@ -90,6 +104,81 @@
 
         <label>Agregar fotos (JPG, PNG o WEBP, máximo 5 MB cada una, hasta 10)
             <input type="file" name="nuevasFotos" accept="image/jpeg,image/png,image/webp" multiple></label>
+
+        <script th:inline="javascript">
+            (() => {
+                const unis = /*[[${puntosUniversidades}]]*/ [];
+                const $ = id => document.getElementById(id);
+                const lat = $('latitud'), lng = $('longitud'), minutos = $('minutosAPie');
+                const selUni = $('universidadCercana'), ciudad = $('ciudad');
+                const mapa = Mapas.crear('mapa-form');
+                let pin = null, pinUni = null, minutosAuto = !minutos.value;
+
+                minutos.addEventListener('input', () => { minutosAuto = !minutos.value; });
+
+                function uniElegida() { return unis.find(u => String(u.id) === selUni.value) || null; }
+
+                function recalcular() {
+                    const u = uniElegida();
+                    if (pin && u && minutosAuto) {
+                        const p = pin.getLatLng();
+                        minutos.value = Mapas.minutosCaminando({ lat: p.lat, lng: p.lng }, u);
+                    }
+                }
+
+                function ponerPin(latlng, centrar) {
+                    if (!pin) {
+                        pin = L.marker(latlng, { draggable: true, icon: L.divIcon({ className: 'pin pin-casa', html: '🏠', iconSize: [34, 34], iconAnchor: [17, 17] }) }).addTo(mapa);
+                        pin.on('dragend', () => { guardar(); recalcular(); });
+                    } else pin.setLatLng(latlng);
+                    if (centrar) mapa.setView(latlng, 16);
+                    guardar();
+                    recalcular();
+                }
+
+                function guardar() {
+                    const p = pin.getLatLng();
+                    lat.value = p.lat.toFixed(6);
+                    lng.value = p.lng.toFixed(6);
+                }
+
+                function mostrarUni() {
+                    if (pinUni) { mapa.removeLayer(pinUni); pinUni = null; }
+                    const u = uniElegida();
+                    if (!u) return;
+                    pinUni = Mapas.marcar(mapa, u, 'uni');
+                    if (!pin) mapa.setView([u.lat, u.lng], 15);
+                    else Mapas.ajustar(mapa, [pin, pinUni]);
+                    recalcular();
+                }
+
+                mapa.on('click', e => ponerPin(e.latlng, false));
+                selUni.addEventListener('change', mostrarUni);
+
+                // Al escribir la ciudad, centrar el mapa ahí (si aún no hay pin)
+                ciudad.addEventListener('change', () => {
+                    if (pin) return;
+                    const u = unis.find(u => u.detalle.toLowerCase() === ciudad.value.trim().toLowerCase());
+                    if (u) mapa.setView([u.lat, u.lng], 13);
+                });
+
+                $('mi-ubicacion').addEventListener('click', () => {
+                    if (!navigator.geolocation) return alert('Tu navegador no permite obtener la ubicación');
+                    navigator.geolocation.getCurrentPosition(
+                        pos => ponerPin(L.latLng(pos.coords.latitude, pos.coords.longitude), true),
+                        () => alert('No pudimos obtener tu ubicación. Haz clic en el mapa.'));
+                });
+
+                $('quitar-ubicacion').addEventListener('click', () => {
+                    if (pin) { mapa.removeLayer(pin); pin = null; }
+                    lat.value = ''; lng.value = '';
+                });
+
+                // Al editar: mostrar lo que ya estaba guardado
+                if (lat.value && lng.value) ponerPin(L.latLng(+lat.value, +lng.value), true);
+                mostrarUni();
+            })();
+        </script>
 
         <button type="submit" class="boton" th:text="${inmueble.id == null ? 'Publicar' : 'Guardar cambios'}"></button>
     </form>

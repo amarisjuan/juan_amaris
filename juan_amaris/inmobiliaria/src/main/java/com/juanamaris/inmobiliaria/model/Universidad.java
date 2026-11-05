@@ -19,6 +19,9 @@ public class Universidad {
     @Column(nullable = false)
     private String ciudad;
 
+    private Double latitud;
+    private Double longitud;
+
     protected Universidad() {}
 
     public Universidad(String nombre, String sigla, String ciudad) {
@@ -26,6 +29,15 @@ public class Universidad {
         this.sigla = sigla;
         this.ciudad = ciudad;
     }
+
+    public void ubicar(Double latitud, Double longitud) {
+        this.latitud = latitud;
+        this.longitud = longitud;
+    }
+
+    public Double getLatitud() { return latitud; }
+    public Double getLongitud() { return longitud; }
+    public boolean isUbicada() { return latitud != null && longitud != null; }
 
     public String getNombreCorto() { return sigla != null ? sigla : nombre; }
 

@@ -56,6 +56,13 @@ public class Inmueble {
     @PositiveOrZero
     private Integer parqueaderos;
 
+    // --- Ubicación en el mapa (opcional, rango aproximado de Colombia) ---
+    @DecimalMin(value = "-5", message = "Ubicación fuera de Colombia") @DecimalMax(value = "14", message = "Ubicación fuera de Colombia")
+    private Double latitud;
+
+    @DecimalMin(value = "-82", message = "Ubicación fuera de Colombia") @DecimalMax(value = "-66", message = "Ubicación fuera de Colombia")
+    private Double longitud;
+
     // --- Para estudiantes ---
     @ManyToOne
     private Universidad universidadCercana;
@@ -82,6 +89,12 @@ public class Inmueble {
 
     public String getFotoPrincipal() { return fotos.isEmpty() ? null : fotos.get(0); }
 
+    public Double getLatitud() { return latitud; }
+    public void setLatitud(Double latitud) { this.latitud = latitud; }
+    public Double getLongitud() { return longitud; }
+    public void setLongitud(Double longitud) { this.longitud = longitud; }
+    public boolean isUbicado() { return latitud != null && longitud != null; }
+
     public Universidad getUniversidadCercana() { return universidadCercana; }
     public void setUniversidadCercana(Universidad universidadCercana) { this.universidadCercana = universidadCercana; }
     public Integer getMinutosAPie() { return minutosAPie; }
@@ -106,7 +119,7 @@ public class Inmueble {
     public String getCiudad() { return ciudad; }
     public void setCiudad(String ciudad) { this.ciudad = ciudad; }
     public String getBarrio() { return barrio; }
-    public void setBarrio(String barrio) { this.barrio = barrio; }
+    public void setBarrio(String barrio) { this.barrio = barrio == null || barrio.isBlank() ? null : barrio.trim(); }
     public Integer getEstrato() { return estrato; }
     public void setEstrato(Integer estrato) { this.estrato = estrato; }
     public Integer getAreaM2() { return areaM2; }

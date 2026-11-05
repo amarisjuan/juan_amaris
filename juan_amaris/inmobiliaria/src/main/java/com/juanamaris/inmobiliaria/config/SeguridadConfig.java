@@ -19,7 +19,7 @@ public class SeguridadConfig {
         http.authorizeHttpRequests(auth -> auth
                         // Cualquiera puede buscar y ver inmuebles
                         .requestMatchers(HttpMethod.GET, "/", "/estudiantes", "/inmuebles/{id:\\d+}", "/fotos/**",
-                                "/css/**", "/registro", "/login", "/error").permitAll()
+                                "/css/**", "/js/**", "/webjars/**", "/registro", "/login", "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/registro").permitAll()
                         // Para publicar o editar hay que iniciar sesión
                         .anyRequest().authenticated())

@@ -43,6 +43,7 @@ public class PublicacionController {
         model.addAttribute("tipos", TipoInmueble.values());
         model.addAttribute("operaciones", Operacion.values());
         model.addAttribute("universidadesPorCiudad", universidades.porCiudad());
+        model.addAttribute("puntosUniversidades", universidades.puntos());
     }
 
     @GetMapping("/mis-inmuebles")

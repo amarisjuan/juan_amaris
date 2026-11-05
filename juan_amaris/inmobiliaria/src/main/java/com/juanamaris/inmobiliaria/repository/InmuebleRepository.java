@@ -13,7 +13,7 @@ public interface InmuebleRepository extends JpaRepository<Inmueble, Long>, JpaSp
 
     List<Inmueble> findByPropietarioOrderByFechaPublicacionDesc(Usuario propietario);
 
-    @EntityGraph(attributePaths = {"fotos", "propietario"})
+    @EntityGraph(attributePaths = {"fotos", "propietario", "universidadCercana"})
     @Query("select i from Inmueble i where i.id = :id")
     Optional<Inmueble> findDetalleById(Long id);
 

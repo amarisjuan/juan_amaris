@@ -9,6 +9,16 @@
         <p>Habitaciones, apartaestudios y apartamentos a pocos minutos caminando de tu campus.</p>
     </section>
 
+    <div id="mapa-universidades" class="mapa"></div>
+    <p class="ayuda centrado">Toca una universidad en el mapa para ver los arriendos cerca.</p>
+    <script th:inline="javascript">
+        (() => {
+            const unis = /*[[${puntosUniversidades}]]*/ [];
+            const mapa = Mapas.crear('mapa-universidades');
+            Mapas.ajustar(mapa, unis.map(u => Mapas.marcar(mapa, u, 'uni')));
+        })();
+    </script>
+
     <section th:each="g : ${universidadesPorCiudad}" class="ciudad-universidades">
         <h2 th:text="${g.key}">Ciudad</h2>
         <div class="universidades">

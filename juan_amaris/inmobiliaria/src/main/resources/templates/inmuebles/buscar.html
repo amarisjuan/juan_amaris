@@ -63,6 +63,18 @@
         <span th:if="${universidadElegida}" th:text="'cerca a ' + ${universidadElegida.nombre}"></span>
     </p>
 
+    <div id="mapa-resultados" class="mapa" th:if="${!puntosInmuebles.empty or puntoUniversidad != null}"></div>
+    <script th:inline="javascript" th:if="${!puntosInmuebles.empty or puntoUniversidad != null}">
+        (() => {
+            const inmuebles = /*[[${puntosInmuebles}]]*/ [];
+            const uni = /*[[${puntoUniversidad}]]*/ null;
+            const mapa = Mapas.crear('mapa-resultados');
+            const marcas = inmuebles.map(p => Mapas.marcar(mapa, p, 'casa'));
+            if (uni) marcas.push(Mapas.marcar(mapa, uni, 'uni', { zIndexOffset: 1000 }));
+            Mapas.ajustar(mapa, marcas);
+        })();
+    </script>
+
     <div class="rejilla">
         <th:block th:each="i : ${resultados.content}">
             <a th:replace="~{fragmentos/base :: tarjeta(${i})}"></a>

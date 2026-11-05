@@ -29,6 +29,26 @@
                 <li th:if="${i.parqueaderos}"><strong th:text="${i.parqueaderos}"></strong> parqueaderos</li>
                 <li th:if="${i.estrato}">Estrato <strong th:text="${i.estrato}"></strong></li>
             </ul>
+            <th:block th:if="${puntoInmueble}">
+                <h2>Ubicación</h2>
+                <div id="mapa-detalle" class="mapa"></div>
+                <p class="ayuda" id="distancia-uni"></p>
+                <script th:inline="javascript">
+                    (() => {
+                        const casa = /*[[${puntoInmueble}]]*/ null;
+                        const uni = /*[[${puntoUniversidad}]]*/ null;
+                        const mapa = Mapas.crear('mapa-detalle');
+                        const marcas = [Mapas.marcar(mapa, casa, 'casa')];
+                        if (uni) {
+                            marcas.push(Mapas.marcar(mapa, uni, 'uni'));
+                            L.polyline([ [casa.lat, casa.lng], [uni.lat, uni.lng] ], { color: '#7c3aed', dashArray: '6 6' }).addTo(mapa);
+                            document.getElementById('distancia-uni').textContent =
+                                Mapas.textoDistancia(Mapas.metros(casa, uni)) + ' en línea recta hasta ' + uni.titulo + '.';
+                        }
+                        Mapas.ajustar(mapa, marcas, 16);
+                    })();
+                </script>
+            </th:block>
             <h2>Descripción</h2>
             <p class="descripcion" th:text="${i.descripcion}"></p>
         </section>

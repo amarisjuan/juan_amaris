@@ -21,6 +21,11 @@ public class UniversidadService {
                 .collect(Collectors.groupingBy(Universidad::getCiudad, TreeMap::new, Collectors.toList()));
     }
 
+    public java.util.List<com.juanamaris.inmobiliaria.model.PuntoMapa> puntos() {
+        return repo.findAllByOrderByCiudadAscNombreAsc().stream().filter(Universidad::isUbicada)
+                .map(com.juanamaris.inmobiliaria.model.PuntoMapa::de).toList();
+    }
+
     public Universidad buscar(Long id) { return repo.findById(id).orElse(null); }
 
     /** universidadId → cantidad de inmuebles activos cerca. */

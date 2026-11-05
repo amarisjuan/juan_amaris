@@ -10,6 +10,13 @@ Las personas crean una cuenta, **suben sus inmuebles con fotos** (arriendo o ven
   Cada inmueble puede indicar la universidad cercana, los minutos a pie y si es amoblado o tiene servicios incluidos.
   Se puede filtrar por esos datos y ordenar por "más cerca a la universidad". Para agregar más universidades,
   edita `CatalogoUniversidades.java`; las nuevas se cargan solas al reiniciar.
+- **Mapas** (Leaflet + OpenStreetMap, gratis y sin clave de API; Leaflet viene incluido en la app):
+  - `/estudiantes`: mapa de las 29 universidades. Al tocar una, se ven los arriendos cerca.
+  - Búsqueda: mapa con los resultados y la universidad elegida.
+  - Detalle: el inmueble, la universidad y la distancia en línea recta.
+  - Publicar: el dueño hace clic en el mapa (o usa "mi ubicación") y los minutos caminando
+    se calculan solos (~80 m/min, ajustado por calles).
+  - Las coordenadas de las universidades son aproximadas (campus principal); ajústalas en `CatalogoUniversidades.java`.
 - Página de detalle con galería de fotos, características y botones de WhatsApp (+57) y llamada.
 - Registro con nombre, correo y celular colombiano, e inicio de sesión.
 - Publicar, editar, pausar/activar y eliminar inmuebles propios (hasta 10 fotos JPG/PNG/WEBP de 5 MB c/u).

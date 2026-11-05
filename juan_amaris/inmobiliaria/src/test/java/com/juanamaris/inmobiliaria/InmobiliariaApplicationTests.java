@@ -34,6 +34,7 @@ class InmobiliariaApplicationTests {
         // Orden "más cerca": Uninorte (8 min) debe salir antes que la CUC (12 min)
         String html = mvc.perform(get("/").param("orden", "cercania"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        html = html.substring(html.indexOf("class=\"rejilla\""));   // solo la lista, no los datos del mapa
         org.junit.jupiter.api.Assertions.assertTrue(
                 html.indexOf("Habitación amoblada a pasos de Uninorte") < html.indexOf("Apartaestudio para estudiantes cerca a la CUC"));
 
@@ -50,12 +51,22 @@ class InmobiliariaApplicationTests {
                         .param("titulo", "Habitación junto a la UdeA").param("operacion", "ARRIENDO")
                         .param("tipo", "HABITACION").param("precio", "700000").param("ciudad", "Medellín")
                         .param("universidadCercana", udea.toString()).param("minutosAPie", "5")
-                        .param("amoblado", "true"))
+                        .param("amoblado", "true").param("latitud", "6.2690").param("longitud", "-75.5660"))
                 .andExpect(status().is3xxRedirection());
 
         mvc.perform(get("/").param("universidad", udea.toString()).param("amoblado", "true"))
                 .andExpect(content().string(containsString("Habitación junto a la UdeA")))
                 .andExpect(content().string(containsString("5 min a pie de ")));
+
+        // El detalle muestra la universidad y el mapa
+        String html = mvc.perform(get("/").param("universidad", udea.toString()))
+                .andReturn().getResponse().getContentAsString();
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("href=\"/inmuebles/(\\d+)\"").matcher(html);
+        org.junit.jupiter.api.Assertions.assertTrue(m.find());
+        mvc.perform(get("/inmuebles/" + m.group(1)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Universidad de Antioquia")))
+                .andExpect(content().string(containsString("mapa-detalle")));
     }
 
     @Test
@@ -91,6 +102,26 @@ class InmobiliariaApplicationTests {
         mvc.perform(get("/").param("texto", "puerto colombia"))
                 .andExpect(content().string(containsString("Casa en Puerto Colombia")))
                 .andExpect(content().string(containsString("/fotos/")));
+    }
+
+    @Test
+    void mapasRecibenLasUbicaciones() throws Exception {
+        mvc.perform(get("/estudiantes"))
+                .andExpect(content().string(containsString("mapa-universidades")))
+                .andExpect(content().string(containsString("11.019")));   // Uninorte
+        mvc.perform(get("/").param("ciudad", "Barranquilla"))
+                .andExpect(content().string(containsString("mapa-resultados")));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@inmobiliaria.co")
+    void rechazaUbicacionFueraDeColombia() throws Exception {
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Casa").param("operacion", "VENTA").param("tipo", "CASA")
+                        .param("precio", "1").param("ciudad", "Cali")
+                        .param("latitud", "40.4").param("longitud", "-3.7"))   // Madrid
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Ubicación fuera de Colombia")));
     }
 
     @Test
