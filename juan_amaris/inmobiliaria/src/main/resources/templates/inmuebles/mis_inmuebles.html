@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Mis inmuebles')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main>
+    <h1>Mis inmuebles</h1>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+    <p th:if="${inmuebles.empty}" class="vacio">Aún no has publicado nada.
+        <a th:href="@{/publicar}">Publica tu primer inmueble</a>.</p>
+
+    <table class="tabla" th:unless="${inmuebles.empty}">
+        <thead><tr><th>Inmueble</th><th>Precio</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="i : ${inmuebles}">
+            <td><a th:href="@{/inmuebles/{id}(id=${i.id})}" th:text="${i.titulo}"></a><br>
+                <small th:text="${i.operacion.etiqueta} + ' · ' + ${i.ciudad}"></small></td>
+            <td>$<span th:text="${#numbers.formatInteger(i.precio, 1, 'POINT')}"></span></td>
+            <td th:text="${i.activo ? 'Publicado' : 'Pausado'}"></td>
+            <td class="acciones">
+                <a th:href="@{/inmuebles/{id}/editar(id=${i.id})}">Editar</a>
+                <form th:action="@{/inmuebles/{id}/estado(id=${i.id})}" method="post" class="en-linea">
+                    <button class="enlace" th:text="${i.activo ? 'Pausar' : 'Activar'}"></button></form>
+                <form th:action="@{/inmuebles/{id}/eliminar(id=${i.id})}" method="post" class="en-linea"
+                      onsubmit="return confirm('¿Eliminar este inmueble?')">
+                    <button class="enlace peligro">Eliminar</button></form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' | Inmobiliaria'">Inmobiliaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<header th:fragment="menu" class="menu">
+    <a class="marca" th:href="@{/}">🏠 Inmobiliaria</a>
+    <nav>
+        <a th:href="@{/}">Buscar</a>
+        <a class="boton" th:href="@{/publicar}">Publicar inmueble</a>
+        <th:block sec:authorize="isAuthenticated()">
+            <a th:href="@{/mis-inmuebles}">Mis inmuebles</a>
+            <form th:action="@{/logout}" method="post" class="en-linea">
+                <button class="enlace" type="submit">Salir</button>
+            </form>
+        </th:block>
+        <th:block sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}">Ingresar</a>
+            <a th:href="@{/registro}">Crear cuenta</a>
+        </th:block>
+    </nav>
+</header>
+
+<div th:fragment="mensajes">
+    <p class="alerta ok" th:if="${ok}" th:text="${ok}"></p>
+    <p class="alerta error" th:if="${error}" th:text="${error}"></p>
+</div>
+
+<th:block th:fragment="tarjeta(i)">
+    <a class="tarjeta" th:href="@{/inmuebles/{id}(id=${i.id})}">
+        <div class="foto">
+            <img th:if="${i.fotoPrincipal}" th:src="@{/fotos/{f}(f=${i.fotoPrincipal})}" alt="" loading="lazy">
+            <span th:unless="${i.fotoPrincipal}" class="sin-foto">Sin foto</span>
+            <span class="etiqueta" th:text="${i.operacion.etiqueta}">Arriendo</span>
+        </div>
+        <div class="cuerpo">
+            <strong class="precio">$<span th:text="${#numbers.formatInteger(i.precio, 1, 'POINT')}"></span>
+                <small th:if="${i.operacion.name() == 'ARRIENDO'}">/mes</small></strong>
+            <h3 th:text="${i.titulo}">Título</h3>
+            <p class="ubicacion" th:text="${i.barrio != null ? i.barrio + ', ' + i.ciudad : i.ciudad}"></p>
+            <p class="datos">
+                <span th:text="${i.tipo.etiqueta}"></span>
+                <span th:if="${i.areaM2}" th:text="${i.areaM2} + ' m²'"></span>
+                <span th:if="${i.habitaciones}" th:text="${i.habitaciones} + ' hab.'"></span>
+                <span th:if="${i.banos}" th:text="${i.banos} + ' baños'"></span>
+            </p>
+        </div>
+    </a>
+</th:block>
+
+<footer th:fragment="pie" class="pie">
+    <p>Publica gratis tu inmueble en Colombia · Arriendo y venta</p>
+</footer>
+</body>
+</html>

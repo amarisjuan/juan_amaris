@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head(${inmueble.titulo})}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="detalle" th:with="i=${inmueble}">
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+    <a th:href="@{/}" class="volver">← Volver a la búsqueda</a>
+
+    <div class="galeria" th:if="${!i.fotos.empty}">
+        <img th:each="f : ${i.fotos}" th:src="@{/fotos/{f}(f=${f})}" alt="Foto del inmueble">
+    </div>
+    <div class="galeria vacia" th:if="${i.fotos.empty}">Este inmueble aún no tiene fotos</div>
+
+    <div class="detalle-columnas">
+        <section>
+            <span class="etiqueta" th:text="${i.operacion.etiqueta} + ' · ' + ${i.tipo.etiqueta}"></span>
+            <h1 th:text="${i.titulo}"></h1>
+            <p class="ubicacion" th:text="${i.barrio != null ? i.barrio + ', ' + i.ciudad : i.ciudad}"></p>
+            <ul class="caracteristicas">
+                <li th:if="${i.areaM2}"><strong th:text="${i.areaM2}"></strong> m²</li>
+                <li th:if="${i.habitaciones}"><strong th:text="${i.habitaciones}"></strong> habitaciones</li>
+                <li th:if="${i.banos}"><strong th:text="${i.banos}"></strong> baños</li>
+                <li th:if="${i.parqueaderos}"><strong th:text="${i.parqueaderos}"></strong> parqueaderos</li>
+                <li th:if="${i.estrato}">Estrato <strong th:text="${i.estrato}"></strong></li>
+            </ul>
+            <h2>Descripción</h2>
+            <p class="descripcion" th:text="${i.descripcion}"></p>
+        </section>
+        <aside class="contacto">
+            <p class="precio grande">$<span th:text="${#numbers.formatInteger(i.precio, 1, 'POINT')}"></span>
+                <small th:if="${i.operacion.name() == 'ARRIENDO'}">/mes</small></p>
+            <p>Publicado por <strong th:text="${i.propietario.nombre}"></strong></p>
+            <a class="boton whatsapp" target="_blank" rel="noopener"
+               th:href="'https://wa.me/57' + ${i.propietario.celular} + '?text=' + ${#uris.escapeQueryParam('Hola, vi tu inmueble «' + i.titulo + '» y me interesa.')}">
+                Escribir por WhatsApp</a>
+            <a class="boton secundario" th:href="'tel:+57' + ${i.propietario.celular}">Llamar</a>
+        </aside>
+    </div>
+</main>
+<footer th:replace="~{fragmentos/base :: pie}"></footer>
+</body>
+</html>

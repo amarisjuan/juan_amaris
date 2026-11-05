@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Buscar inmuebles')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main>
+    <section class="portada">
+        <h1>Encuentra tu próximo hogar en Colombia</h1>
+        <p>Arriendos y ventas publicados directamente por sus dueños.</p>
+    </section>
+
+    <form class="filtros" th:action="@{/}" method="get" th:object="${filtro}">
+        <select th:field="*{operacion}">
+            <option value="">Arriendo o venta</option>
+            <option th:each="o : ${operaciones}" th:value="${o}" th:text="${o.etiqueta}"></option>
+        </select>
+        <input list="lista-ciudades" th:field="*{ciudad}" placeholder="Ciudad">
+        <datalist id="lista-ciudades">
+            <option th:each="c : ${ciudades}" th:value="${c}"></option>
+        </datalist>
+        <select th:field="*{tipo}">
+            <option value="">Tipo de inmueble</option>
+            <option th:each="t : ${tipos}" th:value="${t}" th:text="${t.etiqueta}"></option>
+        </select>
+        <input type="text" th:field="*{texto}" placeholder="Barrio o palabra clave">
+        <input type="number" min="0" step="50000" th:field="*{precioMin}" placeholder="Precio mínimo">
+        <input type="number" min="0" step="50000" th:field="*{precioMax}" placeholder="Precio máximo">
+        <select th:field="*{habitacionesMin}">
+            <option value="">Habitaciones</option>
+            <option th:each="n : ${#numbers.sequence(1,5)}" th:value="${n}" th:text="${n} + '+'"></option>
+        </select>
+        <select th:field="*{estrato}">
+            <option value="">Estrato</option>
+            <option th:each="n : ${#numbers.sequence(1,6)}" th:value="${n}" th:text="'Estrato ' + ${n}"></option>
+        </select>
+        <select th:field="*{orden}">
+            <option value="recientes">Más recientes</option>
+            <option value="precio_asc">Menor precio</option>
+            <option value="precio_desc">Mayor precio</option>
+        </select>
+        <button type="submit" class="boton">Buscar</button>
+        <a th:href="@{/}" class="limpiar">Limpiar</a>
+    </form>
+
+    <p class="conteo" th:text="${resultados.totalElements} + ' inmuebles encontrados'"></p>
+
+    <div class="rejilla">
+        <th:block th:each="i : ${resultados.content}">
+            <a th:replace="~{fragmentos/base :: tarjeta(${i})}"></a>
+        </th:block>
+    </div>
+    <p class="vacio" th:if="${resultados.empty}">No hay inmuebles con esos filtros. Prueba quitando alguno.</p>
+
+    <nav class="paginas" th:if="${resultados.totalPages > 1}">
+        <a th:if="${resultados.hasPrevious()}"
+           th:href="@{/(pagina=${resultados.number - 1}, operacion=${filtro.operacion}, ciudad=${filtro.ciudad}, tipo=${filtro.tipo}, texto=${filtro.texto}, precioMin=${filtro.precioMin}, precioMax=${filtro.precioMax}, habitacionesMin=${filtro.habitacionesMin}, estrato=${filtro.estrato}, orden=${filtro.orden})}">← Anterior</a>
+        <span th:text="'Página ' + ${resultados.number + 1} + ' de ' + ${resultados.totalPages}"></span>
+        <a th:if="${resultados.hasNext()}"
+           th:href="@{/(pagina=${resultados.number + 1}, operacion=${filtro.operacion}, ciudad=${filtro.ciudad}, tipo=${filtro.tipo}, texto=${filtro.texto}, precioMin=${filtro.precioMin}, precioMax=${filtro.precioMax}, habitacionesMin=${filtro.habitacionesMin}, estrato=${filtro.estrato}, orden=${filtro.orden})}">Siguiente →</a>
+    </nav>
+</main>
+<footer th:replace="~{fragmentos/base :: pie}"></footer>
+</body>
+</html>

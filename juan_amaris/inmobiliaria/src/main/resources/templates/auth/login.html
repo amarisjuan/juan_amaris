@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Ingresar')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto">
+    <h1>Ingresar</h1>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+    <p class="alerta error" th:if="${param.error}">Correo o contraseña incorrectos.</p>
+    <p class="alerta ok" th:if="${param.logout}">Cerraste sesión.</p>
+    <form class="formulario" th:action="@{/login}" method="post">
+        <label>Correo <input type="email" name="email" required autofocus></label>
+        <label>Contraseña <input type="password" name="password" required></label>
+        <button class="boton" type="submit">Ingresar</button>
+    </form>
+    <p>¿No tienes cuenta? <a th:href="@{/registro}">Créala gratis</a></p>
+</main>
+</body>
+</html>

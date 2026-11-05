@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head(${inmueble.id == null ? 'Publicar inmueble' : 'Editar inmueble'})}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto">
+    <h1 th:text="${inmueble.id == null ? 'Publica tu inmueble' : 'Editar inmueble'}"></h1>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <form class="formulario" method="post" enctype="multipart/form-data" th:object="${inmueble}"
+          th:action="${inmueble.id == null} ? @{/publicar} : @{/inmuebles/{id}/editar(id=${inmueble.id})}">
+
+        <label>Título del anuncio
+            <input th:field="*{titulo}" maxlength="120" placeholder="Ej: Apartamento iluminado cerca al centro">
+            <span class="campo-error" th:errors="*{titulo}"></span></label>
+
+        <div class="dos">
+            <label>¿Arriendo o venta?
+                <select th:field="*{operacion}">
+                    <option value="">Elige…</option>
+                    <option th:each="o : ${operaciones}" th:value="${o}" th:text="${o.etiqueta}"></option>
+                </select>
+                <span class="campo-error" th:errors="*{operacion}"></span></label>
+            <label>Tipo de inmueble
+                <select th:field="*{tipo}">
+                    <option value="">Elige…</option>
+                    <option th:each="t : ${tipos}" th:value="${t}" th:text="${t.etiqueta}"></option>
+                </select>
+                <span class="campo-error" th:errors="*{tipo}"></span></label>
+        </div>
+
+        <label>Precio en pesos (COP)
+            <input type="number" min="1" th:field="*{precio}" placeholder="Ej: 1500000">
+            <span class="campo-error" th:errors="*{precio}"></span></label>
+
+        <div class="dos">
+            <label>Ciudad
+                <input th:field="*{ciudad}" placeholder="Ej: Barranquilla">
+                <span class="campo-error" th:errors="*{ciudad}"></span></label>
+            <label>Barrio
+                <input th:field="*{barrio}" placeholder="Ej: El Prado"></label>
+        </div>
+
+        <div class="cuatro">
+            <label>Área (m²) <input type="number" min="0" th:field="*{areaM2}"></label>
+            <label>Habitaciones <input type="number" min="0" th:field="*{habitaciones}"></label>
+            <label>Baños <input type="number" min="0" th:field="*{banos}"></label>
+            <label>Parqueaderos <input type="number" min="0" th:field="*{parqueaderos}"></label>
+        </div>
+
+        <label>Estrato
+            <select th:field="*{estrato}">
+                <option value="">Sin estrato / no aplica</option>
+                <option th:each="n : ${#numbers.sequence(1,6)}" th:value="${n}" th:text="${n}"></option>
+            </select></label>
+
+        <label>Descripción
+            <textarea th:field="*{descripcion}" rows="6" maxlength="3000"
+                      placeholder="Cuenta lo mejor del inmueble: iluminación, cercanía a transporte, administración incluida…"></textarea></label>
+
+        <fieldset th:if="${!inmueble.fotos.empty}">
+            <legend>Fotos actuales (marca las que quieres borrar)</legend>
+            <div class="miniaturas">
+                <label th:each="f : ${inmueble.fotos}">
+                    <img th:src="@{/fotos/{f}(f=${f})}" alt="">
+                    <input type="checkbox" name="borrarFotos" th:value="${f}"> Borrar
+                </label>
+            </div>
+        </fieldset>
+
+        <label>Agregar fotos (JPG, PNG o WEBP, máximo 5 MB cada una, hasta 10)
+            <input type="file" name="nuevasFotos" accept="image/jpeg,image/png,image/webp" multiple></label>
+
+        <button type="submit" class="boton" th:text="${inmueble.id == null ? 'Publicar' : 'Guardar cambios'}"></button>
+    </form>
+</main>
+</body>
+</html>
