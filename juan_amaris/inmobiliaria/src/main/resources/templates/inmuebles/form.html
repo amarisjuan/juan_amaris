@@ -38,7 +38,8 @@
                 <input th:field="*{ciudad}" placeholder="Ej: Barranquilla">
                 <span class="campo-error" th:errors="*{ciudad}"></span></label>
             <label>Barrio
-                <input th:field="*{barrio}" placeholder="Ej: El Prado"></label>
+                <input th:field="*{barrio}" placeholder="Ej: El Prado">
+                <span class="campo-error" th:errors="*{barrio}"></span></label>
         </div>
 
         <div class="cuatro">
@@ -58,6 +59,10 @@
             <legend><svg th:replace="~{fragmentos/base :: ic('pin')}"></svg> Ubicación en el mapa (recomendado)</legend>
             <p class="ayuda">Haz clic en el mapa donde está el inmueble. Puedes arrastrar el pin para ajustarlo.
                 Si eliges una universidad abajo, calculamos los minutos caminando.</p>
+            <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
+                <span><strong>Tu ubicación exacta no se publica.</strong> Los visitantes solo ven el barrio y una zona
+                aproximada de unos 400 m. La usamos para dibujar esa zona y calcular distancias. No escribas la dirección
+                en el título ni en la descripción, y evita fotos donde se vea la placa de la casa.</span></p>
             <div id="mapa-form" class="mapa"></div>
             <div class="acciones-mapa">
                 <button type="button" class="boton secundario" id="mi-ubicacion">Usar mi ubicación actual</button>
@@ -110,7 +115,8 @@
 
         <label>Descripción
             <textarea th:field="*{descripcion}" rows="6" maxlength="3000"
-                      placeholder="Cuenta lo mejor del inmueble: iluminación, cercanía a transporte, administración incluida…"></textarea></label>
+                      placeholder="Cuenta lo mejor del inmueble: iluminación, cercanía a transporte, administración incluida…"></textarea>
+            <span class="campo-error" th:errors="*{descripcion}"></span></label>
 
         <fieldset th:if="${!inmueble.fotos.empty}">
             <legend>Fotos actuales (marca las que quieres borrar)</legend>

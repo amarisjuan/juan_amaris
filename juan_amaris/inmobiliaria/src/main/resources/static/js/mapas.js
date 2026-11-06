@@ -48,6 +48,13 @@ const Mapas = (() => {
             .bindPopup(popup(p)).addTo(mapa);
     }
 
+    /** Zona aproximada de un inmueble: círculo de p.radio metros (nunca el punto exacto). */
+    function zona(mapa, p) {
+        return L.circle([p.lat, p.lng], {
+            radius: p.radio, color: '#0B4A6F', weight: 2, fillColor: '#0B4A6F', fillOpacity: 0.15
+        }).bindPopup(popup(p)).addTo(mapa);
+    }
+
     function ajustar(mapa, marcadores, zoomUno) {
         if (!marcadores.length) return;
         if (marcadores.length === 1) mapa.setView(marcadores[0].getLatLng(), zoomUno || 15);
@@ -65,5 +72,5 @@ const Mapas = (() => {
 
     const textoDistancia = m => m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km';
 
-    return { crear, marcar, ajustar, metros, minutosCaminando, textoDistancia, ICONO_CASA, ICONO_UNI };
+    return { crear, marcar, zona, ajustar, metros, minutosCaminando, textoDistancia, ICONO_CASA, ICONO_UNI };
 })();

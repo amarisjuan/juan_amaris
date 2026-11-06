@@ -60,6 +60,11 @@ public class CompaneroController {
     @PostMapping("/nuevo")
     public String publicar(@Valid @ModelAttribute Companero companero, BindingResult errores,
                            @AuthenticationPrincipal UserDetails yo, Model model, RedirectAttributes flash) {
+        for (String campo : java.util.List.of("barrio", "descripcion")) {
+            String texto = "barrio".equals(campo) ? companero.getBarrio() : companero.getDescripcion();
+            com.juanamaris.inmobiliaria.service.DetectorDirecciones.buscar(texto).ifPresent(f -> errores.rejectValue(
+                    campo, "direccion", com.juanamaris.inmobiliaria.service.DetectorDirecciones.mensaje(f)));
+        }
         if (errores.hasErrors()) return "companeros/form";
         try {
             companeros.publicar(companero, usuario(yo));

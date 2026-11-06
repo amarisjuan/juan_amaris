@@ -5,3 +5,4 @@ Si ninguna fila corresponde, pregunta al usuario antes de improvisar.
 
 | Intención | Directiva |
 |---|---|
+| Consultar a Argenis antes de construir algo con posible riesgo legal | `directives/consulta_legal.md` |

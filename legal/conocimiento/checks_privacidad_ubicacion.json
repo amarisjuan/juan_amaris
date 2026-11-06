@@ -1,0 +1,68 @@
+{
+  "nota": "Controles de la decisión 2026-11-06 (consulta 001: no publicar la dirección exacta). Rutas relativas a la raíz del portal.",
+  "checks": [
+    {
+      "id": "zona_publica_guardada",
+      "archivo": "src/main/java/com/juanamaris/inmobiliaria/model/Inmueble.java",
+      "patron": "latitudPublica",
+      "descripcion": "La zona aproximada se guarda (no se recalcula en cada visita)",
+      "norma": "Ley 1581/2012 art. 4 lit. g; consulta 001 req. 3"
+    },
+    {
+      "id": "desplazamiento_seguro",
+      "archivo": "src/main/java/com/juanamaris/inmobiliaria/service/UbicacionPrivadaService.java",
+      "patron": "SecureRandom",
+      "descripcion": "El desplazamiento usa un generador aleatorio seguro",
+      "norma": "Consulta 001 req. 3"
+    },
+    {
+      "id": "mapa_usa_zona",
+      "archivo": "src/main/java/com/juanamaris/inmobiliaria/model/PuntoMapa.java",
+      "patron": "^(?![\\s\\S]*i\\.getLatitud\\(\\))[\\s\\S]*i\\.getLatitudPublica\\(\\)",
+      "descripcion": "Los datos del mapa de un inmueble usan solo la zona pública, nunca su coordenada exacta (las universidades sí son públicas)",
+      "norma": "Ley 1581/2012 art. 4 lit. f; consulta 001 req. 4"
+    },
+    {
+      "id": "etiqueta_aproximada",
+      "archivo": "src/main/resources/templates/inmuebles/detalle.html",
+      "patron": "Ubicación aproximada",
+      "descripcion": "El detalle avisa que la ubicación es aproximada",
+      "norma": "Ley 1480/2011 arts. 29 y 30; consulta 001 req. 8"
+    },
+    {
+      "id": "minutos_redondeados",
+      "archivo": "src/main/resources/templates/fragmentos/base.html",
+      "patron": "minutosAPieAprox",
+      "descripcion": "Los minutos a pie se muestran redondeados",
+      "norma": "Consulta 001 req. 5"
+    },
+    {
+      "id": "fotos_sin_gps",
+      "archivo": "src/main/java/com/juanamaris/inmobiliaria/service/AlmacenFotosService.java",
+      "patron": "LimpiadorMetadatos\\.limpiar",
+      "descripcion": "Se eliminan los metadatos (EXIF/GPS) de las fotos al subirlas",
+      "norma": "Consulta 001 req. 6"
+    },
+    {
+      "id": "bloqueo_direcciones_inmueble",
+      "archivo": "src/main/java/com/juanamaris/inmobiliaria/controller/PublicacionController.java",
+      "patron": "DetectorDirecciones",
+      "descripcion": "Se rechazan direcciones exactas en los textos del anuncio",
+      "norma": "Consulta 001 req. 7"
+    },
+    {
+      "id": "bloqueo_direcciones_companero",
+      "archivo": "src/main/java/com/juanamaris/inmobiliaria/controller/CompaneroController.java",
+      "patron": "DetectorDirecciones",
+      "descripcion": "Se rechazan direcciones exactas en el tablero de compañeros",
+      "norma": "Consulta 001 req. 7"
+    },
+    {
+      "id": "aviso_al_dueno",
+      "archivo": "src/main/resources/templates/inmuebles/form.html",
+      "patron": "Tu ubicación exacta no se publica",
+      "descripcion": "El formulario informa al dueño que la ubicación exacta no se publica",
+      "norma": "Ley 1581/2012 arts. 4 lit. b y 12; consulta 001 req. 9"
+    }
+  ]
+}

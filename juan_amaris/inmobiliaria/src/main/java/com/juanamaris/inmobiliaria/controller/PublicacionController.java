@@ -69,6 +69,7 @@ public class PublicacionController {
     public String publicar(@Valid @ModelAttribute Inmueble inmueble, BindingResult errores,
                            @RequestParam(name = "nuevasFotos", required = false) List<MultipartFile> nuevasFotos,
                            @AuthenticationPrincipal UserDetails yo, Model model, RedirectAttributes flash) {
+        validarSinDireccion(inmueble, errores);
         if (errores.hasErrors()) return "inmuebles/form";
         try {
             Inmueble guardado = inmuebles.publicar(inmueble, nuevasFotos, usuario(yo));
@@ -92,6 +93,7 @@ public class PublicacionController {
                              @RequestParam(name = "borrarFotos", required = false) List<String> borrarFotos,
                              @AuthenticationPrincipal UserDetails yo, Model model, RedirectAttributes flash) {
         Usuario u = usuario(yo);
+        validarSinDireccion(inmueble, errores);
         if (errores.hasErrors()) {
             inmueble.setId(id);
             inmueble.setFotos(inmuebles.paraEditar(id, u).getFotos());
@@ -118,6 +120,18 @@ public class PublicacionController {
         inmuebles.eliminar(id, usuario(yo));
         flash.addFlashAttribute("ok", "Inmueble eliminado");
         return "redirect:/mis-inmuebles";
+    }
+
+    /** Rechaza direcciones exactas en los textos públicos del anuncio. */
+    private void validarSinDireccion(Inmueble i, BindingResult errores) {
+        java.util.Map<String, String> campos = new java.util.LinkedHashMap<>();
+        campos.put("titulo", i.getTitulo());
+        campos.put("barrio", i.getBarrio());
+        campos.put("descripcion", i.getDescripcion());
+        campos.put("otrasReglas", i.getOtrasReglas());
+        campos.forEach((campo, texto) -> com.juanamaris.inmobiliaria.service.DetectorDirecciones.buscar(texto)
+                .ifPresent(f -> errores.rejectValue(campo, "direccion",
+                        com.juanamaris.inmobiliaria.service.DetectorDirecciones.mensaje(f))));
     }
 
     private Usuario usuario(UserDetails yo) { return usuarios.porEmail(yo.getUsername()); }

@@ -22,11 +22,13 @@ public class InmuebleService {
 
     private final InmuebleRepository repo;
     private final AlmacenFotosService fotos;
+    private final UbicacionPrivadaService ubicacion;
     private final int maxFotos;
 
-    public InmuebleService(InmuebleRepository repo, AlmacenFotosService fotos,
+    public InmuebleService(InmuebleRepository repo, AlmacenFotosService fotos, UbicacionPrivadaService ubicacion,
                            @Value("${app.uploads.max-fotos}") int maxFotos) {
         this.repo = repo;
+        this.ubicacion = ubicacion;
         this.fotos = fotos;
         this.maxFotos = maxFotos;
     }
@@ -80,6 +82,7 @@ public class InmuebleService {
         datos.setId(null);
         datos.setPropietario(u);
         if (datos.getUniversidadCercana() == null) datos.setMinutosAPie(null);
+        ubicacion.asignarZona(datos);
         agregarFotos(datos, nuevasFotos);
         return repo.save(datos);
     }
@@ -100,8 +103,10 @@ public class InmuebleService {
         i.setHabitaciones(datos.getHabitaciones());
         i.setBanos(datos.getBanos());
         i.setParqueaderos(datos.getParqueaderos());
+        Double latAnterior = i.getLatitud(), lngAnterior = i.getLongitud();
         i.setLatitud(datos.getLatitud());
         i.setLongitud(datos.getLongitud());
+        ubicacion.actualizarSiCambio(i, latAnterior, lngAnterior);
         i.setUniversidadCercana(datos.getUniversidadCercana());
         i.setMinutosAPie(datos.getUniversidadCercana() == null ? null : datos.getMinutosAPie());
         i.setAmoblado(datos.isAmoblado());

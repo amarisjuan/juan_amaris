@@ -50,7 +50,8 @@
             <span class="campo-error" th:errors="*{presupuesto}"></span></label>
 
         <div class="dos">
-            <label>Barrio (opcional) <input th:field="*{barrio}" maxlength="80"></label>
+            <label>Barrio (opcional) <input th:field="*{barrio}" maxlength="80">
+                <span class="campo-error" th:errors="*{barrio}"></span></label>
             <label>¿De qué ciudad vienes? (opcional) <input th:field="*{ciudadOrigen}" maxlength="60"></label>
         </div>
 

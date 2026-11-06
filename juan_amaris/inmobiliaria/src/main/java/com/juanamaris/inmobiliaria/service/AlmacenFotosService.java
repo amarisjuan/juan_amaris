@@ -32,7 +32,9 @@ public class AlmacenFotosService {
         }
         String nombre = UUID.randomUUID() + ext;
         try (InputStream in = archivo.getInputStream()) {
-            Files.copy(in, carpeta.resolve(nombre));
+            // Sin metadatos: las fotos de celular traen la ubicación GPS exacta (consulta legal 001)
+            byte[] limpia = LimpiadorMetadatos.limpiar(in.readAllBytes(), archivo.getContentType());
+            Files.write(carpeta.resolve(nombre), limpia);
         } catch (IOException e) {
             throw new IllegalStateException("No se pudo guardar la foto", e);
         }

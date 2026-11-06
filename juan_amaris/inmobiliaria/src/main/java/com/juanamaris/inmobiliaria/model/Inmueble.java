@@ -64,6 +64,10 @@ public class Inmueble {
     @DecimalMin(value = "-82", message = "Ubicación fuera de Colombia") @DecimalMax(value = "-66", message = "Ubicación fuera de Colombia")
     private Double longitud;
 
+    // --- Zona pública aproximada (lo único que ve el público). Se calcula una vez al guardar la ubicación. ---
+    private Double latitudPublica;
+    private Double longitudPublica;
+
     // --- Para estudiantes ---
     @ManyToOne
     private Universidad universidadCercana;
@@ -117,6 +121,15 @@ public class Inmueble {
     public Double getLongitud() { return longitud; }
     public void setLongitud(Double longitud) { this.longitud = longitud; }
     public boolean isUbicado() { return latitud != null && longitud != null; }
+    public Double getLatitudPublica() { return latitudPublica; }
+    public Double getLongitudPublica() { return longitudPublica; }
+    public void setZonaPublica(Double lat, Double lng) { this.latitudPublica = lat; this.longitudPublica = lng; }
+    public boolean isZonaPublicaLista() { return latitudPublica != null && longitudPublica != null; }
+
+    /** Minutos a pie redondeados hacia arriba de 5 en 5, para no permitir triangular la ubicación. */
+    public Integer getMinutosAPieAprox() {
+        return minutosAPie == null ? null : Math.max(5, (int) Math.ceil(minutosAPie / 5.0) * 5);
+    }
 
     public Universidad getUniversidadCercana() { return universidadCercana; }
     public void setUniversidadCercana(Universidad universidadCercana) { this.universidadCercana = universidadCercana; }

@@ -93,7 +93,7 @@ class InmobiliariaApplicationTests {
     @Test
     @WithMockUser(username = "admin@inmobiliaria.co")
     void usuarioPublicaInmuebleConFoto() throws Exception {
-        var foto = new MockMultipartFile("nuevasFotos", "casa.jpg", "image/jpeg", new byte[]{1, 2, 3});
+        var foto = new MockMultipartFile("nuevasFotos", "casa.jpg", "image/jpeg", jpegConGps());
         mvc.perform(multipart("/publicar").file(foto).with(csrf())
                         .param("titulo", "Casa en Puerto Colombia").param("operacion", "VENTA")
                         .param("tipo", "CASA").param("precio", "350000000").param("ciudad", "Puerto Colombia"))
@@ -215,5 +215,114 @@ class InmobiliariaApplicationTests {
                         .param("presupuesto", "650000").param("descripcion", "Una más"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("máximo 3 publicaciones")));
+    }
+
+    // ---------- Privacidad de la ubicación (consulta legal 001) ----------
+
+    @Autowired com.juanamaris.inmobiliaria.repository.InmuebleRepository inmuebles;
+
+    /** JPEG real de 8x8 con un segmento APP1 de EXIF que simula coordenadas GPS. */
+    static byte[] jpegConGps() throws Exception {
+        var img = new java.awt.image.BufferedImage(8, 8, java.awt.image.BufferedImage.TYPE_INT_RGB);
+        var buf = new java.io.ByteArrayOutputStream();
+        javax.imageio.ImageIO.write(img, "jpg", buf);
+        byte[] jpg = buf.toByteArray();
+        byte[] exif = "Exif\0\0GPSLatitude=11.0150;GPSLongitude=-74.8460".getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+        var out = new java.io.ByteArrayOutputStream();
+        out.write(jpg, 0, 2);                                   // SOI
+        out.write(0xFF); out.write(0xE1);                       // APP1
+        out.write((exif.length + 2) >> 8); out.write((exif.length + 2) & 0xFF);
+        out.write(exif);
+        out.write(jpg, 2, jpg.length - 2);
+        return out.toByteArray();
+    }
+
+    static double metros(double lat1, double lng1, double lat2, double lng2) {
+        double r = 6_371_000, dLat = Math.toRadians(lat2 - lat1), dLng = Math.toRadians(lng2 - lng1);
+        double h = Math.pow(Math.sin(dLat / 2), 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.pow(Math.sin(dLng / 2), 2);
+        return 2 * r * Math.asin(Math.sqrt(h));
+    }
+
+    private double[] coordenadasDelMapa(String html, long id) {
+        var m = java.util.regex.Pattern.compile("\"lat\":([-0-9.]+),\"lng\":([-0-9.]+),\"url\":\"\\\\?/inmuebles\\\\?/" + id + "\"").matcher(html);
+        if (!m.find()) {
+            int k = html.indexOf("const casa");
+            org.junit.jupiter.api.Assertions.fail("El mapa debe recibir la zona del inmueble. Encontrado: "
+                    + (k < 0 ? "(sin mapa)" : html.substring(k, Math.min(html.length(), k + 300))));
+        }
+        return new double[]{Double.parseDouble(m.group(1)), Double.parseDouble(m.group(2))};
+    }
+
+    @Test
+    void elMapaRecibeSoloUnaZonaAproximadaYEstable() throws Exception {
+        var i = inmuebles.findAll().stream().filter(x -> x.getTitulo().equals("Habitación amoblada a pasos de Uninorte"))
+                .findFirst().orElseThrow();
+        String html1 = mvc.perform(get("/inmuebles/" + i.getId())).andReturn().getResponse().getContentAsString();
+        String html2 = mvc.perform(get("/inmuebles/" + i.getId())).andReturn().getResponse().getContentAsString();
+        double[] zona = coordenadasDelMapa(html1, i.getId());
+        double distancia = metros(zona[0], zona[1], i.getLatitud(), i.getLongitud());
+        org.junit.jupiter.api.Assertions.assertTrue(distancia >= 90 && distancia <= 310,
+                "El centro de la zona debe estar desplazado entre 100 y 300 m; está a " + distancia);
+        org.junit.jupiter.api.Assertions.assertArrayEquals(zona, coordenadasDelMapa(html2, i.getId()),
+                "La zona no puede cambiar entre visitas");
+        org.junit.jupiter.api.Assertions.assertTrue(html1.contains("\"radio\":400"));
+        org.junit.jupiter.api.Assertions.assertTrue(html1.contains("Ubicación aproximada"));
+        // Minutos redondeados de 5 en 5 (8 -> 10) y distancia redondeada
+        org.junit.jupiter.api.Assertions.assertTrue(html1.contains("Unos 10 minutos a pie de"));
+        org.junit.jupiter.api.Assertions.assertTrue(html1.contains("en línea recta de Universidad del Norte"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@inmobiliaria.co")
+    void rechazaDireccionesExactasEnLosTextos() throws Exception {
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Apartamento").param("operacion", "ARRIENDO").param("tipo", "APARTAMENTO")
+                        .param("precio", "1000000").param("ciudad", "Barranquilla")
+                        .param("descripcion", "Queda en la Calle 45 # 23-10, piso 2."))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("no escribas la dirección exacta")));
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Apartamento con referencia").param("operacion", "ARRIENDO").param("tipo", "APARTAMENTO")
+                        .param("precio", "1000000").param("ciudad", "Barranquilla")
+                        .param("descripcion", "A dos cuadras de la Calle 72, cerca al centro comercial."))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @WithMockUser(username = "laura@ejemplo.co")
+    void compañeroNoPuedePublicarDireccion() throws Exception {
+        Long uni = universidades.findBySigla("UIS").orElseThrow().getId();
+        mvc.perform(post("/companeros/nuevo").with(csrf())
+                        .param("tipo", "TENGO_CUARTO").param("universidad", uni.toString()).param("carrera", "Derecho")
+                        .param("genero", "MUJER").param("presupuesto", "600000").param("barrio", "Cra 27 No. 9-60")
+                        .param("descripcion", "Tengo cuarto libre"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("no escribas la dirección exacta")));
+    }
+
+    @Test
+    void detectorDeDirecciones() {
+        var d = (java.util.function.Function<String, Boolean>) t -> com.juanamaris.inmobiliaria.service.DetectorDirecciones.buscar(t).isPresent();
+        for (String si : new String[]{"Calle 45 # 23-10", "cra 54 No. 68-80", "Kr 7 #45-10", "Diagonal 12B bis N° 3-20",
+                "queda en el # 23-10", "apto 302", "Torre 2"}) {
+            org.junit.jupiter.api.Assertions.assertTrue(d.apply(si), "Debería detectar: " + si);
+        }
+        for (String no : new String[]{"A dos cuadras de la Calle 26", "precio 1.500.000", "3 habitaciones y 2 baños",
+                "Cerca a la Avenida Boyacá", "a 10 minutos de Uninorte"}) {
+            org.junit.jupiter.api.Assertions.assertFalse(d.apply(no), "No debería detectar: " + no);
+        }
+    }
+
+    @Test
+    void lasFotosSeGuardanSinMetadatosGps() throws Exception {
+        byte[] original = jpegConGps();
+        org.junit.jupiter.api.Assertions.assertTrue(new String(original, java.nio.charset.StandardCharsets.ISO_8859_1).contains("GPSLatitude"));
+        byte[] limpia = com.juanamaris.inmobiliaria.service.LimpiadorMetadatos.limpiar(original, "image/jpeg");
+        String texto = new String(limpia, java.nio.charset.StandardCharsets.ISO_8859_1);
+        org.junit.jupiter.api.Assertions.assertFalse(texto.contains("GPS"));
+        org.junit.jupiter.api.Assertions.assertFalse(texto.contains("Exif"));
+        org.junit.jupiter.api.Assertions.assertNotNull(javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(limpia)),
+                "La foto limpia debe seguir siendo una imagen válida");
     }
 }

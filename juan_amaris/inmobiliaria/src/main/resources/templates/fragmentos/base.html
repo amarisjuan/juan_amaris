@@ -50,7 +50,7 @@
             <h3 th:text="${i.titulo}">Título</h3>
             <p class="ubicacion" th:text="${i.barrio != null ? i.barrio + ', ' + i.ciudad : i.ciudad}"></p>
             <p class="estudiante" th:if="${i.universidadCercana}"><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg>
-                <span th:text="${i.minutosAPie != null ? i.minutosAPie + ' min a pie de ' : 'Cerca a '}"></span><strong
+                <span th:text="${i.minutosAPieAprox != null ? 'Unos ' + i.minutosAPieAprox + ' min a pie de ' : 'Cerca a '}"></span><strong
                         th:text="${i.universidadCercana.nombreCorto}"></strong></p>
             <p class="datos">
                 <span th:text="${i.tipo.etiqueta}"></span>

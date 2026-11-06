@@ -7,6 +7,7 @@ import com.juanamaris.inmobiliaria.model.PuntoMapa;
 import com.juanamaris.inmobiliaria.model.Universidad;
 import com.juanamaris.inmobiliaria.model.TipoInmueble;
 import com.juanamaris.inmobiliaria.service.InmuebleService;
+import com.juanamaris.inmobiliaria.service.UbicacionPrivadaService;
 import com.juanamaris.inmobiliaria.service.UniversidadService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -19,8 +20,10 @@ public class BusquedaController {
 
     private final InmuebleService service;
     private final UniversidadService universidades;
+    private final UbicacionPrivadaService ubicacion;
 
-    public BusquedaController(InmuebleService service, UniversidadService universidades) {
+    public BusquedaController(InmuebleService service, UniversidadService universidades, UbicacionPrivadaService ubicacion) {
+        this.ubicacion = ubicacion;
         this.service = service;
         this.universidades = universidades;
     }
@@ -33,7 +36,8 @@ public class BusquedaController {
         var resultados = service.buscar(filtro, pagina);
         model.addAttribute("resultados", resultados);
         model.addAttribute("puntosInmuebles",
-                resultados.getContent().stream().filter(Inmueble::isUbicado).map(PuntoMapa::de).toList());
+                resultados.getContent().stream().filter(Inmueble::isZonaPublicaLista)
+                        .map(i -> PuntoMapa.zona(i, ubicacion.getRadio())).toList());
         model.addAttribute("ciudades", service.ciudades());
         model.addAttribute("tipos", TipoInmueble.values());
         model.addAttribute("operaciones", Operacion.values());
@@ -60,9 +64,10 @@ public class BusquedaController {
     public String detalle(@PathVariable Long id, Model model) {
         Inmueble i = service.detallePublico(id);
         model.addAttribute("inmueble", i);
-        model.addAttribute("puntoInmueble", i.isUbicado() ? PuntoMapa.de(i) : null);
+        model.addAttribute("puntoInmueble", i.isZonaPublicaLista() ? PuntoMapa.zona(i, ubicacion.getRadio()) : null);
         Universidad u = i.getUniversidadCercana();
         model.addAttribute("puntoUniversidad", u != null && u.isUbicada() ? PuntoMapa.de(u) : null);
+        model.addAttribute("distanciaUniversidad", ubicacion.distanciaAproximada(i, u));
         return "inmuebles/detalle";
     }
 }

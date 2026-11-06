@@ -10,5 +10,6 @@ Si ninguna fila corresponde, pregunta al usuario antes de improvisar.
 | Redactar o actualizar los términos y condiciones del portal | `directives/terminos_condiciones.md` |
 | Validar un arriendo o generar un contrato de arrendamiento de vivienda | `directives/contrato_arrendamiento.md` |
 | Revisar si un anuncio es discriminatorio, engañoso o pide depósitos | `directives/revision_anuncio.md` |
+| Responder una consulta de Juan (desarrollo) | `directives/responder_consulta.md` |
 
 Base de conocimiento compartida: `conocimiento/normas.json` (normas, fuentes y estado de verificación).

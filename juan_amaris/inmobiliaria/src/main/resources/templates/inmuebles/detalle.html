@@ -18,7 +18,7 @@
             <h1 th:text="${i.titulo}"></h1>
             <p class="ubicacion" th:text="${i.barrio != null ? i.barrio + ', ' + i.ciudad : i.ciudad}"></p>
             <p class="estudiante grande" th:if="${i.universidadCercana}"><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg>
-                <span th:text="${i.minutosAPie != null ? i.minutosAPie + ' minutos a pie de ' : 'Cerca a '}"></span><strong
+                <span th:text="${i.minutosAPieAprox != null ? 'Unos ' + i.minutosAPieAprox + ' minutos a pie de ' : 'Cerca a '}"></span><strong
                         th:text="${i.universidadCercana.nombre}"></strong></p>
             <ul class="caracteristicas">
                 <li class="si" th:if="${i.amoblado}"><svg th:replace="~{fragmentos/base :: ic('si')}"></svg> Amoblado</li>
@@ -42,22 +42,20 @@
             </th:block>
 
             <th:block th:if="${puntoInmueble}">
-                <h2>Ubicación</h2>
+                <h2>Ubicación aproximada</h2>
+                <p class="ayuda">Por seguridad mostramos solo una zona aproximada. La dirección exacta te la da el
+                    anunciante cuando lo contactes.</p>
                 <div id="mapa-detalle" class="mapa"></div>
-                <p class="ayuda" id="distancia-uni"></p>
+                <p class="ayuda" th:if="${distanciaUniversidad}"
+                   th:text="'A ' + ${distanciaUniversidad} + ' en línea recta de ' + ${inmueble.universidadCercana.nombre} + '.'"></p>
                 <script th:inline="javascript">
                     (() => {
                         const casa = /*[[${puntoInmueble}]]*/ null;
                         const uni = /*[[${puntoUniversidad}]]*/ null;
                         const mapa = Mapas.crear('mapa-detalle');
-                        const marcas = [Mapas.marcar(mapa, casa, 'casa')];
-                        if (uni) {
-                            marcas.push(Mapas.marcar(mapa, uni, 'uni'));
-                            L.polyline([ [casa.lat, casa.lng], [uni.lat, uni.lng] ], { color: '#D18A22', weight: 3, dashArray: '6 6' }).addTo(mapa);
-                            document.getElementById('distancia-uni').textContent =
-                                Mapas.textoDistancia(Mapas.metros(casa, uni)) + ' en línea recta hasta ' + uni.titulo + '.';
-                        }
-                        Mapas.ajustar(mapa, marcas, 16);
+                        const marcas = [Mapas.zona(mapa, casa)];
+                        if (uni) marcas.push(Mapas.marcar(mapa, uni, 'uni'));
+                        Mapas.ajustar(mapa, marcas, 15);
                     })();
                 </script>
             </th:block>

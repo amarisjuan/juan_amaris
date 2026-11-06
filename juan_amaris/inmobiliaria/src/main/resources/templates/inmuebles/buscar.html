@@ -75,7 +75,7 @@
             const inmuebles = /*[[${puntosInmuebles}]]*/ [];
             const uni = /*[[${puntoUniversidad}]]*/ null;
             const mapa = Mapas.crear('mapa-resultados');
-            const marcas = inmuebles.map(p => Mapas.marcar(mapa, p, 'casa'));
+            const marcas = inmuebles.map(p => Mapas.zona(mapa, p));
             if (uni) marcas.push(Mapas.marcar(mapa, uni, 'uni', { zIndexOffset: 1000 }));
             Mapas.ajustar(mapa, marcas);
         })();
