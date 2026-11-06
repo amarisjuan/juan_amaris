@@ -43,8 +43,7 @@
 
             <th:block th:if="${puntoInmueble}">
                 <h2>Ubicación aproximada</h2>
-                <p class="ayuda">Por seguridad mostramos solo una zona aproximada. La dirección exacta te la da el
-                    anunciante cuando lo contactes.</p>
+                <p class="ayuda">Mostramos una zona aproximada del inmueble. La dirección exacta se comparte directamente con el anunciante.</p>
                 <div id="mapa-detalle" class="mapa"></div>
                 <p class="ayuda" th:if="${distanciaUniversidad}"
                    th:text="'A ' + ${distanciaUniversidad} + ' en línea recta de ' + ${inmueble.universidadCercana.nombre} + '.'"></p>

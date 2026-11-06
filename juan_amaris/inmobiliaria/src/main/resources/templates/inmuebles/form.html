@@ -64,21 +64,20 @@
             </select></label>
 
         <fieldset class="ubicacion-mapa">
-            <legend><svg th:replace="~{fragmentos/base :: ic('pin')}"></svg> Ubicación en el mapa (recomendado)</legend>
-            <p class="ayuda">Haz clic en el mapa donde está el inmueble. Puedes arrastrar el pin para ajustarlo.
-                Si eliges una universidad abajo, calculamos la distancia hasta ella.</p>
+            <legend><svg th:replace="~{fragmentos/base :: ic('pin')}"></svg> Ubicación del inmueble</legend>
+            <p class="ayuda">Marca el inmueble en el mapa: haz clic, usa tu ubicación actual, o escribe la dirección
+                y presiona «Ubicar en el mapa». Si eliges una universidad abajo, calculamos la distancia hasta ella.</p>
             <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
-                <span><strong>Tu ubicación exacta no se publica.</strong> Los visitantes solo ven el barrio y una zona
-                aproximada de unos 400 m. La usamos para dibujar esa zona y calcular distancias. No escribas la dirección
-                en el título ni en la descripción, y evita fotos donde se vea la placa de la casa.</span></p>
+                <span><strong>Tu privacidad está protegida.</strong> Los interesados solo verán el barrio y una zona
+                aproximada del inmueble. La dirección exacta no aparece en el anuncio.</span></p>
             <div id="mapa-form" class="mapa"></div>
             <div class="acciones-mapa">
                 <button type="button" class="boton secundario" id="mi-ubicacion">Usar mi ubicación actual</button>
-                <button type="button" class="enlace peligro" id="quitar-ubicacion">Quitar ubicación</button>
+                <button type="button" class="enlace peligro" id="quitar-ubicacion">Quitar marcador</button>
             </div>
-            <label class="direccion-privada">Dirección del inmueble
-                <span class="ayuda">Solo para ubicarlo en el mapa. <strong>No se publica.</strong> Puedes escribirla
-                    a mano o tomarla con "Usar mi ubicación actual".</span>
+            <label class="direccion-privada">Dirección (opcional)
+                <span class="ayuda">Sirve para ubicar el inmueble en el mapa y <strong>no se publica</strong>.
+                    También puedes tomarla con «Usar mi ubicación actual».</span>
                 <div class="fila-direccion">
                     <input th:field="*{direccionPrivada}" id="direccion-privada" maxlength="150"
                            placeholder="Ej: Calle 45 # 23-10, Barranquilla">
