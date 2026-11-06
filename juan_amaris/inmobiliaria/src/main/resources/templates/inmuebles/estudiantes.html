@@ -5,7 +5,7 @@
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main>
     <section class="portada">
-        <h1>🎓 Vivienda cerca a tu universidad</h1>
+        <h1><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg> Vivienda cerca a tu universidad</h1>
         <p>Habitaciones, apartaestudios y apartamentos a pocos minutos caminando de tu campus.</p>
     </section>
 
@@ -33,7 +33,7 @@
     </section>
 
     <section class="llamado">
-        <h2>👥 ¿Buscas con quién vivir?</h2>
+        <h2><svg th:replace="~{fragmentos/base :: ic('personas')}"></svg> ¿Buscas con quién vivir?</h2>
         <p>Publica tu perfil o encuentra estudiantes de tu universidad para compartir apartamento.</p>
         <a class="boton secundario" th:href="@{/companeros}">Ver compañeros de cuarto</a>
     </section>

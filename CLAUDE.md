@@ -2,6 +2,9 @@
 
 Responder siempre en español. El dueño del proyecto está en Colombia.
 
+**Nada de emojis** en el sitio (ni en plantillas, textos o mapas). Usar los íconos SVG de la marca y
+la paleta corporativa (Azul Puerto `#0B4A6F` + Ámbar Arena `#E9A23B`). Ver `juan_amaris/inmobiliaria/MARCA.md`.
+
 ## Proyectos
 - `juan_amaris/inmobiliaria/` → **proyecto principal**: portal inmobiliario (Spring Boot 3.5, Java 21, Thymeleaf, JPA).
 - `juan_amaris/inventario/` → proyecto anterior de inventario (no tocar salvo que se pida).

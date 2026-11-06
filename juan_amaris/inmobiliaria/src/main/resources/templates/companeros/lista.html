@@ -5,15 +5,15 @@
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main>
     <section class="portada">
-        <h1>👥 Busco compañero de cuarto</h1>
+        <h1><svg th:replace="~{fragmentos/base :: ic('personas')}"></svg> Busco compañero de cuarto</h1>
         <p>Encuentra con quién vivir cerca a tu universidad y divide los gastos.</p>
-        <p><a class="boton" th:href="@{/companeros/nuevo}">Publicar mi perfil</a></p>
+        <p><a class="boton acento" th:href="@{/companeros/nuevo}">Publicar mi perfil</a></p>
     </section>
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
 
     <form class="filtros" th:action="@{/companeros}" method="get" th:object="${filtro}">
         <select th:field="*{universidad}">
-            <option value="">🎓 Universidad</option>
+            <option value="">Universidad</option>
             <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
                 <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
             </optgroup>
@@ -35,18 +35,18 @@
         <a th:href="@{/companeros}" class="limpiar">Limpiar</a>
     </form>
 
-    <p class="alerta aviso">🔒 Por tu seguridad: conoce a la persona y el lugar en un sitio público antes de
-        mudarte, y nunca envíes dinero sin haber visto el inmueble.</p>
+    <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg> <span>Por tu seguridad: conoce a la persona y el lugar en un sitio público antes de
+        mudarte, y nunca envíes dinero sin haber visto el inmueble.</span></p>
 
     <p class="conteo" th:text="${resultados.totalElements} + (${resultados.totalElements == 1} ? ' publicación' : ' publicaciones')"></p>
 
     <div class="rejilla">
         <article class="tarjeta companero" th:each="c : ${resultados.content}">
             <div class="cuerpo">
-                <span class="etiqueta" th:classappend="${c.tipo.name() == 'TENGO_CUARTO'} ? 'tengo' : 'busco'"
+                <span class="etiqueta" th:classappend="${c.tipo.name() == 'TENGO_CUARTO'} ? '' : 'acento'"
                       th:text="${c.tipo.etiqueta}"></span>
                 <h3 th:text="${c.autor.nombre}"></h3>
-                <p class="estudiante">🎓 <strong th:text="${c.universidad.nombreCorto}"></strong>
+                <p class="estudiante"><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg> <strong th:text="${c.universidad.nombreCorto}"></strong>
                     <span th:text="'· ' + ${c.carrera} + (${c.semestre} != null ? ', semestre ' + ${c.semestre} : '')"></span></p>
                 <p class="datos">
                     <span th:text="${c.genero.etiqueta}"></span>
@@ -55,7 +55,7 @@
                 </p>
                 <p class="precio">$<span th:text="${#numbers.formatInteger(c.presupuesto, 1, 'POINT')}"></span>
                     <small th:text="${c.tipo.name() == 'TENGO_CUARTO' ? '/mes el cuarto' : '/mes de presupuesto'}"></small></p>
-                <p class="ubicacion" th:if="${c.barrio}" th:text="'📍 ' + ${c.barrio} + ', ' + ${c.universidad.ciudad}"></p>
+                <p class="ubicacion" th:if="${c.barrio}"><svg th:replace="~{fragmentos/base :: ic('pin')}"></svg> <span th:text="${c.barrio} + ', ' + ${c.universidad.ciudad}"></span></p>
                 <p class="descripcion corta" th:text="${c.descripcion}"></p>
                 <a sec:authorize="isAuthenticated()" class="boton whatsapp" target="_blank" rel="noopener"
                    th:href="'https://wa.me/57' + ${c.autor.celular} + '?text=' + ${#uris.escapeQueryParam('Hola ' + c.autor.nombre + ', vi tu publicación de compañero de cuarto y me interesa.')}">

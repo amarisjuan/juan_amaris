@@ -17,11 +17,18 @@ const Mapas = (() => {
         return mapa;
     }
 
-    const icono = (emoji, clase) => L.divIcon({
-        className: 'pin ' + clase, html: emoji, iconSize: [34, 34], iconAnchor: [17, 17], popupAnchor: [0, -14]
+    // Íconos de línea de la marca (mismos trazos que /img/iconos.svg)
+    const SVG = {
+        casa: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
+        gorro: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/>'
+    };
+    const icono = (nombre, clase) => L.divIcon({
+        className: 'pin ' + clase, iconSize: [34, 34], iconAnchor: [17, 17], popupAnchor: [0, -14],
+        html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+            + 'stroke-linejoin="round" aria-hidden="true">' + SVG[nombre] + '</svg>'
     });
-    const ICONO_UNI = icono('🎓', 'pin-uni');
-    const ICONO_CASA = icono('🏠', 'pin-casa');
+    const ICONO_UNI = icono('gorro', 'pin-uni');
+    const ICONO_CASA = icono('casa', 'pin-casa');
 
     /** Construye el popup con textContent para que ningún título pueda inyectar HTML. */
     function popup(p) {
@@ -58,5 +65,5 @@ const Mapas = (() => {
 
     const textoDistancia = m => m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km';
 
-    return { crear, marcar, ajustar, metros, minutosCaminando, textoDistancia };
+    return { crear, marcar, ajustar, metros, minutosCaminando, textoDistancia, ICONO_CASA, ICONO_UNI };
 })();

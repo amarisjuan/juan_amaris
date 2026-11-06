@@ -55,7 +55,7 @@
             </select></label>
 
         <fieldset class="ubicacion-mapa">
-            <legend>📍 Ubicación en el mapa (recomendado)</legend>
+            <legend><svg th:replace="~{fragmentos/base :: ic('pin')}"></svg> Ubicación en el mapa (recomendado)</legend>
             <p class="ayuda">Haz clic en el mapa donde está el inmueble. Puedes arrastrar el pin para ajustarlo.
                 Si eliges una universidad abajo, calculamos los minutos caminando.</p>
             <div id="mapa-form" class="mapa"></div>
@@ -69,7 +69,7 @@
         </fieldset>
 
         <fieldset class="estudiantes">
-            <legend>🎓 ¿Es ideal para estudiantes? (opcional)</legend>
+            <legend><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg> ¿Es ideal para estudiantes? (opcional)</legend>
             <p class="ayuda">Si queda cerca a una universidad, los estudiantes te encontrarán más fácil.</p>
             <div class="dos">
                 <label>Universidad cercana
@@ -89,7 +89,7 @@
         </fieldset>
 
         <fieldset class="reglas">
-            <legend>📋 Reglas de la vivienda (solo para arriendos)</legend>
+            <legend><svg th:replace="~{fragmentos/base :: ic('lista')}"></svg> Reglas de la vivienda (solo para arriendos)</legend>
             <div class="dos">
                 <label>¿Quién puede vivir?
                     <select th:field="*{convivencia}">
@@ -148,7 +148,7 @@
 
                 function ponerPin(latlng, centrar) {
                     if (!pin) {
-                        pin = L.marker(latlng, { draggable: true, icon: L.divIcon({ className: 'pin pin-casa', html: '🏠', iconSize: [34, 34], iconAnchor: [17, 17] }) }).addTo(mapa);
+                        pin = L.marker(latlng, { draggable: true, icon: Mapas.ICONO_CASA }).addTo(mapa);
                         pin.on('dragend', () => { guardar(); recalcular(); });
                     } else pin.setLatLng(latlng);
                     if (centrar) mapa.setView(latlng, 16);

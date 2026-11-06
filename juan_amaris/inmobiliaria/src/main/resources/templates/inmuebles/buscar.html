@@ -34,7 +34,7 @@
             <option th:each="n : ${#numbers.sequence(1,6)}" th:value="${n}" th:text="'Estrato ' + ${n}"></option>
         </select>
         <select th:field="*{universidad}">
-            <option value="">🎓 Cerca a universidad</option>
+            <option value="">Cerca a universidad</option>
             <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
                 <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
             </optgroup>

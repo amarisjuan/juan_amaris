@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${titulo} + ' | Inmobiliaria'">Inmobiliaria</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
+    <meta name="theme-color" content="#0B4A6F">
     <link rel="stylesheet" th:href="@{/webjars/leaflet/1.9.4/dist/leaflet.css}">
     <script th:src="@{/webjars/leaflet/1.9.4/dist/leaflet.js}"></script>
     <script th:src="@{/js/mapas.js}"></script>
@@ -11,12 +13,12 @@
 </head>
 <body>
 <header th:fragment="menu" class="menu">
-    <a class="marca" th:href="@{/}">🏠 Inmobiliaria</a>
+    <a class="marca" th:href="@{/}"><img th:src="@{/img/logo.svg}" alt="" width="36" height="36"> Inmobiliaria</a>
     <nav>
         <a th:href="@{/}">Buscar</a>
-        <a th:href="@{/estudiantes}">🎓 Estudiantes</a>
-        <a th:href="@{/companeros}">👥 Compañeros</a>
-        <a class="boton" th:href="@{/publicar}">Publicar inmueble</a>
+        <a th:href="@{/estudiantes}"><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg> Estudiantes</a>
+        <a th:href="@{/companeros}"><svg th:replace="~{fragmentos/base :: ic('personas')}"></svg> Compañeros</a>
+        <a class="boton acento" th:href="@{/publicar}">Publicar inmueble</a>
         <th:block sec:authorize="isAuthenticated()">
             <a th:href="@{/mis-inmuebles}">Mis inmuebles</a>
             <form th:action="@{/logout}" method="post" class="en-linea">
@@ -39,7 +41,7 @@
     <a class="tarjeta" th:href="@{/inmuebles/{id}(id=${i.id})}">
         <div class="foto">
             <img th:if="${i.fotoPrincipal}" th:src="@{/fotos/{f}(f=${i.fotoPrincipal})}" alt="" loading="lazy">
-            <span th:unless="${i.fotoPrincipal}" class="sin-foto">Sin foto</span>
+            <span th:unless="${i.fotoPrincipal}" class="sin-foto" aria-label="Sin foto"><svg th:replace="~{fragmentos/base :: ic('casa')}"></svg></span>
             <span class="etiqueta" th:text="${i.operacion.etiqueta}">Arriendo</span>
         </div>
         <div class="cuerpo">
@@ -47,14 +49,14 @@
                 <small th:if="${i.operacion.name() == 'ARRIENDO'}">/mes</small></strong>
             <h3 th:text="${i.titulo}">Título</h3>
             <p class="ubicacion" th:text="${i.barrio != null ? i.barrio + ', ' + i.ciudad : i.ciudad}"></p>
-            <p class="estudiante" th:if="${i.universidadCercana}">🎓
+            <p class="estudiante" th:if="${i.universidadCercana}"><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg>
                 <span th:text="${i.minutosAPie != null ? i.minutosAPie + ' min a pie de ' : 'Cerca a '}"></span><strong
                         th:text="${i.universidadCercana.nombreCorto}"></strong></p>
             <p class="datos">
                 <span th:text="${i.tipo.etiqueta}"></span>
                 <span th:if="${i.convivencia != null and i.convivencia.name() != 'MIXTO'}" class="regla"
                       th:text="${i.convivencia.etiqueta}"></span>
-                <span th:if="${i.permiteMascotas}">🐶 Mascotas</span>
+                <span th:if="${i.permiteMascotas}">Acepta mascotas</span>
                 <span th:if="${i.amoblado}">Amoblado</span>
                 <span th:if="${i.serviciosIncluidos}">Servicios incl.</span>
                 <span th:if="${i.areaM2}" th:text="${i.areaM2} + ' m²'"></span>
@@ -64,6 +66,8 @@
         </div>
     </a>
 </th:block>
+
+<svg th:fragment="ic(n)" class="ic" aria-hidden="true"><use th:href="@{'/img/iconos.svg#' + ${n}}"></use></svg>
 
 <footer th:fragment="pie" class="pie">
     <p>Publica gratis tu inmueble en Colombia · Arriendo y venta</p>

@@ -4,7 +4,7 @@
 <body>
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main class="angosto">
-    <h1>👥 Busco compañero de cuarto</h1>
+    <h1>Busco compañero de cuarto</h1>
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
     <form class="formulario" method="post" th:action="@{/companeros/nuevo}" th:object="${companero}">
         <label>¿Qué buscas?
