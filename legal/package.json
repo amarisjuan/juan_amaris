@@ -1,0 +1,6 @@
+{
+  "name": "legal-argenis",
+  "private": true,
+  "type": "module",
+  "description": "Scripts deterministas del agente legal Argenis"
+}
