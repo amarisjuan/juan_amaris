@@ -309,3 +309,5 @@ select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed
 .ciudad-universidades h2 small { font-size:.95rem; font-weight:400; color:var(--gris); }
 .universidad .lugar { font-style:normal; color:var(--gris); font-size:.85rem; }
 @media (max-width:760px) { .filtros-estudiantes { grid-template-columns:1fr; } }
+.filtros-estudiantes { grid-template-columns:2fr 1fr 1fr auto; }
+@media (max-width:760px) { .filtros-estudiantes { grid-template-columns:1fr; } }

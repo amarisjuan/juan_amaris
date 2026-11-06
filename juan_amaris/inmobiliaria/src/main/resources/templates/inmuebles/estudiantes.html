@@ -18,6 +18,9 @@
             <option value="">Todos los departamentos</option>
             <option th:each="d : ${departamentos}" th:value="${d}" th:text="${d}"></option>
         </select>
+        <select id="filtro-ciudad" aria-label="Ciudad o municipio">
+            <option value="">Todas las ciudades</option>
+        </select>
         <span class="conteo" id="conteo-univ" th:text="${#lists.size(puntosUniversidades)} + ' universidades con ubicación'"></span>
     </div>
 
@@ -52,18 +55,40 @@
             const quitar = (t) => (t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
             const buscar = document.getElementById('buscar-univ');
             const depto = document.getElementById('filtro-depto');
+            const ciudadSel = document.getElementById('filtro-ciudad');
+
+            // Solo muestra las ciudades del departamento elegido
+            function llenarCiudades() {
+                const dep = depto.value;
+                const nombres = new Set();
+                document.querySelectorAll('.ciudad-universidades').forEach((sec) => {
+                    if (!dep || sec.dataset.depto === dep) nombres.add(sec.dataset.ciudad);
+                });
+                const actual = ciudadSel.value;
+                ciudadSel.innerHTML = '';
+                const todas = document.createElement('option');
+                todas.value = ''; todas.textContent = 'Todas las ciudades';
+                ciudadSel.append(todas);
+                [...nombres].sort((a, b) => a.localeCompare(b, 'es')).forEach((n) => {
+                    const o = document.createElement('option');
+                    o.value = n; o.textContent = n; o.selected = n === actual;
+                    ciudadSel.append(o);
+                });
+            }
             const conteo = document.getElementById('conteo-univ');
             const sinResultados = document.getElementById('sin-resultados');
 
             function aplicar() {
                 const texto = quitar(buscar.value.trim());
                 const dep = depto.value;
+                const ciu = ciudadSel.value;
                 let visibles = 0;
                 document.querySelectorAll('.ciudad-universidades').forEach((sec) => {
                     const ciudadCoincide = texto !== '' && quitar(sec.dataset.ciudad).includes(texto);
+                    const enCiudad = !ciu || sec.dataset.ciudad === ciu;
                     let algunaVisible = false;
                     sec.querySelectorAll('.universidad').forEach((card) => {
-                        const coincide = (!dep || sec.dataset.depto === dep)
+                        const coincide = enCiudad && (!dep || sec.dataset.depto === dep)
                             && (!texto || ciudadCoincide || quitar(card.dataset.buscar).includes(texto));
                         card.hidden = !coincide;
                         if (coincide) { algunaVisible = true; visibles++; }
@@ -76,7 +101,9 @@
                 sinResultados.hidden = visibles > 0;
             }
             buscar.addEventListener('input', aplicar);
-            depto.addEventListener('change', aplicar);
+            depto.addEventListener('change', () => { ciudadSel.value = ''; llenarCiudades(); aplicar(); });
+            ciudadSel.addEventListener('change', aplicar);
+            llenarCiudades();
         })();
     </script>
 
