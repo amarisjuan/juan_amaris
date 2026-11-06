@@ -16,7 +16,8 @@ public record PuntoMapa(Long id, String titulo, String detalle, double lat, doub
     }
 
     public static PuntoMapa de(Universidad u) {
-        return new PuntoMapa(u.getId(), u.getNombre(), u.getCiudad(), u.getLatitud(), u.getLongitud(),
+        String lugar = u.getCiudad() + (u.getDepartamento() != null ? ", " + u.getDepartamento() : "");
+        return new PuntoMapa(u.getId(), u.getNombre(), lugar, u.getLatitud(), u.getLongitud(),
                 "/?universidad=" + u.getId() + "&operacion=ARRIENDO&orden=cercania", 0);
     }
 }

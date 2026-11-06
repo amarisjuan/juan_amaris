@@ -300,3 +300,12 @@ select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed
 .menu nav > a.boton.acento { padding:9px 16px; border-radius:var(--radio-sm); color:var(--marca-900) !important; text-decoration:none !important; }
 .menu nav .ic { width:18px; height:18px; flex:0 0 18px; display:block; }
 .menu .marca img { display:block; }
+
+/* --- Estudiantes: filtros por universidad y departamento --- */
+[hidden] { display:none !important; }
+.filtros-estudiantes { display:grid; grid-template-columns:2fr 1fr auto; gap:10px 12px; align-items:center; margin:14px 0 6px; }
+.filtros-estudiantes .conteo { white-space:nowrap; }
+.ciudad-universidades h2 { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.ciudad-universidades h2 small { font-size:.95rem; font-weight:400; color:var(--gris); }
+.universidad .lugar { font-style:normal; color:var(--gris); font-size:.85rem; }
+@media (max-width:760px) { .filtros-estudiantes { grid-template-columns:1fr; } }

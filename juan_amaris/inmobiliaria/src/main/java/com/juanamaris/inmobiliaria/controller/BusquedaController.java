@@ -97,6 +97,7 @@ public class BusquedaController {
         model.addAttribute("universidadesPorCiudad", universidades.porCiudad());
         model.addAttribute("conteos", universidades.inmueblesCercanos());
         model.addAttribute("puntosUniversidades", universidades.puntos());
+        model.addAttribute("departamentos", universidades.departamentos());
         return "inmuebles/estudiantes";
     }
 

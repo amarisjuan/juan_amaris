@@ -38,6 +38,12 @@ public class UniversidadService {
         return repo.findAllByOrderByCiudadAscNombreAsc().stream().filter(u -> u.getCiudad().equalsIgnoreCase(ciudad.trim())).toList();
     }
 
+    /** Departamentos que tienen universidades, en orden alfabético. */
+    public List<String> departamentos() {
+        return repo.findAll().stream().map(Universidad::getDepartamento).filter(Objects::nonNull)
+                .distinct().sorted(Comparator.comparing(d -> GeografiaService.clave(d))).toList();
+    }
+
     public List<PuntoMapa> puntos() {
         return repo.findAllByOrderByCiudadAscNombreAsc().stream().filter(Universidad::isUbicada)
                 .map(PuntoMapa::de).toList();

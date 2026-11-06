@@ -22,6 +22,10 @@ public class Universidad {
     @Column(nullable = false)
     private String ciudad;
 
+    /** Departamento del municipio (DIVIPOLA). Puede ser nulo en registros anteriores hasta el próximo arranque. */
+    @Column(length = 60)
+    private String departamento;
+
     private Double latitud;
     private Double longitud;
 
@@ -54,4 +58,6 @@ public class Universidad {
     public String getNombre() { return nombre; }
     public String getSigla() { return sigla; }
     public String getCiudad() { return ciudad; }
+    public String getDepartamento() { return departamento; }
+    public void setDepartamento(String departamento) { this.departamento = departamento; }
 }

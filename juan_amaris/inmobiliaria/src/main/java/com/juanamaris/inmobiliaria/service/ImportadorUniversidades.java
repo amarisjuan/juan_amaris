@@ -49,8 +49,17 @@ public class ImportadorUniversidades implements CommandLineRunner {
                 String ciudad = m.get().nombre();
                 boolean esSede = "Seccional".equalsIgnoreCase(sede);
                 String nombreBd = esSede ? nombre + " - Sede " + ciudad : nombre;
-                if (yaExiste(existentes, nombre, ciudad) || universidades.findByNombre(nombreBd).isPresent()) continue;
+                Optional<Universidad> ya = encontrar(existentes, nombre, ciudad);
+                if (ya.isPresent()) {
+                    if (ya.get().getDepartamento() == null) {
+                        ya.get().setDepartamento(m.get().departamento());
+                        universidades.save(ya.get());
+                    }
+                    continue;
+                }
+                if (universidades.findByNombre(nombreBd).isPresent()) continue;
                 Universidad u = new Universidad(nombreBd, null, ciudad);
+                u.setDepartamento(m.get().departamento());
                 u.ubicarAproximada(m.get().lat(), m.get().lon());
                 u.setWeb(c[6]);
                 universidades.save(u);
@@ -65,13 +74,13 @@ public class ImportadorUniversidades implements CommandLineRunner {
     }
 
     /** Coincide si en el mismo municipio hay una universidad cuyo nombre empieza igual (p. ej. "Universidad del Norte" = "UNIVERSIDAD DEL NORTE"). */
-    private boolean yaExiste(List<Universidad> lista, String nombreOficial, String ciudad) {
+    private Optional<Universidad> encontrar(List<Universidad> lista, String nombreOficial, String ciudad) {
         String o = GeografiaService.clave(nombreOficial);
         for (Universidad u : lista) {
             if (!ciudad.equalsIgnoreCase(u.getCiudad())) continue;
             String n = GeografiaService.clave(u.getNombre().replaceAll(" - .*$", ""));
-            if (n.equals(o) || o.startsWith(n) || n.startsWith(o)) return true;
+            if (n.equals(o) || o.startsWith(n) || n.startsWith(o)) return Optional.of(u);
         }
-        return false;
+        return Optional.empty();
     }
 }

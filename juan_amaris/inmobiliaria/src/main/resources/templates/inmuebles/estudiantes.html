@@ -11,28 +11,74 @@
 
     <div id="mapa-universidades" class="mapa mapa-bajo"></div>
     <p class="ayuda centrado">Toca una universidad en el mapa para ver los arriendos cerca.</p>
-    <script th:inline="javascript">
-        (() => {
-            const unis = /*[[${puntosUniversidades}]]*/ [];
-            const mapa = Mapas.crear('mapa-universidades');
-            unis.forEach((u) => Mapas.marcar(mapa, u, 'uni-pequeno'));
-            mapa.setView([4.6, -74.1], 5); // Colombia completa, sin acercarse a una sola universidad
-        })();
-    </script>
 
-    <p class="filtro-ciudades"><input id="buscar-ciudad" type="search" placeholder="Busca tu ciudad o municipio" aria-label="Buscar ciudad"></p>
-    <section th:each="g : ${universidadesPorCiudad}" class="ciudad-universidades" th:attr="data-ciudad=${g.key}">
-        <h2 th:text="${g.key}">Ciudad</h2>
+    <div class="filtros-estudiantes" role="search">
+        <input id="buscar-univ" type="search" placeholder="Busca una universidad o una ciudad" aria-label="Buscar universidad o ciudad">
+        <select id="filtro-depto" aria-label="Departamento">
+            <option value="">Todos los departamentos</option>
+            <option th:each="d : ${departamentos}" th:value="${d}" th:text="${d}"></option>
+        </select>
+        <span class="conteo" id="conteo-univ" th:text="${#lists.size(puntosUniversidades)} + ' universidades con ubicación'"></span>
+    </div>
+
+    <section th:each="g : ${universidadesPorCiudad}" class="ciudad-universidades"
+             th:attr="data-ciudad=${g.key},data-depto=${g.value[0].departamento}">
+        <h2>
+            <span th:text="${g.key}">Ciudad</span>
+            <small th:if="${g.value[0].departamento != null}" th:text="${g.value[0].departamento}"></small>
+        </h2>
         <div class="universidades">
             <a th:each="u : ${g.value}" class="universidad"
+               th:attr="data-id=${u.id},data-buscar=${u.nombre + ' ' + u.nombreCorto}"
                th:href="@{/(universidad=${u.id}, operacion='ARRIENDO', orden='cercania')}">
                 <strong th:text="${u.nombreCorto}"></strong>
-                <span th:text="${u.nombre}"></span>
+                <span th:if="${u.sigla != null}" th:text="${u.nombre}"></span>
+                <em class="lugar" th:text="${u.ciudad} + (${u.departamento != null} ? ', ' + ${u.departamento} : '')"></em>
                 <small th:with="n=${conteos.get(u.id)}"
                        th:text="${n == null ? 'Sé el primero en publicar' : n + (n == 1 ? ' inmueble cerca' : ' inmuebles cerca')}"></small>
             </a>
         </div>
     </section>
+    <p class="vacio" id="sin-resultados" hidden>No encontramos universidades con ese filtro. Prueba con otra ciudad o quita el departamento.</p>
+
+    <script th:inline="javascript">
+        (() => {
+            const unis = /*[[${puntosUniversidades}]]*/ [];
+            const mapa = Mapas.crear('mapa-universidades');
+            const marcas = {};
+            unis.forEach((u) => { marcas[u.id] = Mapas.marcar(mapa, u, 'uni-pequeno'); });
+            mapa.setView([4.6, -74.1], 5); // Colombia completa
+
+            const quitar = (t) => (t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            const buscar = document.getElementById('buscar-univ');
+            const depto = document.getElementById('filtro-depto');
+            const conteo = document.getElementById('conteo-univ');
+            const sinResultados = document.getElementById('sin-resultados');
+
+            function aplicar() {
+                const texto = quitar(buscar.value.trim());
+                const dep = depto.value;
+                let visibles = 0;
+                document.querySelectorAll('.ciudad-universidades').forEach((sec) => {
+                    const ciudadCoincide = texto !== '' && quitar(sec.dataset.ciudad).includes(texto);
+                    let algunaVisible = false;
+                    sec.querySelectorAll('.universidad').forEach((card) => {
+                        const coincide = (!dep || sec.dataset.depto === dep)
+                            && (!texto || ciudadCoincide || quitar(card.dataset.buscar).includes(texto));
+                        card.hidden = !coincide;
+                        if (coincide) { algunaVisible = true; visibles++; }
+                        const marca = marcas[card.dataset.id];
+                        if (marca) { coincide ? marca.addTo(mapa) : mapa.removeLayer(marca); }
+                    });
+                    sec.hidden = !algunaVisible;
+                });
+                conteo.textContent = visibles + (visibles === 1 ? ' universidad' : ' universidades');
+                sinResultados.hidden = visibles > 0;
+            }
+            buscar.addEventListener('input', aplicar);
+            depto.addEventListener('change', aplicar);
+        })();
+    </script>
 
     <section class="llamado">
         <h2><svg th:replace="~{fragmentos/base :: ic('personas')}"></svg> ¿Buscas con quién vivir?</h2>
@@ -45,15 +91,6 @@
         <p>Publícalo gratis e indica la universidad: los estudiantes lo encontrarán al instante.</p>
         <a class="boton" th:href="@{/publicar}">Publicar para estudiantes</a>
     </section>
-<script>
-    document.getElementById('buscar-ciudad').addEventListener('input', (e) => {
-        const quitar = (t) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        const q = quitar(e.target.value.trim());
-        document.querySelectorAll('.ciudad-universidades').forEach((sec) => {
-            sec.hidden = q !== '' && !quitar(sec.dataset.ciudad || '').includes(q);
-        });
-    });
-</script>
 </main>
 <footer th:replace="~{fragmentos/base :: pie}"></footer>
 </body>
