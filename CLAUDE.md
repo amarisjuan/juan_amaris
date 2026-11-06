@@ -35,6 +35,11 @@ alianzas con oficinas de bienestar universitario.
 - **Privacidad de la ubicación** (decisión 2026-11-06, `coordinacion/consultas/001`): no se publica la dirección
   exacta; el mapa muestra una zona de 400 m guardada (`UbicacionPrivadaService`), minutos y distancias redondeados,
   direcciones bloqueadas en los textos (`DetectorDirecciones`) y fotos sin EXIF/GPS (`LimpiadorMetadatos`).
+- **Registro privado de anunciantes** (Ley 1480 art. 53): documento y dirección de notificaciones, obligatorio antes
+  de publicar (`/mi-registro`); solo visible en `/admin/anunciantes`.
+- **Panel del administrador** (`/admin`, rol ADMIN): visitas, visitantes aproximados, contactos (los botones pasan por
+  `/contacto/...`), inmuebles más y menos contactados, búsquedas sin resultados. Conteos diarios sin IP
+  (`ActividadService`). Consulta 002 a Argenis pendiente.
 - Base H2 en archivo por defecto (`./data`); perfil `mysql` opcional.
 - Datos demo: usuario `admin@inmobiliaria.co` / `admin123` (cambiar antes de producción).
 
@@ -42,7 +47,7 @@ alianzas con oficinas de bienestar universitario.
 ```bash
 cd juan_amaris/inmobiliaria
 ./mvnw spring-boot:run   # http://localhost:8080
-./mvnw test              # 22 pruebas con MockMvc
+./mvnw test              # 28 pruebas con MockMvc
 ```
 
 ## Cuidado (errores ya vistos)

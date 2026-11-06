@@ -33,6 +33,12 @@ public class CompaneroService {
     @Transactional(readOnly = true)
     public List<Companero> deUsuario(Usuario u) { return repo.findByAutorOrderByFechaPublicacionDesc(u); }
 
+    @Transactional(readOnly = true)
+    public Companero activo(Long id) {
+        return repo.findById(id).filter(Companero::isActivo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publicación no encontrada"));
+    }
+
     @Transactional
     public Companero publicar(Companero c, Usuario autor) {
         if (repo.findByAutorOrderByFechaPublicacionDesc(autor).size() >= MAX_POR_USUARIO) {

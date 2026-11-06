@@ -19,7 +19,7 @@ public class AuthController {
 
     @InitBinder("usuario")
     public void protegerCampos(WebDataBinder binder) {
-        binder.setDisallowedFields("id", "rol", "password");
+        binder.setDisallowedFields("id", "rol", "password", "fechaRegistro");
     }
 
     @GetMapping("/login")

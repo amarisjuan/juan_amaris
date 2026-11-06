@@ -26,9 +26,12 @@ public class PublicacionController {
     private final UsuarioService usuarios;
     private final UniversidadService universidades;
     private final com.juanamaris.inmobiliaria.service.CompaneroService companeros;
+    private final com.juanamaris.inmobiliaria.service.RegistroAnuncianteService registros;
 
     public PublicacionController(InmuebleService inmuebles, UsuarioService usuarios, UniversidadService universidades,
-                                 com.juanamaris.inmobiliaria.service.CompaneroService companeros) {
+                                 com.juanamaris.inmobiliaria.service.CompaneroService companeros,
+                                 com.juanamaris.inmobiliaria.service.RegistroAnuncianteService registros) {
+        this.registros = registros;
         this.companeros = companeros;
         this.universidades = universidades;
         this.inmuebles = inmuebles;
@@ -59,8 +62,16 @@ public class PublicacionController {
         return "inmuebles/mis_inmuebles";
     }
 
+    /** Ley 1480 de 2011, art. 53: antes de publicar, el anunciante debe dejar sus datos de identificación (privados). */
+    private boolean faltaRegistro(UserDetails yo, RedirectAttributes flash) {
+        if (registros.tieneRegistro(usuario(yo))) return false;
+        flash.addFlashAttribute("error", "Antes de publicar necesitamos tus datos de anunciante. Son privados: no se publican.");
+        return true;
+    }
+
     @GetMapping("/publicar")
-    public String nuevo(Model model) {
+    public String nuevo(@AuthenticationPrincipal UserDetails yo, Model model, RedirectAttributes flash) {
+        if (faltaRegistro(yo, flash)) return "redirect:/mi-registro";
         model.addAttribute("inmueble", new Inmueble());
         return "inmuebles/form";
     }
@@ -69,6 +80,7 @@ public class PublicacionController {
     public String publicar(@Valid @ModelAttribute Inmueble inmueble, BindingResult errores,
                            @RequestParam(name = "nuevasFotos", required = false) List<MultipartFile> nuevasFotos,
                            @AuthenticationPrincipal UserDetails yo, Model model, RedirectAttributes flash) {
+        if (faltaRegistro(yo, flash)) return "redirect:/mi-registro";
         validarSinDireccion(inmueble, errores);
         if (errores.hasErrors()) return "inmuebles/form";
         try {

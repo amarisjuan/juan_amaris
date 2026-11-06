@@ -181,7 +181,7 @@ class InmobiliariaApplicationTests {
     @WithMockUser(username = "admin@inmobiliaria.co")
     void conSesionSeVeElWhatsapp() throws Exception {
         mvc.perform(get("/companeros"))
-                .andExpect(content().string(containsString("wa.me/573007654321")));
+                .andExpect(content().string(containsString("/contacto/companero/")));
     }
 
     @Test
@@ -324,5 +324,75 @@ class InmobiliariaApplicationTests {
         org.junit.jupiter.api.Assertions.assertFalse(texto.contains("Exif"));
         org.junit.jupiter.api.Assertions.assertNotNull(javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(limpia)),
                 "La foto limpia debe seguir siendo una imagen válida");
+    }
+
+    // ---------- Contactos, panel del administrador y registro de anunciantes ----------
+
+    @Autowired com.juanamaris.inmobiliaria.repository.ConteoDiarioRepository conteos;
+
+    private long contados(com.juanamaris.inmobiliaria.model.TipoEvento t) {
+        return conteos.total(java.util.EnumSet.of(t), java.time.LocalDate.now().minusDays(2));
+    }
+
+    @Test
+    void elClicEnWhatsappSeCuentaYRedirige() throws Exception {
+        long antes = contados(com.juanamaris.inmobiliaria.model.TipoEvento.CONTACTO_WHATSAPP);
+        mvc.perform(get("/contacto/inmueble/1/whatsapp"))
+                .andExpect(status().isFound())
+                .andExpect(header().string("Location", org.hamcrest.Matchers.startsWith("https://wa.me/57")));
+        mvc.perform(get("/contacto/inmueble/1/llamada")).andExpect(status().isNoContent());
+        org.junit.jupiter.api.Assertions.assertEquals(antes + 1, contados(com.juanamaris.inmobiliaria.model.TipoEvento.CONTACTO_WHATSAPP));
+        mvc.perform(get("/inmuebles/1")).andExpect(content().string(containsString("/contacto/inmueble/1/whatsapp")));
+    }
+
+    @Test
+    void contactoDeCompaneroRequiereSesion() throws Exception {
+        mvc.perform(get("/contacto/companero/1/whatsapp")).andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", containsString("/login")));
+    }
+
+    @Test
+    void panelSoloParaAdministradores() throws Exception {
+        mvc.perform(get("/admin")).andExpect(status().is3xxRedirection());
+        mvc.perform(get("/admin").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
+                .user("laura@ejemplo.co").roles("USER"))).andExpect(status().isForbidden());
+        mvc.perform(get("/admin/anunciantes").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
+                .user("laura@ejemplo.co").roles("USER"))).andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "admin@inmobiliaria.co", roles = "ADMIN")
+    void panelMuestraBusquedasSinResultadosYRegistro() throws Exception {
+        mvc.perform(get("/").param("ciudad", "Leticia").param("operacion", "ARRIENDO"));
+        mvc.perform(get("/admin"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Panel del administrador")))
+                .andExpect(content().string(containsString("Arriendo · Leticia")));
+        mvc.perform(get("/admin/anunciantes"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("1000000000")));
+    }
+
+    @Test
+    void losDatosDelRegistroNoSalenEnPaginasPublicas() throws Exception {
+        for (String url : new String[]{"/", "/inmuebles/1", "/estudiantes", "/companeros"}) {
+            mvc.perform(get(url)).andExpect(content().string(not(containsString("1000000000"))));
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "laura@ejemplo.co")
+    void paraPublicarHayQueLlenarElRegistroDeAnunciante() throws Exception {
+        mvc.perform(get("/publicar")).andExpect(redirectedUrl("/mi-registro"));
+        mvc.perform(post("/mi-registro").with(csrf())
+                        .param("tipoDocumento", "CC").param("numeroDocumento", "1234567")
+                        .param("direccionNotificaciones", "Dirección de prueba").param("ciudadNotificaciones", "Bucaramanga"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Debes declarar que los datos son verdaderos")));
+        mvc.perform(post("/mi-registro").with(csrf())
+                        .param("tipoDocumento", "CC").param("numeroDocumento", "1234567").param("declaro", "true")
+                        .param("direccionNotificaciones", "Dirección de prueba").param("ciudadNotificaciones", "Bucaramanga"))
+                .andExpect(redirectedUrl("/publicar"));
+        mvc.perform(get("/publicar")).andExpect(status().isOk());
     }
 }

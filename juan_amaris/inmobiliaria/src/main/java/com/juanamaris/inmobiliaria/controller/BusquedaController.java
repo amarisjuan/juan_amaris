@@ -7,6 +7,8 @@ import com.juanamaris.inmobiliaria.model.PuntoMapa;
 import com.juanamaris.inmobiliaria.model.Universidad;
 import com.juanamaris.inmobiliaria.model.TipoInmueble;
 import com.juanamaris.inmobiliaria.service.InmuebleService;
+import com.juanamaris.inmobiliaria.service.ActividadService;
+import com.juanamaris.inmobiliaria.model.TipoEvento;
 import com.juanamaris.inmobiliaria.service.UbicacionPrivadaService;
 import com.juanamaris.inmobiliaria.service.UniversidadService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +23,12 @@ public class BusquedaController {
     private final InmuebleService service;
     private final UniversidadService universidades;
     private final UbicacionPrivadaService ubicacion;
+    private final ActividadService actividad;
 
-    public BusquedaController(InmuebleService service, UniversidadService universidades, UbicacionPrivadaService ubicacion) {
+    public BusquedaController(InmuebleService service, UniversidadService universidades, UbicacionPrivadaService ubicacion,
+                              ActividadService actividad) {
         this.ubicacion = ubicacion;
+        this.actividad = actividad;
         this.service = service;
         this.universidades = universidades;
     }
@@ -49,7 +54,34 @@ public class BusquedaController {
             model.addAttribute("universidadElegida", u);
             if (u != null && u.isUbicada()) model.addAttribute("puntoUniversidad", PuntoMapa.de(u));
         }
+        if (pagina == 0) {
+            String descripcion = describir(filtro, (Universidad) model.getAttribute("universidadElegida"));
+            if (!descripcion.isEmpty()) {
+                actividad.registrar(TipoEvento.BUSQUEDA, descripcion);
+                if (resultados.getTotalElements() == 0) actividad.registrar(TipoEvento.BUSQUEDA_SIN_RESULTADOS, descripcion);
+            }
+        }
         return "inmuebles/buscar";
+    }
+
+    /** Descripción legible de lo que se buscó (sin datos de quién buscó). Vacía si no hay filtros. */
+    static String describir(FiltroBusqueda f, Universidad u) {
+        java.util.List<String> partes = new java.util.ArrayList<>();
+        if (f.getOperacion() != null) partes.add(f.getOperacion().getEtiqueta());
+        if (f.getTipo() != null) partes.add(f.getTipo().getEtiqueta());
+        if (f.getCiudad() != null && !f.getCiudad().isBlank()) partes.add(capitalizar(f.getCiudad().trim()));
+        if (u != null) partes.add("cerca a " + u.getNombreCorto());
+        if (f.getTexto() != null && !f.getTexto().isBlank()) partes.add("\"" + f.getTexto().trim().toLowerCase() + "\"");
+        if (f.getPrecioMax() != null) partes.add("hasta $" + String.format(java.util.Locale.GERMANY, "%,d", f.getPrecioMax()));
+        if (f.getHabitacionesMin() != null) partes.add(f.getHabitacionesMin() + "+ hab.");
+        if (f.getPara() != null) partes.add("para " + f.getPara().getEtiqueta().toLowerCase());
+        if (Boolean.TRUE.equals(f.getAmoblado())) partes.add("amoblado");
+        if (Boolean.TRUE.equals(f.getMascotas())) partes.add("con mascotas");
+        return String.join(" · ", partes);
+    }
+
+    private static String capitalizar(String s) {
+        return s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
     }
 
     @GetMapping("/estudiantes")
@@ -63,6 +95,7 @@ public class BusquedaController {
     @GetMapping("/inmuebles/{id:\\d+}")
     public String detalle(@PathVariable Long id, Model model) {
         Inmueble i = service.detallePublico(id);
+        actividad.registrar(TipoEvento.VER_INMUEBLE, String.valueOf(id));
         model.addAttribute("inmueble", i);
         model.addAttribute("puntoInmueble", i.isZonaPublicaLista() ? PuntoMapa.zona(i, ubicacion.getRadio()) : null);
         Universidad u = i.getUniversidadCercana();

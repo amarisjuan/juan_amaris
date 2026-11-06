@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Datos de anunciante')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto">
+    <h1>Tus datos de anunciante</h1>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+    <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
+        <span><strong>Estos datos no se publican.</strong> La ley exige a los portales de contacto llevar un registro
+        de quienes ofrecen inmuebles (Ley 1480 de 2011, art. 53). Solo los ve el administrador del portal y solo se
+        entregan a una autoridad que los pida formalmente.</span></p>
+
+    <form class="formulario" method="post" th:action="@{/mi-registro}" th:object="${registro}">
+        <p class="alerta error" th:if="${#fields.hasGlobalErrors()}" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+        <div class="dos">
+            <label>Tipo de documento
+                <select th:field="*{tipoDocumento}">
+                    <option value="">Elige…</option>
+                    <option th:each="t : ${tiposDocumento}" th:value="${t}" th:text="${t.etiqueta}"></option>
+                </select>
+                <span class="campo-error" th:errors="*{tipoDocumento}"></span></label>
+            <label>Número de documento
+                <input th:field="*{numeroDocumento}" maxlength="20" autocomplete="off">
+                <span class="campo-error" th:errors="*{numeroDocumento}"></span></label>
+        </div>
+        <label>Dirección de notificaciones
+            <input th:field="*{direccionNotificaciones}" maxlength="150" placeholder="Donde puedes recibir notificaciones">
+            <span class="campo-error" th:errors="*{direccionNotificaciones}"></span></label>
+        <label>Ciudad
+            <input th:field="*{ciudadNotificaciones}" maxlength="60">
+            <span class="campo-error" th:errors="*{ciudadNotificaciones}"></span></label>
+        <p class="ayuda">Teléfono registrado: <strong th:text="${celular}"></strong> (el de tu cuenta).</p>
+        <label class="check"><input type="checkbox" name="declaro" value="true" required>
+            Declaro que estos datos son verdaderos y que tengo facultad para ofrecer los inmuebles que publique.</label>
+        <button class="boton" type="submit">Guardar mis datos</button>
+    </form>
+</main>
+</body>
+</html>

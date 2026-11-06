@@ -14,6 +14,8 @@ public interface CompaneroRepository extends JpaRepository<Companero, Long>, Jpa
 
     List<Companero> findByAutorOrderByFechaPublicacionDesc(Usuario autor);
 
+    long countByActivoTrue();
+
     static Specification<Companero> buscar(FiltroCompanero f) {
         return (root, query, cb) -> {
             List<Predicate> p = new ArrayList<>();

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Registro de anunciantes')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main>
+    <p><a th:href="@{/admin}">&larr; Volver al panel</a></p>
+    <h1>Registro de anunciantes</h1>
+    <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
+        <span>Información confidencial (Ley 1480 de 2011, art. 53). No la copies, no la compartas y entrégala solo a
+        autoridades que la pidan formalmente. Acceso solo para administradores.</span></p>
+    <p class="conteo" th:text="${registros.size()} + ' anunciantes registrados'"></p>
+    <table class="tabla" th:unless="${registros.empty}">
+        <thead><tr><th>Anunciante</th><th>Documento</th><th>Notificaciones</th><th>Teléfono</th><th>Registrado</th></tr></thead>
+        <tbody>
+        <tr th:each="r : ${registros}">
+            <td><span th:text="${r.usuario.nombre}"></span><br><small th:text="${r.usuario.email}"></small></td>
+            <td th:text="${r.tipoDocumento.name()} + ' ' + ${r.numeroDocumento}"></td>
+            <td th:text="${r.direccionNotificaciones} + ', ' + ${r.ciudadNotificaciones}"></td>
+            <td th:text="${r.usuario.celular}"></td>
+            <td th:text="${#temporals.format(r.fechaRegistro, 'yyyy-MM-dd')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

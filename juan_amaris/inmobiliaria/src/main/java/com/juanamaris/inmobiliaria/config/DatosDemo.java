@@ -20,11 +20,14 @@ public class DatosDemo implements CommandLineRunner {
     private final InmuebleRepository inmuebles;
     private final PasswordEncoder encoder;
     private final UniversidadRepository universidades;
+    private final com.juanamaris.inmobiliaria.repository.RegistroAnuncianteRepository registros;
     private final com.juanamaris.inmobiliaria.repository.CompaneroRepository companeros;
 
     public DatosDemo(UsuarioRepository usuarios, InmuebleRepository inmuebles, PasswordEncoder encoder,
                      UniversidadRepository universidades,
-                     com.juanamaris.inmobiliaria.repository.CompaneroRepository companeros) {
+                     com.juanamaris.inmobiliaria.repository.CompaneroRepository companeros,
+                     com.juanamaris.inmobiliaria.repository.RegistroAnuncianteRepository registros) {
+        this.registros = registros;
         this.companeros = companeros;
         this.universidades = universidades;
         this.usuarios = usuarios;
@@ -68,6 +71,15 @@ public class DatosDemo implements CommandLineRunner {
         inmuebles.save(habBogota);
         aptoEstudio.setPermiteMascotas(true);
         inmuebles.save(aptoEstudio);
+
+        // Registro privado de anunciante (art. 53) para el usuario de ejemplo que publica inmuebles
+        RegistroAnunciante reg = new RegistroAnunciante();
+        reg.setUsuario(admin);
+        reg.setTipoDocumento(TipoDocumento.CC);
+        reg.setNumeroDocumento("1000000000");
+        reg.setDireccionNotificaciones("Dirección de ejemplo");
+        reg.setCiudadNotificaciones("Barranquilla");
+        registros.save(reg);
 
         Usuario laura = new Usuario();
         laura.setNombre("Laura (ejemplo)");

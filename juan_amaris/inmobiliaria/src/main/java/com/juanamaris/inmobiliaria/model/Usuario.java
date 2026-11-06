@@ -29,6 +29,8 @@ public class Usuario {
 
     private String rol = "USER";
 
+    private java.time.LocalDateTime fechaRegistro;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNombre() { return nombre; }
@@ -39,6 +41,8 @@ public class Usuario {
     public void setCelular(String celular) { this.celular = celular; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    public java.time.LocalDateTime getFechaRegistro() { return fechaRegistro; }
+    public void setFechaRegistro(java.time.LocalDateTime f) { this.fechaRegistro = f; }
     public String getRol() { return rol; }
     public void setRol(String rol) { this.rol = rol; }
 }

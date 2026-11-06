@@ -32,6 +32,7 @@ public class UsuarioService implements UserDetailsService {
         u.setEmail(u.getEmail().trim().toLowerCase());
         u.setPassword(encoder.encode(passwordPlano));
         u.setRol("USER");
+        u.setFechaRegistro(java.time.LocalDateTime.now());
         return repo.save(u);
     }
 

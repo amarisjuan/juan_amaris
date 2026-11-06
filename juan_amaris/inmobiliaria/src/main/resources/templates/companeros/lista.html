@@ -58,8 +58,7 @@
                 <p class="ubicacion" th:if="${c.barrio}"><svg th:replace="~{fragmentos/base :: ic('pin')}"></svg> <span th:text="${c.barrio} + ', ' + ${c.universidad.ciudad}"></span></p>
                 <p class="descripcion corta" th:text="${c.descripcion}"></p>
                 <a sec:authorize="isAuthenticated()" class="boton whatsapp" target="_blank" rel="noopener"
-                   th:href="'https://wa.me/57' + ${c.autor.celular} + '?text=' + ${#uris.escapeQueryParam('Hola ' + c.autor.nombre + ', vi tu publicación de compañero de cuarto y me interesa.')}">
-                    Escribir por WhatsApp</a>
+                   th:href="@{/contacto/companero/{id}/whatsapp(id=${c.id})}">Escribir por WhatsApp</a>
                 <a sec:authorize="!isAuthenticated()" class="boton secundario" th:href="@{/login}">
                     Inicia sesión para contactar</a>
             </div>

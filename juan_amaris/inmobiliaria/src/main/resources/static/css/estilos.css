@@ -204,3 +204,32 @@ fieldset.estudiantes legend .ic { color:var(--acento-texto); }
   .tabla tr, .tabla td { display:block; }
   .mapa { height:300px; }
 }
+
+/* --- Panel del administrador --- */
+.panel h2 { margin:28px 0 10px; font-size:1.2rem; }
+.panel-titulo h1 { margin-bottom:4px; }
+.tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; }
+.tiles.pequenos { margin-top:12px; }
+.tile { background:var(--blanco); border:1px solid var(--borde); border-radius:var(--radio); padding:14px 16px;
+        display:flex; flex-direction:column; gap:4px; }
+.tile.destacado { border-top:4px solid var(--acento); }
+.tile-etq { color:var(--gris); font-size:.9rem; }
+.tile strong { font-size:1.8rem; color:var(--marca-900); line-height:1.1; font-variant-numeric:tabular-nums; }
+.tile small { color:var(--gris); }
+.embudo { margin:12px 0 0; color:var(--tinta); }
+.graficas { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px; }
+.grafica { margin:0; background:var(--blanco); border:1px solid var(--borde); border-radius:var(--radio); padding:14px; }
+.grafica figcaption { font-weight:700; color:var(--marca-900); margin-bottom:8px; }
+.grafica figcaption small { font-weight:400; color:var(--gris); }
+.g-caja { position:relative; width:100%; }
+.g-caja svg { display:block; }
+.g-barra { fill:var(--marca); }
+.g-rejilla { stroke:var(--borde); stroke-width:1; }
+.g-eje { fill:var(--gris); font-size:11px; font-variant-numeric:tabular-nums; }
+.g-tooltip { position:absolute; transform:translateX(-50%); background:var(--marca-900); color:var(--blanco);
+             padding:4px 8px; border-radius:6px; font-size:.85rem; white-space:nowrap; pointer-events:none; }
+.tabla-datos { margin-top:10px; }
+.tabla-datos summary { cursor:pointer; color:var(--marca); }
+.dos-columnas { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.nota-privacidad { margin-top:28px; display:flex; gap:6px; align-items:flex-start; }
+@media (max-width:760px) { .graficas, .dos-columnas { grid-template-columns:1fr; } }

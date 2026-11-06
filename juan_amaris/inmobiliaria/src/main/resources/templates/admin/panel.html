@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Panel del administrador')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="panel">
+    <div class="panel-titulo">
+        <h1>Panel del administrador</h1>
+        <p class="ayuda">Actualizado al <span th:text="${#temporals.format(hoy, 'd ''de'' MMMM yyyy', new java.util.Locale('es','CO'))}"></span> ·
+            <a th:href="@{/admin/anunciantes}">Registro de anunciantes</a></p>
+    </div>
+
+    <section th:with="p=${periodos[2]}">
+        <h2>Últimos 30 días</h2>
+        <div class="tiles">
+            <div class="tile"><span class="tile-etq">Visitas a páginas</span><strong th:text="${#numbers.formatInteger(p.visitas, 1, 'POINT')}"></strong></div>
+            <div class="tile"><span class="tile-etq">Visitantes (aprox.)</span><strong th:text="${#numbers.formatInteger(p.visitantes, 1, 'POINT')}"></strong></div>
+            <div class="tile"><span class="tile-etq">Inmuebles vistos</span><strong th:text="${#numbers.formatInteger(p.vistasInmuebles, 1, 'POINT')}"></strong></div>
+            <div class="tile destacado"><span class="tile-etq">Contactos a dueños</span><strong th:text="${#numbers.formatInteger(p.contactos(), 1, 'POINT')}"></strong>
+                <small th:text="${p.whatsapp} + ' WhatsApp · ' + ${p.llamadas} + ' llamadas'"></small></div>
+            <div class="tile"><span class="tile-etq">Contactos entre compañeros</span><strong th:text="${p.contactosCompaneros}"></strong></div>
+        </div>
+        <p class="embudo">
+            De cada 100 inmuebles vistos,
+            <strong th:text="${p.vistasInmuebles == 0 ? '0' : #numbers.formatDecimal(100.0 * p.contactos() / p.vistasInmuebles, 1, 0)}"></strong>
+            terminan en un contacto al dueño.
+        </p>
+    </section>
+
+    <section>
+        <h2>Comparación</h2>
+        <table class="tabla">
+            <thead><tr><th>Periodo</th><th>Visitas</th><th>Visitantes</th><th>Inmuebles vistos</th><th>WhatsApp</th><th>Llamadas</th></tr></thead>
+            <tbody>
+            <tr th:each="p : ${periodos}">
+                <td th:text="${p.nombre}"></td><td th:text="${p.visitas}"></td><td th:text="${p.visitantes}"></td>
+                <td th:text="${p.vistasInmuebles}"></td><td th:text="${p.whatsapp}"></td><td th:text="${p.llamadas}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="tiles pequenos">
+            <div class="tile"><span class="tile-etq">Usuarios</span><strong th:text="${totales.usuarios}"></strong>
+                <small th:text="${totales.usuariosNuevos7} + ' nuevos en 7 días'"></small></div>
+            <div class="tile"><span class="tile-etq">Inmuebles activos</span><strong th:text="${totales.inmueblesActivos}"></strong>
+                <small th:text="'de ' + ${totales.inmuebles} + ' publicados'"></small></div>
+            <div class="tile"><span class="tile-etq">Perfiles de compañeros</span><strong th:text="${totales.companerosActivos}"></strong></div>
+        </div>
+    </section>
+
+    <section class="graficas">
+        <figure class="grafica">
+            <figcaption>Visitas por día <small>(últimos 30 días)</small></figcaption>
+            <div id="g-visitas" class="g-caja" data-titulo="Visitas por día, últimos 30 días"></div>
+        </figure>
+        <figure class="grafica">
+            <figcaption>Contactos a dueños por día <small>(WhatsApp y llamadas)</small></figcaption>
+            <div id="g-contactos" class="g-caja" data-titulo="Contactos por día, últimos 30 días"></div>
+        </figure>
+    </section>
+    <details class="tabla-datos">
+        <summary>Ver los datos diarios en tabla</summary>
+        <table class="tabla">
+            <thead><tr><th>Día</th><th>Visitas</th><th>Contactos</th></tr></thead>
+            <tbody><tr th:each="d, st : ${serieVisitas}">
+                <td th:text="${d.etiqueta}"></td><td th:text="${d.valor}"></td><td th:text="${serieContactos[st.index].valor}"></td>
+            </tr></tbody>
+        </table>
+    </details>
+    <script th:src="@{/js/graficas.js}"></script>
+    <script th:inline="javascript">
+        Graficas.columnas('g-visitas', /*[[${serieVisitas}]]*/ [], 'visitas');
+        Graficas.columnas('g-contactos', /*[[${serieContactos}]]*/ [], 'contactos');
+    </script>
+
+    <section class="dos-columnas">
+        <div>
+            <h2>Inmuebles más contactados</h2>
+            <p class="ayuda" th:if="${masContactados.empty}">Todavía no hay contactos.</p>
+            <table class="tabla" th:unless="${masContactados.empty}">
+                <thead><tr><th>Inmueble</th><th>Vistas</th><th>Contactos</th><th>Tasa</th></tr></thead>
+                <tbody><tr th:each="f : ${masContactados}">
+                    <td><a th:href="@{/inmuebles/{id}(id=${f.id})}" th:text="${f.titulo}"></a><br><small th:text="${f.ciudad}"></small></td>
+                    <td th:text="${f.vistas}"></td><td th:text="${f.contactos}"></td><td th:text="${f.tasa()}"></td>
+                </tr></tbody>
+            </table>
+        </div>
+        <div>
+            <h2>Con visitas pero sin contactos</h2>
+            <p class="ayuda">Revisa precio, fotos o descripción.</p>
+            <p class="ayuda" th:if="${sinContacto.empty}">Ninguno por ahora (se listan desde 3 vistas).</p>
+            <table class="tabla" th:unless="${sinContacto.empty}">
+                <thead><tr><th>Inmueble</th><th>Vistas</th></tr></thead>
+                <tbody><tr th:each="f : ${sinContacto}">
+                    <td><a th:href="@{/inmuebles/{id}(id=${f.id})}" th:text="${f.titulo}"></a><br><small th:text="${f.ciudad}"></small></td>
+                    <td th:text="${f.vistas}"></td>
+                </tr></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="dos-columnas">
+        <div>
+            <h2>Búsquedas sin resultados</h2>
+            <p class="ayuda">Demanda sin oferta: aquí conviene conseguir inmuebles.</p>
+            <p class="ayuda" th:if="${sinResultados.empty}">Ninguna en los últimos 30 días.</p>
+            <table class="tabla" th:unless="${sinResultados.empty}">
+                <thead><tr><th>Lo que buscaron</th><th>Veces</th></tr></thead>
+                <tbody><tr th:each="b : ${sinResultados}"><td th:text="${b.descripcion}"></td><td th:text="${b.veces}"></td></tr></tbody>
+            </table>
+        </div>
+        <div>
+            <h2>Lo más buscado</h2>
+            <p class="ayuda" th:if="${masBuscado.empty}">Todavía no hay búsquedas con filtros.</p>
+            <table class="tabla" th:unless="${masBuscado.empty}">
+                <thead><tr><th>Búsqueda</th><th>Veces</th></tr></thead>
+                <tbody><tr th:each="b : ${masBuscado}"><td th:text="${b.descripcion}"></td><td th:text="${b.veces}"></td></tr></tbody>
+            </table>
+        </div>
+    </section>
+
+    <p class="ayuda nota-privacidad"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
+        Los contactos cuentan los clics en "WhatsApp" y "Llamar"; no confirman que hubo conversación. Las estadísticas
+        son totales por día: no se guarda la IP ni quién visitó o hizo clic.</p>
+</main>
+</body>
+</html>

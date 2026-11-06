@@ -21,6 +21,7 @@
         <a class="boton acento" th:href="@{/publicar}">Publicar inmueble</a>
         <th:block sec:authorize="isAuthenticated()">
             <a th:href="@{/mis-inmuebles}">Mis inmuebles</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"><svg th:replace="~{fragmentos/base :: ic('lista')}"></svg> Panel</a>
             <form th:action="@{/logout}" method="post" class="en-linea">
                 <button class="enlace" type="submit">Salir</button>
             </form>

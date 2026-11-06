@@ -5,6 +5,7 @@
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main>
     <h1>Mis inmuebles</h1>
+    <p class="ayuda"><a th:href="@{/mi-registro}">Mis datos de anunciante</a> (privados, exigidos por la ley a los portales)</p>
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
     <p th:if="${inmuebles.empty}" class="vacio">Aún no has publicado nada.
         <a th:href="@{/publicar}">Publica tu primer inmueble</a>.</p>
