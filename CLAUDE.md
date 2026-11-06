@@ -40,6 +40,10 @@ alianzas con oficinas de bienestar universitario.
 - **Panel del administrador** (`/admin`, rol ADMIN): visitas, visitantes aproximados, contactos (los botones pasan por
   `/contacto/...`), inmuebles más y menos contactados, búsquedas sin resultados. Conteos diarios sin IP
   (`ActividadService`). Consulta 002 a Argenis pendiente.
+- **Nombre público** "Laura M." (`Usuario.getNombrePublico()`; nunca `nombre` en vistas públicas) y perfil público
+  `/anunciantes/{id}`. **Reportes** confidenciales (`/reportar`, umbral 3 cuentas graves en 30 días oculta en revisión),
+  **bloqueos** por correo y cédula (`/admin/reportes`, `/admin/bloqueos`), **aviso antiestafa** antes de WhatsApp o llamada
+  y página `/seguridad` (consulta 003).
 - Base H2 en archivo por defecto (`./data`); perfil `mysql` opcional.
 - Datos demo: usuario `admin@inmobiliaria.co` / `admin123` (cambiar antes de producción).
 
@@ -47,7 +51,7 @@ alianzas con oficinas de bienestar universitario.
 ```bash
 cd juan_amaris/inmobiliaria
 ./mvnw spring-boot:run   # http://localhost:8080
-./mvnw test              # 28 pruebas con MockMvc
+./mvnw test              # 34 pruebas con MockMvc
 ```
 
 ## Cuidado (errores ya vistos)
@@ -56,6 +60,9 @@ cd juan_amaris/inmobiliaria
 - Los `@EntityGraph` deben incluir todas las relaciones que use la vista (`open-in-view=false`).
 - Columnas `boolean` nuevas en entidades existentes necesitan `@ColumnDefault`, si no, la base
   existente no se actualiza (`ddl-auto=update` falla con "NULL not allowed").
+- `hibernate.validator.apply_to_ddl=false`: las validaciones no se vuelven NOT NULL en la base (si no, agregar
+  columnas a tablas con datos falla). Las cuentas viejas se completan con migraciones (`config/Migracion*`).
+- Al modificar un usuario cargado en el controlador, recargarlo dentro de la transacción del servicio (si no, no se guarda).
 - **Nunca** enviar `inmueble.getLatitud()/getLongitud()` a una vista pública: usar `PuntoMapa.zona(...)`.
 - El serializador de JavaScript de Thymeleaf escapa `/` como `\/` (ej. `\/inmuebles\/3`): tenerlo en cuenta en pruebas.
 - Rutas públicas nuevas (estáticos, páginas) hay que agregarlas en `config/SeguridadConfig.java`.

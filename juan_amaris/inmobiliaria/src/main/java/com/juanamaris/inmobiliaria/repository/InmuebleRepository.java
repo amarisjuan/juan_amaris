@@ -15,6 +15,11 @@ public interface InmuebleRepository extends JpaRepository<Inmueble, Long>, JpaSp
 
     long countByActivoTrue();
 
+    /** Inmuebles visibles de un anunciante (perfil público). */
+    List<Inmueble> findByPropietarioAndActivoTrueAndEnRevisionFalseOrderByFechaPublicacionDesc(Usuario propietario);
+
+    long countByEnRevisionTrue();
+
     @EntityGraph(attributePaths = {"fotos", "propietario", "universidadCercana"})
     @Query("select i from Inmueble i where i.id = :id")
     Optional<Inmueble> findDetalleById(Long id);

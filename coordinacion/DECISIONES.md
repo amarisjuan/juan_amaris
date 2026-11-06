@@ -3,6 +3,10 @@
 Registro de decisiones de producto con efecto legal. Más recientes arriba.
 Formato: fecha, decisión, razón, consulta relacionada, quién la confirmó.
 
+- **2026-11-06 — Nombre público "Laura M.", reportes confidenciales, bloqueo por correo y cédula, aviso antiestafa.**
+  **Razón:** prevenir estafas y suplantaciones sin exponer datos de más (Ley 1581 art. 4) ni repetir acusaciones sin pruebas (C.P. art. 222); el anunciante puede responder (Constitución art. 29).
+  **Consulta:** `consultas/003-nombre-del-anunciante-reportes-y-avisos-antiestafa.md`. **Confirmó:** el usuario (fundador), siguiendo la recomendación de Argenis.
+
 - **2026-11-06 — Construir primero el panel de administración y el registro de anunciantes; Argenis revisa después.**
   **Razón:** el usuario prioriza terminar la página web. Para reducir el riesgo mientras tanto, se construyó con privacidad desde el diseño (sin IP ni identificación en las estadísticas, registro visible solo para administradores).
   **Consulta:** `consultas/002-estadisticas-de-visitas-y-acceso-a-los-datos.md` (abierta, pendiente). **Confirmó:** el usuario (fundador).

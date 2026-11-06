@@ -14,12 +14,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AuthController {
 
     private final UsuarioService usuarios;
+    private final com.juanamaris.inmobiliaria.service.BloqueoService bloqueos;
 
-    public AuthController(UsuarioService usuarios) { this.usuarios = usuarios; }
+    public AuthController(UsuarioService usuarios, com.juanamaris.inmobiliaria.service.BloqueoService bloqueos) {
+        this.usuarios = usuarios;
+        this.bloqueos = bloqueos;
+    }
 
     @InitBinder("usuario")
     public void protegerCampos(WebDataBinder binder) {
-        binder.setDisallowedFields("id", "rol", "password", "fechaRegistro");
+        binder.setAllowedFields("nombres", "apellidos", "email", "celular");
     }
 
     @GetMapping("/login")
@@ -36,6 +40,9 @@ public class AuthController {
                             @RequestParam String clave, RedirectAttributes flash) {
         if (clave.length() < 8) {
             errores.reject("clave", "La contraseña debe tener mínimo 8 caracteres");
+        }
+        if (!errores.hasFieldErrors("email") && bloqueos.correoBloqueado(usuario.getEmail())) {
+            errores.rejectValue("email", "bloqueado", "No es posible crear una cuenta con este correo.");
         }
         if (!errores.hasFieldErrors("email") && usuarios.existeEmail(usuario.getEmail())) {
             errores.rejectValue("email", "duplicado", "Ya existe una cuenta con ese correo");

@@ -11,8 +11,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final AlmacenFotosService fotos;
     private final com.juanamaris.inmobiliaria.service.ActividadService actividad;
+    private final com.juanamaris.inmobiliaria.repository.UsuarioRepository usuarios;
 
-    public WebConfig(AlmacenFotosService fotos, com.juanamaris.inmobiliaria.service.ActividadService actividad) {
+    public WebConfig(AlmacenFotosService fotos, com.juanamaris.inmobiliaria.service.ActividadService actividad,
+                     com.juanamaris.inmobiliaria.repository.UsuarioRepository usuarios) {
+        this.usuarios = usuarios;
         this.fotos = fotos;
         this.actividad = actividad;
     }
@@ -20,6 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(org.springframework.web.servlet.config.annotation.InterceptorRegistry registry) {
         registry.addInterceptor(new ContadorVisitas(actividad));
+        registry.addInterceptor(new SesionBloqueada(usuarios));
     }
 
     @Override

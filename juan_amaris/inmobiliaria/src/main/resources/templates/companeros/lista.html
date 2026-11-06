@@ -35,8 +35,7 @@
         <a th:href="@{/companeros}" class="limpiar">Limpiar</a>
     </form>
 
-    <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg> <span>Por tu seguridad: conoce a la persona y el lugar en un sitio público antes de
-        mudarte, y nunca envíes dinero sin haber visto el inmueble.</span></p>
+    <div th:replace="~{fragmentos/base :: antiestafa}"></div>
 
     <p class="conteo" th:text="${resultados.totalElements} + (${resultados.totalElements == 1} ? ' publicación' : ' publicaciones')"></p>
 
@@ -45,7 +44,7 @@
             <div class="cuerpo">
                 <span class="etiqueta" th:classappend="${c.tipo.name() == 'TENGO_CUARTO'} ? '' : 'acento'"
                       th:text="${c.tipo.etiqueta}"></span>
-                <h3 th:text="${c.autor.nombre}"></h3>
+                <h3 th:text="${c.autor.nombrePublico}"></h3>
                 <p class="estudiante"><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg> <strong th:text="${c.universidad.nombreCorto}"></strong>
                     <span th:text="'· ' + ${c.carrera} + (${c.semestre} != null ? ', semestre ' + ${c.semestre} : '')"></span></p>
                 <p class="datos">
@@ -57,8 +56,10 @@
                     <small th:text="${c.tipo.name() == 'TENGO_CUARTO' ? '/mes el cuarto' : '/mes de presupuesto'}"></small></p>
                 <p class="ubicacion" th:if="${c.barrio}"><svg th:replace="~{fragmentos/base :: ic('pin')}"></svg> <span th:text="${c.barrio} + ', ' + ${c.universidad.ciudad}"></span></p>
                 <p class="descripcion corta" th:text="${c.descripcion}"></p>
-                <a sec:authorize="isAuthenticated()" class="boton whatsapp" target="_blank" rel="noopener"
+                <a sec:authorize="isAuthenticated()" class="boton whatsapp"
                    th:href="@{/contacto/companero/{id}/whatsapp(id=${c.id})}">Escribir por WhatsApp</a>
+                <a sec:authorize="isAuthenticated()" class="reportar" th:href="@{/reportar(objetivo='COMPANERO', id=${c.id})}">
+                    <svg th:replace="~{fragmentos/base :: ic('bandera')}"></svg> Reportar</a>
                 <a sec:authorize="!isAuthenticated()" class="boton secundario" th:href="@{/login}">
                     Inicia sesión para contactar</a>
             </div>

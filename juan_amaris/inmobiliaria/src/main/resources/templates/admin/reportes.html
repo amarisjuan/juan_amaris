@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Reportes')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="panel">
+    <p><a th:href="@{/admin}">&larr; Volver al panel</a> · <a th:href="@{/admin/bloqueos}">Bloqueos</a></p>
+    <h1>Personas reportadas</h1>
+    <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
+        <span>Confidencial. Los reportes no se muestran en el sitio y no se le dice al reportado quién lo reportó.
+        Revisa cada caso en máximo 5 días hábiles; los de "usa mis datos o mis fotos" se responden en máximo 15 días hábiles (Ley 1581, art. 15).</span></p>
+    <p class="conteo" th:text="${pendientes} + ' reportes pendientes'"></p>
+    <p class="ayuda" th:if="${filas.empty}">No hay reportes.</p>
+    <table class="tabla" th:unless="${filas.empty}">
+        <thead><tr><th>Persona</th><th>Reportes</th><th>Pendientes</th><th>Graves</th><th>Último</th><th>Estado</th><th></th></tr></thead>
+        <tbody><tr th:each="f : ${filas}">
+            <td><span th:text="${f.usuario.nombre}"></span><br><small th:text="${f.usuario.email}"></small></td>
+            <td th:text="${f.total}"></td>
+            <td th:text="${f.pendientes}"></td>
+            <td th:text="${f.graves}"></td>
+            <td th:text="${#temporals.format(f.ultimo, 'yyyy-MM-dd')}"></td>
+            <td th:text="${f.usuario.bloqueado ? 'Bloqueada' : 'Activa'}" th:classappend="${f.usuario.bloqueado} ? 'peligro' : ''"></td>
+            <td><a th:href="@{/admin/reportes/usuario/{id}(id=${f.usuario.id})}">Revisar</a></td>
+        </tr></tbody>
+    </table>
+</main>
+</body>
+</html>

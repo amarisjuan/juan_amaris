@@ -121,6 +121,19 @@ public class PublicacionController {
         }
     }
 
+    /** El anunciante responde a la revisión y puede aportar pruebas (no sabe quién reportó). */
+    @PostMapping("/inmuebles/{id}/respuesta-revision")
+    public String responderRevision(@PathVariable Long id, @RequestParam String respuesta,
+                                    @AuthenticationPrincipal UserDetails yo, RedirectAttributes flash) {
+        if (respuesta.isBlank() || respuesta.length() > 2000) {
+            flash.addFlashAttribute("error", "Escribe tu respuesta (máximo 2000 caracteres).");
+        } else {
+            inmuebles.responderRevision(id, respuesta.trim(), usuario(yo));
+            flash.addFlashAttribute("ok", "Recibimos tu respuesta. Una persona la revisará.");
+        }
+        return "redirect:/mis-inmuebles";
+    }
+
     @PostMapping("/inmuebles/{id}/estado")
     public String estado(@PathVariable Long id, @AuthenticationPrincipal UserDetails yo) {
         inmuebles.cambiarEstado(id, usuario(yo));

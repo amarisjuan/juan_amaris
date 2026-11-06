@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('No disponible')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto centrado">
+    <h1>No disponible</h1>
+    <p th:text="${message != null and !#strings.isEmpty(message) ? message : 'Esta página no está disponible en este momento.'}"></p>
+    <p><a class="boton" th:href="@{/}">Buscar otros inmuebles</a></p>
+</main>
+<footer th:replace="~{fragmentos/base :: pie}"></footer>
+</body>
+</html>

@@ -65,12 +65,14 @@
         <aside class="contacto">
             <p class="precio grande">$<span th:text="${#numbers.formatInteger(i.precio, 1, 'POINT')}"></span>
                 <small th:if="${i.operacion.name() == 'ARRIENDO'}">/mes</small></p>
-            <p>Publicado por <strong th:text="${i.propietario.nombre}"></strong></p>
-            <a class="boton whatsapp" th:href="@{/contacto/inmueble/{id}/whatsapp(id=${i.id})}" target="_blank" rel="noopener">
-                Escribir por WhatsApp</a>
-            <a class="boton secundario" th:href="'tel:+57' + ${i.propietario.celular}"
-               th:data-contador="@{/contacto/inmueble/{id}/llamada(id=${i.id})}"
-               onclick="fetch(this.dataset.contador, { keepalive: true })">Llamar</a>
+            <p class="publicado-por">Publicado por
+                <a th:href="@{/anunciantes/{id}(id=${i.propietario.id})}" th:text="${i.propietario.nombrePublico}"></a>
+                <small>Nombre informado por el anunciante</small></p>
+            <a class="boton whatsapp" th:href="@{/contacto/inmueble/{id}/whatsapp(id=${i.id})}">Escribir por WhatsApp</a>
+            <a class="boton secundario" th:href="@{/contacto/inmueble/{id}/llamar(id=${i.id})}">Llamar</a>
+            <div th:replace="~{fragmentos/base :: antiestafa}"></div>
+            <a class="reportar" th:href="@{/reportar(objetivo='INMUEBLE', id=${i.id})}">
+                <svg th:replace="~{fragmentos/base :: ic('bandera')}"></svg> Reportar este anuncio</a>
         </aside>
     </div>
 </main>

@@ -54,6 +54,15 @@ public class Companero {
     @Column(length = 1000)
     private String descripcion;
 
+
+    // --- Revisión por reportes (consulta legal 003). Oculto al público mientras está en revisión. ---
+    @org.hibernate.annotations.ColumnDefault("false")
+    private boolean enRevision;
+    private String motivoRevision;
+    @Column(length = 2000)
+    private String respuestaAnunciante;
+    private java.time.LocalDateTime fechaRevision;
+
     private boolean activo = true;
 
     private LocalDateTime fechaPublicacion = LocalDateTime.now();
@@ -84,4 +93,17 @@ public class Companero {
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }
     public LocalDateTime getFechaPublicacion() { return fechaPublicacion; }
+
+    public boolean isEnRevision() { return enRevision; }
+    public String getMotivoRevision() { return motivoRevision; }
+    public String getRespuestaAnunciante() { return respuestaAnunciante; }
+    public void setRespuestaAnunciante(String r) { this.respuestaAnunciante = r; }
+    public java.time.LocalDateTime getFechaRevision() { return fechaRevision; }
+    public void ponerEnRevision(String motivoGeneral) {
+        this.enRevision = true;
+        this.motivoRevision = motivoGeneral;
+        this.fechaRevision = java.time.LocalDateTime.now();
+        this.respuestaAnunciante = null;
+    }
+    public void quitarRevision() { this.enRevision = false; }
 }

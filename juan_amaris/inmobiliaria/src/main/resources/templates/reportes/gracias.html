@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Reporte recibido')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto">
+    <h1>Recibimos tu reporte</h1>
+    <p class="alerta ok">Gracias. Tu reporte es confidencial y lo revisa una persona del equipo.</p>
+    <p class="alerta aviso" th:if="${estafa}"><svg th:replace="~{fragmentos/base :: ic('alerta')}"></svg>
+        <span><strong>Si perdiste dinero, denuncia ante la Policía y la Fiscalía</strong> (CAI Virtual de la Policía o
+        ADenunciar). El reporte en el portal no reemplaza la denuncia.</span></p>
+    <p><a class="boton secundario" th:href="@{/}">Volver a la búsqueda</a></p>
+</main>
+</body>
+</html>

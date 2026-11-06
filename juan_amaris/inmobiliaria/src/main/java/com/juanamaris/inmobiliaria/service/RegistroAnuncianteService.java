@@ -14,8 +14,24 @@ import java.util.Optional;
 public class RegistroAnuncianteService {
 
     private final RegistroAnuncianteRepository repo;
+    private final BloqueoService bloqueos;
+    private final com.juanamaris.inmobiliaria.repository.UsuarioRepository usuarios;
 
-    public RegistroAnuncianteService(RegistroAnuncianteRepository repo) { this.repo = repo; }
+    public RegistroAnuncianteService(RegistroAnuncianteRepository repo, BloqueoService bloqueos,
+                                     com.juanamaris.inmobiliaria.repository.UsuarioRepository usuarios) {
+        this.repo = repo;
+        this.usuarios = usuarios;
+        this.bloqueos = bloqueos;
+    }
+
+    /** true si el documento está vetado. En ese caso también se bloquea la cuenta que intentó usarlo. */
+    @Transactional
+    public boolean documentoVetado(Usuario u, String documento) {
+        if (!bloqueos.documentoBloqueado(documento)) return false;
+        // Se recarga dentro de la transacción: el usuario que llega del controlador no está conectado a la base
+        if (!"ADMIN".equals(u.getRol())) usuarios.findById(u.getId()).ifPresent(x -> x.setBloqueado(true));
+        return true;
+    }
 
     @Transactional(readOnly = true)
     public boolean tieneRegistro(Usuario u) { return repo.existsByUsuario(u); }
@@ -36,6 +52,8 @@ public class RegistroAnuncianteService {
         r.setDireccionNotificaciones(datos.getDireccionNotificaciones());
         r.setCiudadNotificaciones(datos.getCiudadNotificaciones());
         repo.save(r);
+        usuarios.findById(u.getId()).ifPresent(x ->
+                x.setEmpresa(datos.getTipoDocumento() == com.juanamaris.inmobiliaria.model.TipoDocumento.NIT));
     }
 
     /** Solo para el panel del administrador. */

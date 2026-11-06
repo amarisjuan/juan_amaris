@@ -50,6 +50,10 @@ public class RegistroAnuncianteController {
                           @AuthenticationPrincipal UserDetails yo, Model model, RedirectAttributes flash) {
         Usuario u = usuarios.porEmail(yo.getUsername());
         if (!declaro) errores.reject("declaro", "Debes declarar que los datos son verdaderos");
+        if (!errores.hasFieldErrors("numeroDocumento") && registro.getNumeroDocumento() != null
+                && registros.documentoVetado(u, registro.getNumeroDocumento())) {
+            return "redirect:/login?bloqueado";
+        }
         if (errores.hasErrors()) {
             model.addAttribute("celular", u.getCelular());
             return "inmuebles/registro_anunciante";

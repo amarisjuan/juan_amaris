@@ -85,7 +85,7 @@ class InmobiliariaApplicationTests {
     @Test
     void registroCreaCuenta() throws Exception {
         mvc.perform(post("/registro").with(csrf())
-                        .param("nombre", "Ana").param("email", "ana@correo.co")
+                        .param("nombres", "Ana María").param("apellidos", "Pérez Rojas").param("email", "ana@correo.co")
                         .param("celular", "3109876543").param("clave", "secreta123"))
                 .andExpect(redirectedUrl("/login"));
     }
@@ -338,6 +338,9 @@ class InmobiliariaApplicationTests {
     void elClicEnWhatsappSeCuentaYRedirige() throws Exception {
         long antes = contados(com.juanamaris.inmobiliaria.model.TipoEvento.CONTACTO_WHATSAPP);
         mvc.perform(get("/contacto/inmueble/1/whatsapp"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Antes de pagar, visita el inmueble")));
+        mvc.perform(get("/contacto/inmueble/1/whatsapp/abrir"))
                 .andExpect(status().isFound())
                 .andExpect(header().string("Location", org.hamcrest.Matchers.startsWith("https://wa.me/57")));
         mvc.perform(get("/contacto/inmueble/1/llamada")).andExpect(status().isNoContent());
@@ -394,5 +397,140 @@ class InmobiliariaApplicationTests {
                         .param("direccionNotificaciones", "Dirección de prueba").param("ciudadNotificaciones", "Bucaramanga"))
                 .andExpect(redirectedUrl("/publicar"));
         mvc.perform(get("/publicar")).andExpect(status().isOk());
+    }
+
+    // ---------- Nombre público, reportes, bloqueos y avisos (consulta legal 003) ----------
+
+    @Autowired com.juanamaris.inmobiliaria.repository.UsuarioRepository usuariosRepo;
+    @Autowired org.springframework.security.crypto.password.PasswordEncoder encoder;
+
+    private com.juanamaris.inmobiliaria.model.Usuario crearUsuario(String email) {
+        var u = new com.juanamaris.inmobiliaria.model.Usuario();
+        u.setNombres("Prueba"); u.setApellidos("Usuario Test"); u.setNombre("Prueba Usuario Test");
+        u.setEmail(email); u.setCelular("3110000000"); u.setPassword(encoder.encode("clave12345"));
+        return usuariosRepo.save(u);
+    }
+
+    private com.juanamaris.inmobiliaria.model.Inmueble crearInmueble(com.juanamaris.inmobiliaria.model.Usuario dueno, String titulo) {
+        var i = new com.juanamaris.inmobiliaria.model.Inmueble();
+        i.setTitulo(titulo); i.setTipo(com.juanamaris.inmobiliaria.model.TipoInmueble.CASA);
+        i.setOperacion(com.juanamaris.inmobiliaria.model.Operacion.ARRIENDO); i.setPrecio(1_000_000L);
+        i.setCiudad("Montería"); i.setPropietario(dueno);
+        return inmuebles.save(i);
+    }
+
+    private org.springframework.test.web.servlet.request.RequestPostProcessor como(String email) {
+        return org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user(email).roles("USER");
+    }
+
+    @Test
+    void soloSeMuestraElNombreYLaInicialDelApellido() throws Exception {
+        String detalle = mvc.perform(get("/inmuebles/1")).andReturn().getResponse().getContentAsString();
+        org.junit.jupiter.api.Assertions.assertTrue(detalle.contains("Administrador P."));
+        org.junit.jupiter.api.Assertions.assertTrue(detalle.contains("Nombre informado por el anunciante"));
+        org.junit.jupiter.api.Assertions.assertFalse(detalle.contains("Administrador Portal"));
+        mvc.perform(get("/companeros")).andExpect(content().string(containsString("Laura M.")))
+                .andExpect(content().string(not(containsString("Martínez"))));
+        var admin = usuariosRepo.findByEmailIgnoreCase("admin@inmobiliaria.co").orElseThrow();
+        mvc.perform(get("/anunciantes/" + admin.getId())).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Administrador P.")))
+                .andExpect(content().string(containsString("Casa familiar con patio")))
+                .andExpect(content().string(not(containsString("Administrador Portal"))));
+    }
+
+    @Test
+    void avisoAntiestafaEnDetalleYCompaneros() throws Exception {
+        mvc.perform(get("/inmuebles/1")).andExpect(content().string(containsString("Antes de pagar, visita el inmueble")));
+        mvc.perform(get("/companeros")).andExpect(content().string(containsString("Antes de pagar, visita el inmueble")));
+        mvc.perform(get("/seguridad")).andExpect(status().isOk()).andExpect(content().string(containsString("tradición y libertad")));
+        mvc.perform(get("/contacto/inmueble/1/whatsapp/abrir"))
+                .andExpect(header().string("Location", not(containsString("Antes"))));
+    }
+
+    @Test
+    void reportarRequiereSesionYNoSeMuestraEnElSitio() throws Exception {
+        mvc.perform(get("/reportar").param("objetivo", "INMUEBLE").param("id", "1")).andExpect(status().is3xxRedirection());
+        crearUsuario("reporta1@test.co");
+        mvc.perform(post("/reportar").with(csrf()).with(como("reporta1@test.co"))
+                        .param("objetivo", "INMUEBLE").param("id", "2").param("motivo", "ESTAFA")
+                        .param("descripcion", "Me pidió consignar una reserva sin mostrarme la casa"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Si perdiste dinero, denuncia")));
+        // Un segundo reporte del mismo usuario al mismo anuncio no se acepta
+        mvc.perform(post("/reportar").with(csrf()).with(como("reporta1@test.co"))
+                        .param("objetivo", "INMUEBLE").param("id", "2").param("motivo", "OTRO").param("descripcion", "otra vez"))
+                .andExpect(content().string(containsString("Ya reportaste esta publicación")));
+        // Con un solo reporte el anuncio sigue visible y el reporte no aparece en el sitio
+        mvc.perform(get("/inmuebles/2")).andExpect(status().isOk())
+                .andExpect(content().string(not(containsString("consignar una reserva"))));
+    }
+
+    @Test
+    void noSePuedeReportarLaPropiaPublicacion() throws Exception {
+        mvc.perform(post("/reportar").with(csrf()).with(como("admin@inmobiliaria.co"))
+                        .param("objetivo", "INMUEBLE").param("id", "1").param("motivo", "OTRO").param("descripcion", "prueba"))
+                .andExpect(content().string(containsString("No puedes reportar tu propia publicación")));
+    }
+
+    @Test
+    void tresCuentasConMotivoGraveOcultanElAnuncioMientrasSeRevisa() throws Exception {
+        var dueno = crearUsuario("dueno.reportes@test.co");
+        var i = crearInmueble(dueno, "Casa de prueba reportes");
+        for (int k = 1; k <= 3; k++) {
+            crearUsuario("rep" + k + ".grave@test.co");
+            mvc.perform(get("/inmuebles/" + i.getId())).andExpect(status().isOk());
+            mvc.perform(post("/reportar").with(csrf()).with(como("rep" + k + ".grave@test.co"))
+                    .param("objetivo", "INMUEBLE").param("id", i.getId().toString())
+                    .param("motivo", "INMUEBLE_FALSO").param("descripcion", "El inmueble no existe en esa zona"));
+        }
+        mvc.perform(get("/inmuebles/" + i.getId())).andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Este anuncio no está disponible en este momento.")))
+                .andExpect(content().string(not(containsString("reportado"))));
+        mvc.perform(get("/").param("ciudad", "Montería")).andExpect(content().string(not(containsString("Casa de prueba reportes"))));
+        // El dueño ve que está en revisión y puede responder
+        mvc.perform(get("/mis-inmuebles").with(como("dueno.reportes@test.co")))
+                .andExpect(content().string(containsString("En revisión: no visible al público")));
+        // El administrador ve los reportes y puede volver a mostrarlo
+        mvc.perform(get("/admin/reportes/usuario/" + dueno.getId()).with(
+                        org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("admin@inmobiliaria.co").roles("ADMIN")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("El inmueble no existe en esa zona")));
+        mvc.perform(post("/admin/publicaciones/restaurar").with(csrf()).with(
+                        org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("admin@inmobiliaria.co").roles("ADMIN"))
+                        .param("objetivo", "INMUEBLE").param("id", i.getId().toString()).param("usuario", dueno.getId().toString()))
+                .andExpect(status().is3xxRedirection());
+        mvc.perform(get("/inmuebles/" + i.getId())).andExpect(status().isOk());
+    }
+
+    @Test
+    void bloquearPorCorreoYCedula() throws Exception {
+        var admin = org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("admin@inmobiliaria.co").roles("ADMIN");
+        var malo = crearUsuario("estafador@test.co");
+        var i = crearInmueble(malo, "Casa del estafador");
+        mvc.perform(post("/mi-registro").with(csrf()).with(como("estafador@test.co"))
+                .param("tipoDocumento", "CC").param("numeroDocumento", "98.765.432").param("declaro", "true")
+                .param("direccionNotificaciones", "X").param("ciudadNotificaciones", "Cali"));
+        mvc.perform(post("/admin/usuarios/" + malo.getId() + "/bloquear").with(csrf()).with(admin).param("motivo", "Estafa confirmada"))
+                .andExpect(status().is3xxRedirection());
+        // No puede ingresar
+        mvc.perform(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin("/login")
+                        .userParameter("email").user("estafador@test.co").password("clave12345"))
+                .andExpect(redirectedUrl("/login?bloqueado"));
+        // Si tenía sesión abierta, se le cierra
+        mvc.perform(get("/mis-inmuebles").with(como("estafador@test.co"))).andExpect(redirectedUrl("/login?bloqueado"));
+        // Sus anuncios dejan de verse
+        mvc.perform(get("/inmuebles/" + i.getId())).andExpect(status().isNotFound());
+        // No puede crear otra cuenta con el mismo correo
+        mvc.perform(post("/registro").with(csrf()).param("nombres", "Otro").param("apellidos", "Nombre")
+                        .param("email", "ESTAFADOR@test.co").param("celular", "3120000000").param("clave", "clave12345"))
+                .andExpect(content().string(containsString("No es posible crear una cuenta con este correo")));
+        // Con otra cuenta y la misma cédula (escrita distinto) queda bloqueado al registrarse como anunciante
+        crearUsuario("otra.cuenta@test.co");
+        mvc.perform(post("/mi-registro").with(csrf()).with(como("otra.cuenta@test.co"))
+                        .param("tipoDocumento", "CC").param("numeroDocumento", "98765432").param("declaro", "true")
+                        .param("direccionNotificaciones", "Y").param("ciudadNotificaciones", "Cali"))
+                .andExpect(redirectedUrl("/login?bloqueado"));
+        org.junit.jupiter.api.Assertions.assertTrue(usuariosRepo.findByEmailIgnoreCase("otra.cuenta@test.co").orElseThrow().isBloqueado());
+        mvc.perform(get("/admin/bloqueos").with(admin)).andExpect(content().string(containsString("98765432")));
     }
 }

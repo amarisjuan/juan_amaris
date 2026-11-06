@@ -18,6 +18,8 @@ public final class InmuebleSpecs {
         return (root, query, cb) -> {
             List<Predicate> p = new ArrayList<>();
             p.add(cb.isTrue(root.get("activo")));
+            p.add(cb.isFalse(root.get("enRevision")));
+            p.add(cb.isFalse(root.get("propietario").get("bloqueado")));
             if (tieneTexto(f.getCiudad())) {
                 p.add(cb.equal(cb.lower(root.get("ciudad")), f.getCiudad().trim().toLowerCase()));
             }

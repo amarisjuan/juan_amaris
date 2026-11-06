@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Antes de contactar')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto">
+    <h1>Antes de contactar</h1>
+    <p class="ayuda">Vas a contactar sobre: <strong th:text="${titulo}"></strong></p>
+    <div th:replace="~{fragmentos/base :: antiestafa}"></div>
+    <div class="acciones-aviso">
+        <a th:if="${abrir}" class="boton whatsapp" th:href="@{${abrir}}" target="_blank" rel="noopener">Entendido, abrir WhatsApp</a>
+        <a th:if="${telefono}" class="boton" th:href="${telefono}" th:data-contador="@{${contador}}"
+           onclick="fetch(this.dataset.contador, { keepalive: true })">Entendido, llamar</a>
+        <a class="boton secundario" th:href="@{${volver}}">Volver</a>
+    </div>
+</main>
+<footer th:replace="~{fragmentos/base :: pie}"></footer>
+</body>
+</html>

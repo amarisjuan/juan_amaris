@@ -22,7 +22,8 @@ public class UsuarioService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         Usuario u = repo.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-        return User.withUsername(u.getEmail()).password(u.getPassword()).roles(u.getRol()).build();
+        return User.withUsername(u.getEmail()).password(u.getPassword()).roles(u.getRol())
+                .disabled(u.isBloqueado()).build();
     }
 
     public boolean existeEmail(String email) { return repo.existsByEmailIgnoreCase(email); }
@@ -30,6 +31,7 @@ public class UsuarioService implements UserDetailsService {
     @Transactional
     public Usuario registrar(Usuario u, String passwordPlano) {
         u.setEmail(u.getEmail().trim().toLowerCase());
+        u.setNombre(u.getNombres() + " " + u.getApellidos());
         u.setPassword(encoder.encode(passwordPlano));
         u.setRol("USER");
         u.setFechaRegistro(java.time.LocalDateTime.now());

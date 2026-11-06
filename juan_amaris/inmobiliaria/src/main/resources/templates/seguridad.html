@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Cómo evitar estafas')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto texto-largo">
+    <h1>Cómo evitar estafas al arrendar o comprar</h1>
+    <div th:replace="~{fragmentos/base :: antiestafa}"></div>
+    <h2>Antes de pagar</h2>
+    <ul>
+        <li><strong>Visita el inmueble en persona.</strong> Si no puedes ir, pide a alguien de confianza que vaya. Desconfía de quien no quiere mostrarlo.</li>
+        <li><strong>Confirma quién es el dueño.</strong> Pide el certificado de tradición y libertad del inmueble y compara el nombre con el de quien te lo ofrece. Si es un intermediario, pide la autorización del dueño.</li>
+        <li><strong>Desconfía de la urgencia y la presión</strong> ("hay otros interesados, consigna hoy para separarlo").</li>
+        <li><strong>Desconfía de precios muy por debajo de la zona.</strong></li>
+        <li><strong>No envíes copias de tu documento de identidad a desconocidos</strong> antes de conocer el inmueble.</li>
+        <li><strong>Paga solo después de firmar el contrato</strong> y contra un recibo.</li>
+        <li>En arriendos de vivienda <strong>no se pueden exigir depósitos en dinero</strong> (Ley 820 de 2003, art. 16): lo normal es un codeudor, una póliza o una fianza.</li>
+    </ul>
+    <h2>El portal</h2>
+    <ul>
+        <li>El portal <strong>no cobra ni recibe pagos de arriendos</strong> y nunca te pedirá consignar dinero a una cuenta para separar un inmueble.</li>
+        <li>No publicamos la dirección exacta: el anunciante te la da cuando lo contactas.</li>
+        <li>El nombre que ves es el informado por el anunciante.</li>
+    </ul>
+    <h2>Si algo no cuadra</h2>
+    <ul>
+        <li>Usa <strong>"Reportar"</strong> en el anuncio o el perfil. Tu reporte es confidencial y lo revisa una persona.</li>
+        <li>Si perdiste dinero, <strong>denuncia ante la Policía y la Fiscalía</strong> (CAI Virtual de la Policía o el sistema ADenunciar). El reporte en el portal no reemplaza la denuncia.</li>
+    </ul>
+</main>
+<footer th:replace="~{fragmentos/base :: pie}"></footer>
+</body>
+</html>

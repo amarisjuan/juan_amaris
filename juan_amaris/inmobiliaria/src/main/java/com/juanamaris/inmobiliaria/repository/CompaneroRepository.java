@@ -16,10 +16,14 @@ public interface CompaneroRepository extends JpaRepository<Companero, Long>, Jpa
 
     long countByActivoTrue();
 
+    long countByEnRevisionTrue();
+
     static Specification<Companero> buscar(FiltroCompanero f) {
         return (root, query, cb) -> {
             List<Predicate> p = new ArrayList<>();
             p.add(cb.isTrue(root.get("activo")));
+            p.add(cb.isFalse(root.get("enRevision")));
+            p.add(cb.isFalse(root.get("autor").get("bloqueado")));
             if (f.getCiudad() != null && !f.getCiudad().isBlank()) {
                 p.add(cb.equal(cb.lower(root.get("universidad").get("ciudad")), f.getCiudad().trim().toLowerCase()));
             }

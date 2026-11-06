@@ -56,11 +56,30 @@ public class InmuebleService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inmueble no encontrado"));
     }
 
+    public static final String NO_DISPONIBLE = "Este anuncio no está disponible en este momento.";
+
+    /** Mensaje neutro si está pausado, en revisión o el dueño está bloqueado (nunca "reportado"). */
     @Transactional(readOnly = true)
     public Inmueble detallePublico(Long id) {
         Inmueble i = detalle(id);
-        if (!i.isActivo()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Inmueble no disponible");
+        if (!i.isActivo() || i.isEnRevision() || i.getPropietario().isBloqueado()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, NO_DISPONIBLE);
+        }
         return i;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Inmueble> visiblesDe(Usuario u) {
+        List<Inmueble> lista = repo.findByPropietarioAndActivoTrueAndEnRevisionFalseOrderByFechaPublicacionDesc(u);
+        lista.forEach(i -> i.getFotos().size());
+        return lista;
+    }
+
+    @Transactional
+    public void responderRevision(Long id, String respuesta, Usuario u) {
+        Inmueble i = paraEditar(id, u);
+        if (!i.isEnRevision()) throw new IllegalArgumentException("Este anuncio no está en revisión");
+        i.setRespuestaAnunciante(respuesta);
     }
 
     @Transactional(readOnly = true)

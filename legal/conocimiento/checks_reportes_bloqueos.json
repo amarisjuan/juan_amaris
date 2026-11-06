@@ -1,0 +1,31 @@
+{
+  "nota": "Controles de la decisión 2026-11-06 (consulta 003: nombre público, reportes, bloqueos y aviso antiestafa). Rutas relativas a la raíz del portal.",
+  "checks": [
+    { "id": "nombre_publico", "archivo": "src/main/java/com/juanamaris/inmobiliaria/model/Usuario.java", "patron": "getNombrePublico",
+      "descripcion": "Existe un nombre público: primer nombre + inicial del apellido", "norma": "Ley 1581/2012 art. 4 lit. b y c; consulta 003 punto 1" },
+    { "id": "detalle_sin_nombre_completo", "archivo": "src/main/resources/templates/inmuebles/detalle.html", "patron": "^(?![\\s\\S]*propietario\\.nombre\\})[\\s\\S]*propietario\\.nombrePublico",
+      "descripcion": "El detalle muestra el nombre público y no el nombre completo", "norma": "Consulta 003 punto 1 req. 7" },
+    { "id": "companeros_sin_nombre_completo", "archivo": "src/main/resources/templates/companeros/lista.html", "patron": "^(?![\\s\\S]*autor\\.nombre\\})[\\s\\S]*autor\\.nombrePublico",
+      "descripcion": "El tablero de compañeros muestra el nombre público", "norma": "Consulta 003 punto 1 req. 6" },
+    { "id": "nombre_informado", "archivo": "src/main/resources/templates/inmuebles/detalle.html", "patron": "Nombre informado por el anunciante",
+      "descripcion": "Se aclara que el nombre lo informa el anunciante (no está verificado)", "norma": "Ley 1480/2011 arts. 29 y 30; consulta 003 punto 1 req. 5" },
+    { "id": "reportes_con_sesion", "archivo": "src/main/java/com/juanamaris/inmobiliaria/config/SeguridadConfig.java", "patron": "^(?![\\s\\S]*\"/reportar)",
+      "descripcion": "Reportar no es una ruta pública (exige sesión)", "norma": "Consulta 003 punto 2 req. 1" },
+    { "id": "umbral_tres_cuentas", "archivo": "src/main/resources/application.properties", "patron": "app\\.reportes\\.umbral-ocultar=3",
+      "descripcion": "Ocultamiento automático con 3 cuentas distintas por motivos graves", "norma": "Consulta 003 punto 2 req. 4" },
+    { "id": "mensaje_neutro", "archivo": "src/main/java/com/juanamaris/inmobiliaria/service/InmuebleService.java", "patron": "Este anuncio no está disponible en este momento\\.",
+      "descripcion": "El público ve un mensaje neutro, nunca 'reportado'", "norma": "C.P. art. 222; consulta 003 punto 2 req. 5" },
+    { "id": "derecho_a_responder", "archivo": "src/main/java/com/juanamaris/inmobiliaria/controller/PublicacionController.java", "patron": "respuesta-revision",
+      "descripcion": "El anunciante puede responder a la revisión", "norma": "Constitución art. 29; consulta 003 punto 2 req. 7" },
+    { "id": "admin_solo_rol", "archivo": "src/main/java/com/juanamaris/inmobiliaria/config/SeguridadConfig.java", "patron": "\"/admin/\\*\\*\", \"/admin\"\\)\\.hasRole\\(\"ADMIN\"\\)",
+      "descripcion": "Reportes y bloqueos solo para el rol administrador", "norma": "Consulta 003 punto 2 req. 10" },
+    { "id": "aviso_antiestafa", "archivo": "src/main/resources/templates/fragmentos/base.html", "patron": "Antes de pagar, visita el inmueble",
+      "descripcion": "Aviso antiestafa con el texto aprobado", "norma": "Consulta 003 punto 3" },
+    { "id": "pantalla_intermedia", "archivo": "src/main/resources/templates/contacto/aviso.html", "patron": "antiestafa",
+      "descripcion": "El aviso se muestra antes de abrir WhatsApp o la llamada", "norma": "Consulta 003 punto 3 req. 1" },
+    { "id": "mensaje_whatsapp_neutro", "archivo": "src/main/java/com/juanamaris/inmobiliaria/controller/ContactoController.java", "patron": "^(?![\\s\\S]*getNombre\\(\\) \\+)",
+      "descripcion": "El mensaje inicial de WhatsApp no incluye el nombre del anunciante", "norma": "Consulta 003 punto 1 req. 7 y punto 3 req. 2" },
+    { "id": "pagina_seguridad", "archivo": "src/main/resources/templates/seguridad.html", "patron": "tradición y libertad",
+      "descripcion": "Página 'Cómo evitar estafas' con la versión larga", "norma": "Consulta 003 punto 3 req. 6" }
+  ]
+}

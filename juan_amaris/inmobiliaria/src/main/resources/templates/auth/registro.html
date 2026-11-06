@@ -7,8 +7,14 @@
     <h1>Crea tu cuenta y publica gratis</h1>
     <form class="formulario" th:action="@{/registro}" method="post" th:object="${usuario}">
         <p class="alerta error" th:if="${#fields.hasGlobalErrors()}" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
-        <label>Nombre <input th:field="*{nombre}" required>
-            <span class="campo-error" th:errors="*{nombre}"></span></label>
+        <div class="dos">
+            <label>Nombres <input th:field="*{nombres}" maxlength="60" required>
+                <span class="campo-error" th:errors="*{nombres}"></span></label>
+            <label>Apellidos <input th:field="*{apellidos}" maxlength="60" required>
+                <span class="campo-error" th:errors="*{apellidos}"></span></label>
+        </div>
+        <p class="ayuda">En tus anuncios se mostrará tu nombre y la inicial de tu apellido. Tu documento, dirección y
+            apellidos completos no se publican.</p>
         <label>Correo <input type="email" th:field="*{email}" required>
             <span class="campo-error" th:errors="*{email}"></span></label>
         <label>Celular (WhatsApp) <input th:field="*{celular}" placeholder="3001234567" required>

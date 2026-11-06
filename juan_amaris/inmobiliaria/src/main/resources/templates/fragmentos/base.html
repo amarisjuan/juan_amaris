@@ -70,8 +70,20 @@
 
 <svg th:fragment="ic(n)" class="ic" aria-hidden="true"><use th:href="@{'/img/iconos.svg#' + ${n}}"></use></svg>
 
+<!-- Aviso antiestafa (consulta legal 003). "No cobramos" es cierto mientras el portal no cobre: cambiarlo si se activa un cobro. -->
+<div th:fragment="antiestafa" class="antiestafa" role="note">
+    <svg th:replace="~{fragmentos/base :: ic('alerta')}"></svg>
+    <div>
+        <strong>Antes de pagar, visita el inmueble.</strong>
+        <p>No consignes dinero ni pagues "reservas" o anticipos sin haberlo visto en persona y sin un contrato firmado.
+            Confirma que quien te lo muestra es el dueño o está autorizado. Desconfía de precios muy por debajo de la zona.
+            Si algo no cuadra, repórtalo. El portal no cobra ni recibe pagos de arriendos.</p>
+        <a th:href="@{/seguridad}">Cómo evitar estafas</a>
+    </div>
+</div>
+
 <footer th:fragment="pie" class="pie">
-    <p>Publica gratis tu inmueble en Colombia · Arriendo y venta</p>
+    <p>Publica gratis tu inmueble en Colombia · Arriendo y venta · <a th:href="@{/seguridad}">Cómo evitar estafas</a></p>
 </footer>
 </body>
 </html>

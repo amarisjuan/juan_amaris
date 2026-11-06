@@ -17,7 +17,20 @@
             <td><a th:href="@{/inmuebles/{id}(id=${i.id})}" th:text="${i.titulo}"></a><br>
                 <small th:text="${i.operacion.etiqueta} + ' · ' + ${i.ciudad}"></small></td>
             <td>$<span th:text="${#numbers.formatInteger(i.precio, 1, 'POINT')}"></span></td>
-            <td th:text="${i.activo ? 'Publicado' : 'Pausado'}"></td>
+            <td>
+                <span th:if="${!i.enRevision}" th:text="${i.activo ? 'Publicado' : 'Pausado'}"></span>
+                <div th:if="${i.enRevision}" class="revision">
+                    <strong>En revisión: no visible al público</strong>
+                    <small th:text="${i.motivoRevision}"></small>
+                    <small>Puedes responder y aportar pruebas (por ejemplo, certificado de tradición y libertad o autorización
+                        del dueño). Una persona revisará tu caso.</small>
+                    <form th:action="@{/inmuebles/{id}/respuesta-revision(id=${i.id})}" method="post">
+                        <textarea name="respuesta" rows="3" maxlength="2000" required
+                                  th:text="${i.respuestaAnunciante}"></textarea>
+                        <button class="boton secundario" type="submit">Enviar respuesta</button>
+                    </form>
+                </div>
+            </td>
             <td class="acciones">
                 <a th:href="@{/inmuebles/{id}/editar(id=${i.id})}">Editar</a>
                 <form th:action="@{/inmuebles/{id}/estado(id=${i.id})}" method="post" class="en-linea">
@@ -39,7 +52,7 @@
         <tr th:each="c : ${misCompaneros}">
             <td><span th:text="${c.tipo.etiqueta}"></span><br>
                 <small th:text="${c.universidad.nombreCorto} + ' · ' + ${c.carrera}"></small></td>
-            <td th:text="${c.activo ? 'Publicado' : 'Pausado'}"></td>
+            <td th:text="${c.enRevision ? 'En revisión: no visible al público' : (c.activo ? 'Publicado' : 'Pausado')}"></td>
             <td class="acciones">
                 <form th:action="@{/companeros/{id}/estado(id=${c.id})}" method="post" class="en-linea">
                     <button class="enlace" th:text="${c.activo ? 'Pausar' : 'Activar'}"></button></form>

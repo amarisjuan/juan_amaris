@@ -35,7 +35,7 @@ public class CompaneroService {
 
     @Transactional(readOnly = true)
     public Companero activo(Long id) {
-        return repo.findById(id).filter(Companero::isActivo)
+        return repo.findById(id).filter(c -> c.isActivo() && !c.isEnRevision() && !c.getAutor().isBloqueado())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publicación no encontrada"));
     }
 

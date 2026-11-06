@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Reportes de la persona')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="panel">
+    <p><a th:href="@{/admin/reportes}">&larr; Volver a reportes</a></p>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+    <h1 th:text="${usuario.nombre}"></h1>
+    <p class="ayuda">
+        <span th:text="${usuario.email}"></span> · <span th:text="${usuario.celular}"></span>
+        <span th:if="${registro}" th:text="' · ' + ${registro.tipoDocumento.name()} + ' ' + ${registro.numeroDocumento}"></span>
+        <span th:unless="${registro}"> · Sin registro de anunciante</span>
+        · <strong th:text="${usuario.bloqueado ? 'Cuenta bloqueada' : 'Cuenta activa'}"></strong>
+    </p>
+
+    <section class="bloqueo-caja">
+        <form th:unless="${usuario.bloqueado or usuario.rol == 'ADMIN'}" th:action="@{/admin/usuarios/{id}/bloquear(id=${usuario.id})}" method="post"
+              onsubmit="return confirm('¿Bloquear esta cuenta? No podrá ingresar y se vetarán su correo y su documento.')">
+            <label>Motivo del bloqueo (interno)
+                <input name="motivo" maxlength="300" required placeholder="Ej: anuncio falso confirmado, cobro anticipado"></label>
+            <button class="boton peligro-fondo" type="submit">Bloquear cuenta, correo y cédula</button>
+        </form>
+        <p th:if="${usuario.rol == 'ADMIN' and !usuario.bloqueado}" class="ayuda">Los administradores no se pueden bloquear desde aquí.</p>
+        <form th:if="${usuario.bloqueado}" th:action="@{/admin/usuarios/{id}/desbloquear(id=${usuario.id})}" method="post">
+            <button class="boton secundario" type="submit">Desbloquear</button>
+        </form>
+    </section>
+
+    <h2 th:text="${reportes.size()} + ' reportes'"></h2>
+    <article class="reporte" th:each="r : ${reportes}" th:classappend="${r.pendiente} ? 'pendiente' : ''">
+        <header>
+            <strong th:text="${r.motivo.etiqueta}"></strong>
+            <span class="etiqueta" th:if="${r.motivo.grave}">Grave</span>
+            <span class="ayuda" th:text="${r.objetivo.etiqueta} + ': ' + ${titulos[r.id]} + ' · ' + ${#temporals.format(r.fecha, 'yyyy-MM-dd HH:mm')}"></span>
+        </header>
+        <p class="descripcion" th:text="${r.descripcion}"></p>
+        <p class="ayuda">Reportado por: <span th:text="${r.reportante.email}"></span> (no se le revela al reportado)</p>
+        <p th:if="${r.motivo.name() == 'USA_MIS_DATOS'}" class="alerta aviso">Posible reclamo de datos personales: responder en máximo 15 días hábiles.</p>
+        <div class="acciones">
+            <a th:if="${r.objetivo.name() == 'INMUEBLE'}" th:href="@{/inmuebles/{id}/editar(id=${r.objetivoId})}">Ver anuncio</a>
+            <form th:unless="${r.objetivo.name() == 'PERFIL'}" th:action="@{/admin/publicaciones/ocultar}" method="post" class="en-linea">
+                <input type="hidden" name="objetivo" th:value="${r.objetivo}"><input type="hidden" name="id" th:value="${r.objetivoId}">
+                <input type="hidden" name="usuario" th:value="${usuario.id}">
+                <button class="enlace">Ocultar mientras reviso</button></form>
+            <form th:unless="${r.objetivo.name() == 'PERFIL'}" th:action="@{/admin/publicaciones/restaurar}" method="post" class="en-linea">
+                <input type="hidden" name="objetivo" th:value="${r.objetivo}"><input type="hidden" name="id" th:value="${r.objetivoId}">
+                <input type="hidden" name="usuario" th:value="${usuario.id}">
+                <button class="enlace">Volver a mostrar</button></form>
+        </div>
+        <form th:if="${r.pendiente}" class="resolver" th:action="@{/admin/reportes/{id}/resolver(id=${r.id})}" method="post">
+            <input type="hidden" name="usuario" th:value="${usuario.id}">
+            <select name="resultado" required>
+                <option value="">Decisión…</option>
+                <option th:each="d : ${resultados}" th:value="${d}" th:text="${d.etiqueta}"></option>
+            </select>
+            <input name="nota" maxlength="500" placeholder="Nota breve de la decisión">
+            <button class="boton secundario" type="submit">Resolver</button>
+        </form>
+        <p th:unless="${r.pendiente}" class="ayuda"
+           th:text="'Resuelto el ' + ${#temporals.format(r.fechaResolucion, 'yyyy-MM-dd')} + ': ' + ${r.resultado.etiqueta} + (${r.notaResolucion} != null and ${r.notaResolucion} != '' ? ' · ' + ${r.notaResolucion} : '')"></p>
+    </article>
+</main>
+</body>
+</html>

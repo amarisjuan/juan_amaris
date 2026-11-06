@@ -7,20 +7,29 @@
       "En el tablero de compañeros de cuarto: universidad, carrera, semestre, género, género con el que se desea convivir, presupuesto, barrio y ciudad de origen.",
       "Datos técnicos de la navegación necesarios para la seguridad del sitio (por ejemplo, la sesión iniciada).",
       "Si publicas inmuebles: tipo y número de documento, dirección y ciudad de notificaciones. No se publican; forman el registro de anunciantes que exige la ley a los portales de contacto (Ley 1480 de 2011, art. 53) y solo lo ven los administradores.",
-      "Estadísticas de uso agregadas por día (visitas, inmuebles vistos, clics en contactar y búsquedas), sin guardar la dirección IP ni identificar a quién visita."
+      "Estadísticas de uso agregadas por día (visitas, inmuebles vistos, clics en contactar y búsquedas), sin guardar la dirección IP ni identificar a quién visita.",
+      "Si reportas una publicación: el motivo y la descripción que escribas. Es confidencial: no se muestra en el sitio ni se le revela a la persona reportada.",
+      "Si tu cuenta es bloqueada: tu correo y tu documento quedan en una lista interna para impedir nuevas cuentas o publicaciones."
     ],
     "finalidades": [
       "Crear y administrar la cuenta del usuario y permitirle iniciar sesión.",
       "Publicar los anuncios de inmuebles y los perfiles de compañero de cuarto que el usuario decida publicar.",
+      "Mostrar en los anuncios solo tu primer nombre y la inicial de tu apellido, para que los interesados sepan con quién hablan sin exponer tus datos completos.",
       "Permitir que otros usuarios contacten al anunciante por WhatsApp o llamada, a iniciativa de quien está interesado.",
       "Cumplir la obligación de los portales de contacto de identificar a quienes ofrecen inmuebles (Ley 1480 de 2011, art. 53).",
       "Prevenir fraudes, anuncios falsos o discriminatorios, y atender requerimientos de autoridades.",
       "Atender consultas, reclamos y solicitudes de los titulares.",
       "Proteger la ubicación de las personas: no publicamos direcciones exactas y eliminamos de las fotos los datos de ubicación (GPS) que traen los celulares.",
-      "Medir de forma agregada el uso del portal para mejorarlo (sin identificar a las personas)."
+      "Medir de forma agregada el uso del portal para mejorarlo (sin identificar a las personas).",
+      "Recibir y revisar reportes de publicaciones falsas, fraudulentas o discriminatorias, y bloquear cuentas que incumplan los términos."
     ],
     "datos_publicos_por_decision_del_titular": "El nombre, el celular (en los anuncios de inmuebles) y la información de los anuncios y perfiles se muestran a otros usuarios porque el titular decide publicarlos. En el tablero de compañeros, el WhatsApp solo se muestra a usuarios con sesión iniciada.",
     "edad_minima": "18",
     "encargados": "PENDIENTE: proveedor de alojamiento (hosting) y de almacenamiento de fotos, con su país"
+  },
+  "reportes": {
+    "max_por_dia": "5",
+    "umbral": "3",
+    "plazo_revision": "PENDIENTE: plazo de revisión (Argenis sugiere 5 días hábiles)"
   }
 }

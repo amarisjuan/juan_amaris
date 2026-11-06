@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Bloqueos')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="panel">
+    <p><a th:href="@{/admin}">&larr; Volver al panel</a> · <a th:href="@{/admin/reportes}">Reportes</a></p>
+    <h1>Correos y cédulas bloqueados</h1>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+    <p class="ayuda">Un correo bloqueado no puede crear cuentas ni ingresar. Un documento bloqueado no puede registrarse como
+        anunciante (y la cuenta que lo intente queda bloqueada).</p>
+    <form class="formulario fila" th:action="@{/admin/bloqueos}" method="post">
+        <select name="tipo" required>
+            <option value="DOCUMENTO">Cédula o documento</option>
+            <option value="CORREO">Correo</option>
+        </select>
+        <input name="valor" required maxlength="160" placeholder="Número o correo">
+        <input name="motivo" required maxlength="300" placeholder="Motivo (interno)">
+        <button class="boton peligro-fondo" type="submit">Bloquear</button>
+    </form>
+    <p class="ayuda" th:if="${bloqueos.empty}">No hay bloqueos.</p>
+    <table class="tabla" th:unless="${bloqueos.empty}">
+        <thead><tr><th>Tipo</th><th>Valor</th><th>Motivo</th><th>Por</th><th>Fecha</th><th></th></tr></thead>
+        <tbody><tr th:each="b : ${bloqueos}">
+            <td th:text="${b.tipo == T(com.juanamaris.inmobiliaria.model.Bloqueo.Tipo).CORREO ? 'Correo' : 'Documento'}"></td>
+            <td th:text="${b.valor}"></td><td th:text="${b.motivo}"></td><td th:text="${b.bloqueadoPor}"></td>
+            <td th:text="${#temporals.format(b.fecha, 'yyyy-MM-dd')}"></td>
+            <td><form th:action="@{/admin/bloqueos/{id}/eliminar(id=${b.id})}" method="post" class="en-linea"
+                      onsubmit="return confirm('¿Quitar este bloqueo?')"><button class="enlace">Quitar</button></form></td>
+        </tr></tbody>
+    </table>
+</main>
+</body>
+</html>

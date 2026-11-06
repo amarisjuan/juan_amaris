@@ -40,7 +40,9 @@ public class DatosDemo implements CommandLineRunner {
         if (usuarios.count() > 0) return;
 
         Usuario admin = new Usuario();
-        admin.setNombre("Administrador");
+        admin.setNombre("Administrador Portal");
+        admin.setNombres("Administrador");
+        admin.setApellidos("Portal");
         admin.setEmail("admin@inmobiliaria.co");
         admin.setCelular("3001234567");
         admin.setPassword(encoder.encode("admin123"));
@@ -82,7 +84,9 @@ public class DatosDemo implements CommandLineRunner {
         registros.save(reg);
 
         Usuario laura = new Usuario();
-        laura.setNombre("Laura (ejemplo)");
+        laura.setNombre("Laura Martínez Gómez");
+        laura.setNombres("Laura");
+        laura.setApellidos("Martínez Gómez");
         laura.setEmail("laura@ejemplo.co");
         laura.setCelular("3007654321");
         laura.setPassword(encoder.encode("laura12345"));

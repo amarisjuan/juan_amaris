@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Reportar')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto">
+    <h1>Reportar</h1>
+    <p class="ayuda"><span th:text="${objetivo.etiqueta}"></span>: <strong th:text="${titulo}"></strong></p>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+    <form class="formulario" method="post" th:action="@{/reportar}">
+        <input type="hidden" name="objetivo" th:value="${objetivo}">
+        <input type="hidden" name="id" th:value="${id}">
+        <fieldset>
+            <legend>Motivo</legend>
+            <label class="check" th:each="m : ${motivos}">
+                <input type="radio" name="motivo" th:value="${m}" th:checked="${motivoElegido == m}" required>
+                <span th:text="${m.etiqueta}"></span></label>
+        </fieldset>
+        <label>¿Qué pasó?
+            <textarea name="descripcion" rows="5" maxlength="1000" required th:text="${descripcion}"></textarea></label>
+        <p class="ayuda">Describe hechos, no insultos. Tu reporte es confidencial y lo revisa una persona.
+            No le diremos a la persona reportada quién la reportó.</p>
+        <button class="boton" type="submit">Enviar reporte</button>
+    </form>
+</main>
+</body>
+</html>

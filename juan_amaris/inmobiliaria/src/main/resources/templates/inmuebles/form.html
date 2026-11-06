@@ -5,6 +5,8 @@
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main class="angosto">
     <h1 th:text="${inmueble.id == null ? 'Publica tu inmueble' : 'Editar inmueble'}"></h1>
+    <p class="ayuda">En tus anuncios se mostrará tu nombre y la inicial de tu apellido. Tu documento, dirección y
+        apellidos completos no se publican.</p>
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
 
     <form class="formulario" method="post" enctype="multipart/form-data" th:object="${inmueble}"

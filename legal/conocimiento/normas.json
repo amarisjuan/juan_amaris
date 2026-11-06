@@ -214,6 +214,141 @@
         "https://normograma.icfes.gov.co/docs/pdf/ley_1752_2015.pdf"
       ],
       "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1581_art4b",
+      "norma": "Ley 1581 de 2012, art. 4 lit. b",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1581_2012.html",
+      "frase_clave": "finalidad legitima de acuerdo con la constitucion y la ley, la cual debe ser informada al titular",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1581_art4c",
+      "norma": "Ley 1581 de 2012, art. 4 lit. c",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1581_2012.html",
+      "frase_clave": "no podran ser obtenidos o divulgados sin previa autorizacion",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1581_art4d",
+      "norma": "Ley 1581 de 2012, art. 4 lit. d",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1581_2012.html",
+      "frase_clave": "se prohibe el tratamiento de datos parciales, incompletos, fraccionados o que induzcan a error",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1581_art4f",
+      "norma": "Ley 1581 de 2012, art. 4 lit. f",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1581_2012.html",
+      "frase_clave": "salvo la informacion publica, no podran estar disponibles en internet",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "dec1377_art3",
+      "norma": "Decreto 1377 de 2013, art. 3 num. 2 (dato público)",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=53646",
+      "frase_clave": "datos relativos al estado civil de las personas, a su profesion u oficio",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "dec1377_art4",
+      "norma": "Decreto 1377 de 2013, art. 4 (recolección limitada a lo pertinente)",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=53646",
+      "frase_clave": "pertinentes y adecuados para la finalidad",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1480_art53_consulta",
+      "norma": "Ley 1480 de 2011, art. 53 (consulta por el consumidor)",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1480_2011_pr001.html",
+      "frase_clave": "podra ser consultada por quien haya comprado un producto con el fin de presentar una queja o reclamo",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1480_art54",
+      "norma": "Ley 1480 de 2011, art. 54 (bloqueo temporal por la SIC)",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1480_2011_pr001.html",
+      "frase_clave": "bloqueo temporal de acceso al medio de comercio electronico",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley2439_def",
+      "norma": "Ley 2439 de 2024, definición de portal de contacto",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_2439_2024.html",
+      "frase_clave": "se podra concretar la relacion de consumo directamente entre el consumidor y el productor o el proveedor",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "cp_art246",
+      "norma": "Código Penal (Ley 599 de 2000), art. 246 estafa",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=6388",
+      "frase_clave": "induciendo o manteniendo a otro en error por medio de artificios o enganos",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "cp_art220_221",
+      "norma": "Código Penal, arts. 220 y 221 (injuria y calumnia)",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=6388",
+      "frase_clave": "impute falsamente a otro una conducta tipica",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "cp_art222",
+      "norma": "Código Penal, art. 222 (injuria y calumnia indirectas)",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=6388",
+      "frase_clave": "publicare, reprodujere, repitiere injuria o calumnia imputada por otro",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "cp_art223",
+      "norma": "Código Penal, art. 223 (agravante por medio de divulgación colectiva)",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=6388",
+      "frase_clave": "cualquier medio de comunicacion social u otro de divulgacion colectiva",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "const_art15",
+      "norma": "Constitución Política, art. 15 (intimidad, buen nombre, habeas data)",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=4125",
+      "frase_clave": "derecho a su intimidad personal y familiar y a su buen nombre",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "const_art29",
+      "norma": "Constitución Política, art. 29 (debido proceso)",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=4125",
+      "frase_clave": "el debido proceso se aplicara a toda clase de actuaciones judiciales y administrativas",
+      "estado": "confirmado_oficial",
+      "fuentes": [],
+      "verificado": "2026-11-06"
     }
   ]
 }

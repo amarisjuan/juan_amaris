@@ -8,6 +8,8 @@
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
     <p class="alerta error" th:if="${param.error}">Correo o contraseña incorrectos.</p>
     <p class="alerta ok" th:if="${param.logout}">Cerraste sesión.</p>
+    <p class="alerta error" th:if="${param.bloqueado}">Esta cuenta está bloqueada por incumplir los términos de uso.
+        Si crees que es un error, escríbenos.</p>
     <form class="formulario" th:action="@{/login}" method="post">
         <label>Correo <input type="email" name="email" required autofocus></label>
         <label>Contraseña <input type="password" name="password" required></label>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head(${anunciante.nombrePublico})}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main>
+    <section class="perfil-cabecera">
+        <div class="avatar" aria-hidden="true" th:text="${#strings.substring(anunciante.nombrePublico, 0, 1)}"></div>
+        <div>
+            <h1 th:text="${anunciante.nombrePublico}"></h1>
+            <p class="ayuda">Nombre informado por el anunciante
+                <span th:if="${anunciante.fechaRegistro}" th:text="' · En el portal desde ' + ${#temporals.format(anunciante.fechaRegistro, 'MMMM yyyy', new java.util.Locale('es','CO'))}"></span></p>
+            <p class="ayuda" th:text="${inmuebles.size()} + (${inmuebles.size() == 1} ? ' inmueble publicado' : ' inmuebles publicados')"></p>
+        </div>
+        <a class="reportar" th:href="@{/reportar(objetivo='PERFIL', id=${anunciante.id})}">
+            <svg th:replace="~{fragmentos/base :: ic('bandera')}"></svg> Reportar perfil</a>
+    </section>
+    <div class="rejilla">
+        <th:block th:each="i : ${inmuebles}">
+            <a th:replace="~{fragmentos/base :: tarjeta(${i})}"></a>
+        </th:block>
+    </div>
+    <p class="vacio" th:if="${inmuebles.empty}">Este anunciante no tiene inmuebles publicados en este momento.</p>
+    <div th:replace="~{fragmentos/base :: antiestafa}"></div>
+</main>
+<footer th:replace="~{fragmentos/base :: pie}"></footer>
+</body>
+</html>

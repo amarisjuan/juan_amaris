@@ -28,6 +28,21 @@ Podemos revisar, pedir corrección, ocultar o retirar anuncios que incumplan est
 ## 4. Compañeros de cuarto
 Los perfiles se publican por decisión del usuario. Recomendamos conocer a la otra persona y el inmueble en un lugar público antes de mudarse, y **nunca enviar dinero sin haber visto el inmueble**. No verificamos la identidad de quienes publican perfiles, salvo que el perfil indique lo contrario.
 
+## 4.1. Nombre que se muestra
+En tus anuncios y en tu perfil se muestra tu primer nombre y la inicial de tu primer apellido (por ejemplo, "Laura M."), o la razón social si eres empresa. Tu documento, tu dirección y tus apellidos completos no se publican. El nombre es el que informaste; el portal no lo ha verificado salvo que se indique.
+
+## 4.2. Reportes
+- Cualquier usuario con sesión iniciada puede reportar un anuncio o perfil por: inmueble falso o inexistente; estafa o cobro anticipado; uso de datos o fotos de otra persona; discriminación; u otro motivo. Máximo {{reportes.max_por_dia}} reportes al día y uno por publicación.
+- Los reportes son confidenciales: no se muestran en el sitio y no le decimos a la persona reportada quién la reportó. Los revisa una persona del equipo, en un plazo máximo de {{reportes.plazo_revision}}.
+- Si {{reportes.umbral}} o más cuentas distintas reportan una publicación por un motivo grave en 30 días, la ocultamos temporalmente mientras la revisamos. Al público solo le mostramos que "no está disponible en este momento". También podemos ocultarla por decisión del equipo.
+- Al anunciante le informamos que su publicación está en revisión y el motivo general, y puede responder y aportar pruebas (por ejemplo, el certificado de tradición y libertad o la autorización del dueño). Podrá pedir una segunda revisión una vez.
+- La decisión puede ser: mantener la publicación, pedir que se corrija, retirarla o bloquear la cuenta. Quien reportó recibe una respuesta general.
+- Los reportes por uso de datos personales se tramitan como reclamos en el plazo de la Ley 1581 de 2012 (art. 15).
+- El reporte en el portal no reemplaza la denuncia ante la Policía o la Fiscalía.
+
+## 4.3. Bloqueo de cuentas
+Podemos bloquear cuentas que incumplan estos términos de forma grave o reiterada (por ejemplo, anuncios falsos o cobros anticipados). Una cuenta bloqueada no puede ingresar, sus publicaciones dejan de mostrarse, y su correo y documento no podrán usarse para crear nuevas cuentas ni para publicar. Si crees que es un error, escríbenos a {{empresa.correo_datos}}.
+
 ## 5. Fotos y contenido
 Conservas los derechos sobre tus fotos y textos. Nos autorizas, sin costo, a mostrarlos en el portal mientras el anuncio esté publicado.
 
