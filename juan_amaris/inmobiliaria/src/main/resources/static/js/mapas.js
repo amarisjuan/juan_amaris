@@ -28,6 +28,12 @@ const Mapas = (() => {
             + 'stroke-linejoin="round" aria-hidden="true">' + SVG[nombre] + '</svg>'
     });
     const ICONO_UNI = icono('gorro', 'pin-uni');
+    // Pin pequeño para mapas con muchas universidades (página de estudiantes)
+    const ICONO_UNI_PEQUENO = L.divIcon({
+        className: 'pin pin-uni pin-pequeno', iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -10],
+        html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" '
+            + 'stroke-linejoin="round" aria-hidden="true">' + SVG.gorro + '</svg>'
+    });
     const ICONO_CASA = icono('casa', 'pin-casa');
 
     /** Construye el popup con textContent para que ningún título pueda inyectar HTML. */
@@ -44,7 +50,8 @@ const Mapas = (() => {
     }
 
     function marcar(mapa, p, tipo, opciones) {
-        return L.marker([p.lat, p.lng], Object.assign({ icon: tipo === 'uni' ? ICONO_UNI : ICONO_CASA }, opciones))
+        const icono = tipo === 'uni-pequeno' ? ICONO_UNI_PEQUENO : tipo === 'uni' ? ICONO_UNI : ICONO_CASA;
+        return L.marker([p.lat, p.lng], Object.assign({ icon: icono }, opciones))
             .bindPopup(popup(p)).addTo(mapa);
     }
 
@@ -72,5 +79,5 @@ const Mapas = (() => {
 
     const textoDistancia = m => m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km';
 
-    return { crear, marcar, zona, ajustar, metros, minutosCaminando, textoDistancia, ICONO_CASA, ICONO_UNI };
+    return { crear, marcar, zona, ajustar, ICONO_UNI_PEQUENO, metros, minutosCaminando, textoDistancia, ICONO_CASA, ICONO_UNI };
 })();

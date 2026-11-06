@@ -37,7 +37,7 @@
             <option th:each="n : ${#numbers.sequence(1,6)}" th:value="${n}" th:text="'Estrato ' + ${n}"></option>
         </select>
         <select id="sel-universidad" th:field="*{universidad}">
-            <option value="">Primero elige la ciudad</option>
+            <option value="">Universidad</option>
             <option th:each="u : ${universidadesFiltro}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
         </select>
         <select th:field="*{maxMinutos}">
@@ -61,8 +61,10 @@
             <option value="precio_asc">Menor precio</option>
             <option value="precio_desc">Mayor precio</option>
         </select>
-        <button type="submit" class="boton">Buscar</button>
-        <a th:href="@{/}" class="limpiar">Limpiar</a>
+        <div class="acciones-filtro">
+            <a th:href="@{/}" class="limpiar">Limpiar</a>
+            <button type="submit" class="boton">Buscar</button>
+        </div>
     </form>
 
     <p class="conteo">
@@ -102,7 +104,7 @@
         listaBarrios: document.getElementById('lista-barrios'),
         universidades: /*[[${universidadesGeo}]]*/ {},
         barrios: /*[[${barriosGeo}]]*/ {},
-        textoVacio: 'Cerca a universidad (opcional)'
+        textoVacio: 'Universidad (opcional)'
     });
 </script>
 </main>

@@ -9,13 +9,14 @@
         <p>Habitaciones, apartaestudios y apartamentos a pocos minutos caminando de tu campus.</p>
     </section>
 
-    <div id="mapa-universidades" class="mapa"></div>
+    <div id="mapa-universidades" class="mapa mapa-bajo"></div>
     <p class="ayuda centrado">Toca una universidad en el mapa para ver los arriendos cerca.</p>
     <script th:inline="javascript">
         (() => {
             const unis = /*[[${puntosUniversidades}]]*/ [];
             const mapa = Mapas.crear('mapa-universidades');
-            Mapas.ajustar(mapa, unis.map(u => Mapas.marcar(mapa, u, 'uni')));
+            unis.forEach((u) => Mapas.marcar(mapa, u, 'uni-pequeno'));
+            mapa.setView([4.6, -74.1], 5); // Colombia completa, sin acercarse a una sola universidad
         })();
     </script>
 

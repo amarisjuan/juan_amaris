@@ -274,3 +274,15 @@ td.peligro { color:var(--error); font-weight:600; }
 .filtro-ciudades { margin:14px 0 0; }
 .filtro-ciudades input { max-width:360px; }
 select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed; }
+
+/* --- Filtros ordenados: cuadrícula uniforme y botones alineados abajo --- */
+.filtros { grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:10px 12px; align-items:stretch; }
+.filtros select, .filtros input { min-width:0; height:42px; }
+.filtros label.check { min-height:42px; }
+.filtros .acciones-filtro { grid-column:1 / -1; display:flex; justify-content:flex-end; align-items:center; gap:16px; padding-top:4px; }
+.filtros .limpiar { text-align:center; }
+.filtros .boton { min-width:160px; text-align:center; height:42px; line-height:22px; }
+.estudiante { line-height:1.4; }
+.mapa-bajo { height:320px; }
+.pin-pequeno { border-width:1px; box-shadow:0 1px 3px rgba(10,37,64,.35); }
+.pin-pequeno svg { width:13px; height:13px; }

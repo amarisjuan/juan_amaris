@@ -19,7 +19,7 @@
             </optgroup>
         </select>
         <select id="sel-universidad" th:field="*{universidad}">
-            <option value="">Primero elige la ciudad</option>
+            <option value="">Universidad</option>
             <option th:each="u : ${universidadesFiltro}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
         </select>
         <select th:field="*{tipo}">
@@ -31,8 +31,10 @@
             <option th:each="g : ${generos}" th:value="${g}" th:text="${g.etiqueta}"></option>
         </select>
         <input type="number" min="0" step="50000" th:field="*{presupuestoMax}" placeholder="Presupuesto máximo">
-        <button type="submit" class="boton">Buscar</button>
-        <a th:href="@{/companeros}" class="limpiar">Limpiar</a>
+        <div class="acciones-filtro">
+            <a th:href="@{/companeros}" class="limpiar">Limpiar</a>
+            <button type="submit" class="boton">Buscar</button>
+        </div>
     </form>
 
     <div th:replace="~{fragmentos/base :: antiestafa}"></div>
@@ -46,7 +48,7 @@
                       th:text="${c.tipo.etiqueta}"></span>
                 <h3 th:text="${c.autor.nombrePublico}"></h3>
                 <p class="estudiante"><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg> <strong th:text="${c.universidad.nombreCorto}"></strong>
-                    <span th:text="'· ' + ${c.carrera} + (${c.semestre} != null ? ', semestre ' + ${c.semestre} : '')"></span></p>
+                    <span th:text="${c.carrera} + (${c.semestre} != null ? ', semestre ' + ${c.semestre} : '')"></span></p>
                 <p class="datos">
                     <span th:text="${c.genero.etiqueta}"></span>
                     <span th:text="${c.buscoGenero == null ? 'Busca: mujer u hombre' : 'Busca: ' + c.buscoGenero.etiqueta.toLowerCase()}"></span>
