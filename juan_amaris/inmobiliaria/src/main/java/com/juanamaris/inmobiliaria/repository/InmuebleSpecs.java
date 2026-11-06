@@ -1,6 +1,8 @@
 package com.juanamaris.inmobiliaria.repository;
 
+import com.juanamaris.inmobiliaria.model.Convivencia;
 import com.juanamaris.inmobiliaria.model.FiltroBusqueda;
+import com.juanamaris.inmobiliaria.model.Genero;
 import com.juanamaris.inmobiliaria.model.Inmueble;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,6 +40,11 @@ public final class InmuebleSpecs {
             if (f.getMaxMinutos() != null) p.add(cb.le(root.get("minutosAPie"), f.getMaxMinutos()));
             if (Boolean.TRUE.equals(f.getAmoblado())) p.add(cb.isTrue(root.get("amoblado")));
             if (Boolean.TRUE.equals(f.getServiciosIncluidos())) p.add(cb.isTrue(root.get("serviciosIncluidos")));
+            if (f.getPara() != null) {
+                Convivencia excluida = f.getPara() == Genero.MUJER ? Convivencia.SOLO_HOMBRES : Convivencia.SOLO_MUJERES;
+                p.add(cb.or(cb.isNull(root.get("convivencia")), cb.notEqual(root.get("convivencia"), excluida)));
+            }
+            if (Boolean.TRUE.equals(f.getMascotas())) p.add(cb.isTrue(root.get("permiteMascotas")));
             boolean esConteo = Long.class.equals(query.getResultType());
             if ("cercania".equals(f.getOrden()) && !esConteo) {
                 query.orderBy(cb.asc(cb.coalesce(root.<Integer>get("minutosAPie"), 9999)),

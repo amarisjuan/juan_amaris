@@ -29,6 +29,18 @@
                 <li th:if="${i.parqueaderos}"><strong th:text="${i.parqueaderos}"></strong> parqueaderos</li>
                 <li th:if="${i.estrato}">Estrato <strong th:text="${i.estrato}"></strong></li>
             </ul>
+            <th:block th:if="${i.operacion.name() == 'ARRIENDO'}">
+            <h2>Reglas de la vivienda</h2>
+            <ul class="caracteristicas reglas-lista">
+                <li th:text="${i.convivencia == null or i.convivencia.name() == 'MIXTO' ? '👥 Mixto' : (i.convivencia.name() == 'SOLO_MUJERES' ? '👩 Solo mujeres' : '👨 Solo hombres')}"></li>
+                <li th:text="${i.permiteMascotas ? '🐶 Se permiten mascotas' : '🚫 Sin mascotas'}"></li>
+                <li th:text="${i.permiteVisitas ? '🙋 Se permiten visitas' : '🚫 Sin visitas'}"></li>
+                <li th:text="${i.permiteFumar ? '🚬 Se permite fumar' : '🚭 No se permite fumar'}"></li>
+                <li th:if="${i.horarioLlegada}" th:text="'🕚 ' + ${i.horarioLlegada}"></li>
+            </ul>
+            <p class="descripcion" th:if="${i.otrasReglas}" th:text="${i.otrasReglas}"></p>
+            </th:block>
+
             <th:block th:if="${puntoInmueble}">
                 <h2>Ubicación</h2>
                 <div id="mapa-detalle" class="mapa"></div>

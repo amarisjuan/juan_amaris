@@ -110,3 +110,18 @@ fieldset.estudiantes { display:flex; flex-direction:column; gap:12px; background
 fieldset.ubicacion-mapa { display:flex; flex-direction:column; gap:8px; }
 .acciones-mapa { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
 @media (max-width:760px) { .mapa { height:300px; } }
+
+/* --- Reglas de la vivienda --- */
+fieldset.reglas { display:flex; flex-direction:column; gap:10px; }
+.datos .regla { color:#be185d; font-weight:600; }
+
+/* --- Compañeros de cuarto --- */
+.alerta.aviso { background:#fef9c3; color:#854d0e; }
+.tarjeta.companero .cuerpo { display:flex; flex-direction:column; gap:6px; height:100%; }
+.tarjeta.companero h3 { margin:2px 0 0; }
+.tarjeta.companero .boton { margin-top:auto; text-align:center; }
+.etiqueta.busco { background:#7c3aed; align-self:flex-start; }
+.etiqueta.tengo { background:#0f766e; align-self:flex-start; }
+.descripcion.corta { margin:0; color:#334155; font-size:.95rem; display:-webkit-box; -webkit-line-clamp:4;
+                     -webkit-box-orient:vertical; overflow:hidden; }
+.llamado + .llamado { margin-top:16px; }

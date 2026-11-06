@@ -105,6 +105,12 @@ public class InmuebleService {
         i.setUniversidadCercana(datos.getUniversidadCercana());
         i.setMinutosAPie(datos.getUniversidadCercana() == null ? null : datos.getMinutosAPie());
         i.setAmoblado(datos.isAmoblado());
+        i.setConvivencia(datos.getConvivencia());
+        i.setPermiteMascotas(datos.isPermiteMascotas());
+        i.setPermiteFumar(datos.isPermiteFumar());
+        i.setPermiteVisitas(datos.isPermiteVisitas());
+        i.setHorarioLlegada(datos.getHorarioLlegada());
+        i.setOtrasReglas(datos.getOtrasReglas());
         i.setServiciosIncluidos(datos.isServiciosIncluidos());
         if (fotosABorrar != null) {
             for (String f : fotosABorrar) {

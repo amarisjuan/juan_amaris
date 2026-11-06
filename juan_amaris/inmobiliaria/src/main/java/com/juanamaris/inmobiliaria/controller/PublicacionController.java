@@ -25,8 +25,11 @@ public class PublicacionController {
     private final InmuebleService inmuebles;
     private final UsuarioService usuarios;
     private final UniversidadService universidades;
+    private final com.juanamaris.inmobiliaria.service.CompaneroService companeros;
 
-    public PublicacionController(InmuebleService inmuebles, UsuarioService usuarios, UniversidadService universidades) {
+    public PublicacionController(InmuebleService inmuebles, UsuarioService usuarios, UniversidadService universidades,
+                                 com.juanamaris.inmobiliaria.service.CompaneroService companeros) {
+        this.companeros = companeros;
         this.universidades = universidades;
         this.inmuebles = inmuebles;
         this.usuarios = usuarios;
@@ -42,13 +45,17 @@ public class PublicacionController {
     public void listas(Model model) {
         model.addAttribute("tipos", TipoInmueble.values());
         model.addAttribute("operaciones", Operacion.values());
+        model.addAttribute("convivencias", com.juanamaris.inmobiliaria.model.Convivencia.values());
+        model.addAttribute("generos", com.juanamaris.inmobiliaria.model.Genero.values());
         model.addAttribute("universidadesPorCiudad", universidades.porCiudad());
         model.addAttribute("puntosUniversidades", universidades.puntos());
     }
 
     @GetMapping("/mis-inmuebles")
     public String misInmuebles(@AuthenticationPrincipal UserDetails yo, Model model) {
-        model.addAttribute("inmuebles", inmuebles.deUsuario(usuario(yo)));
+        Usuario u = usuario(yo);
+        model.addAttribute("inmuebles", inmuebles.deUsuario(u));
+        model.addAttribute("misCompaneros", companeros.deUsuario(u));
         return "inmuebles/mis_inmuebles";
     }
 

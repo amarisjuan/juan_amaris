@@ -37,6 +37,8 @@ public class BusquedaController {
         model.addAttribute("ciudades", service.ciudades());
         model.addAttribute("tipos", TipoInmueble.values());
         model.addAttribute("operaciones", Operacion.values());
+        model.addAttribute("convivencias", com.juanamaris.inmobiliaria.model.Convivencia.values());
+        model.addAttribute("generos", com.juanamaris.inmobiliaria.model.Genero.values());
         model.addAttribute("universidadesPorCiudad", universidades.porCiudad());
         if (filtro.getUniversidad() != null) {
             Universidad u = universidades.buscar(filtro.getUniversidad());

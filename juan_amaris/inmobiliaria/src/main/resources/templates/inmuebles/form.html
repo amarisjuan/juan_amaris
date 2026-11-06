@@ -88,6 +88,26 @@
             <label class="check"><input type="checkbox" th:field="*{serviciosIncluidos}"> Servicios incluidos (agua, luz, internet)</label>
         </fieldset>
 
+        <fieldset class="reglas">
+            <legend>📋 Reglas de la vivienda (solo para arriendos)</legend>
+            <div class="dos">
+                <label>¿Quién puede vivir?
+                    <select th:field="*{convivencia}">
+                        <option th:each="c : ${convivencias}" th:value="${c}" th:text="${c.etiqueta}"></option>
+                    </select></label>
+                <label>Horario de llegada
+                    <input th:field="*{horarioLlegada}" maxlength="60" placeholder="Ej: Hasta las 11:00 p. m. o Sin restricción">
+                    <span class="campo-error" th:errors="*{horarioLlegada}"></span></label>
+            </div>
+            <label class="check"><input type="checkbox" th:field="*{permiteMascotas}"> Se permiten mascotas</label>
+            <label class="check"><input type="checkbox" th:field="*{permiteVisitas}"> Se permiten visitas</label>
+            <label class="check"><input type="checkbox" th:field="*{permiteFumar}"> Se permite fumar</label>
+            <label>Otras reglas
+                <textarea th:field="*{otrasReglas}" rows="3" maxlength="500"
+                          placeholder="Ej: Cocina compartida, aseo por turnos, no fiestas entre semana…"></textarea>
+                <span class="campo-error" th:errors="*{otrasReglas}"></span></label>
+        </fieldset>
+
         <label>Descripción
             <textarea th:field="*{descripcion}" rows="6" maxlength="3000"
                       placeholder="Cuenta lo mejor del inmueble: iluminación, cercanía a transporte, administración incluida…"></textarea></label>

@@ -17,6 +17,11 @@ Las personas crean una cuenta, **suben sus inmuebles con fotos** (arriendo o ven
   - Publicar: el dueño hace clic en el mapa (o usa "mi ubicación") y los minutos caminando
     se calculan solos (~80 m/min, ajustado por calles).
   - Las coordenadas de las universidades son aproximadas (campus principal); ajústalas en `CatalogoUniversidades.java`.
+- **Reglas de la vivienda** (en arriendos): mixto / solo mujeres / solo hombres, mascotas, visitas, fumar,
+  horario de llegada y otras reglas. Filtros "Vivienda para mujer/hombre" y "Acepta mascotas".
+- **Busco compañero de cuarto** (`/companeros`): los estudiantes publican su perfil (universidad, carrera,
+  semestre, presupuesto, con quién quieren vivir). El tablero es público, pero el WhatsApp solo se ve con
+  sesión iniciada. Máximo 3 publicaciones por persona; se pausan o eliminan desde "Mis inmuebles".
 - Página de detalle con galería de fotos, características y botones de WhatsApp (+57) y llamada.
 - Registro con nombre, correo y celular colombiano, e inicio de sesión.
 - Publicar, editar, pausar/activar y eliminar inmuebles propios (hasta 10 fotos JPG/PNG/WEBP de 5 MB c/u).

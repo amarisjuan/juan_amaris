@@ -1,6 +1,7 @@
 package com.juanamaris.inmobiliaria.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -70,9 +71,31 @@ public class Inmueble {
     @Min(value = 1, message = "Mínimo 1 minuto") @Max(value = 120, message = "Máximo 120 minutos")
     private Integer minutosAPie;
 
+    @ColumnDefault("false")
     private boolean amoblado;
 
+    @ColumnDefault("false")
     private boolean serviciosIncluidos;
+
+    // --- Reglas de la vivienda ---
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'MIXTO'")
+    private Convivencia convivencia = Convivencia.MIXTO;
+
+    // Valores por defecto para que las bases existentes se actualicen sin errores
+    @ColumnDefault("false")
+    private boolean permiteMascotas;
+    @ColumnDefault("false")
+    private boolean permiteFumar;
+    @ColumnDefault("true")
+    private boolean permiteVisitas = true;
+
+    @Size(max = 60, message = "Máximo 60 caracteres")
+    private String horarioLlegada;
+
+    @Size(max = 500, message = "Máximo 500 caracteres")
+    @Column(length = 500)
+    private String otrasReglas;
 
     @ElementCollection
     @CollectionTable(name = "inmueble_fotos", joinColumns = @JoinColumn(name = "inmueble_id"))
@@ -103,6 +126,21 @@ public class Inmueble {
     public void setAmoblado(boolean amoblado) { this.amoblado = amoblado; }
     public boolean isServiciosIncluidos() { return serviciosIncluidos; }
     public void setServiciosIncluidos(boolean serviciosIncluidos) { this.serviciosIncluidos = serviciosIncluidos; }
+
+    public Convivencia getConvivencia() { return convivencia; }
+    public void setConvivencia(Convivencia convivencia) { this.convivencia = convivencia == null ? Convivencia.MIXTO : convivencia; }
+    public boolean isPermiteMascotas() { return permiteMascotas; }
+    public void setPermiteMascotas(boolean permiteMascotas) { this.permiteMascotas = permiteMascotas; }
+    public boolean isPermiteFumar() { return permiteFumar; }
+    public void setPermiteFumar(boolean permiteFumar) { this.permiteFumar = permiteFumar; }
+    public boolean isPermiteVisitas() { return permiteVisitas; }
+    public void setPermiteVisitas(boolean permiteVisitas) { this.permiteVisitas = permiteVisitas; }
+    public String getHorarioLlegada() { return horarioLlegada; }
+    public void setHorarioLlegada(String horarioLlegada) { this.horarioLlegada = vacioANull(horarioLlegada); }
+    public String getOtrasReglas() { return otrasReglas; }
+    public void setOtrasReglas(String otrasReglas) { this.otrasReglas = vacioANull(otrasReglas); }
+
+    private static String vacioANull(String s) { return s == null || s.isBlank() ? null : s.trim(); }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

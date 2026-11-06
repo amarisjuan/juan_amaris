@@ -15,6 +15,7 @@
     <nav>
         <a th:href="@{/}">Buscar</a>
         <a th:href="@{/estudiantes}">🎓 Estudiantes</a>
+        <a th:href="@{/companeros}">👥 Compañeros</a>
         <a class="boton" th:href="@{/publicar}">Publicar inmueble</a>
         <th:block sec:authorize="isAuthenticated()">
             <a th:href="@{/mis-inmuebles}">Mis inmuebles</a>
@@ -51,6 +52,9 @@
                         th:text="${i.universidadCercana.nombreCorto}"></strong></p>
             <p class="datos">
                 <span th:text="${i.tipo.etiqueta}"></span>
+                <span th:if="${i.convivencia != null and i.convivencia.name() != 'MIXTO'}" class="regla"
+                      th:text="${i.convivencia.etiqueta}"></span>
+                <span th:if="${i.permiteMascotas}">🐶 Mascotas</span>
                 <span th:if="${i.amoblado}">Amoblado</span>
                 <span th:if="${i.serviciosIncluidos}">Servicios incl.</span>
                 <span th:if="${i.areaM2}" th:text="${i.areaM2} + ' m²'"></span>

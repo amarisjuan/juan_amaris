@@ -28,6 +28,27 @@
         </tr>
         </tbody>
     </table>
+
+    <h2>Mis publicaciones de compañero de cuarto</h2>
+    <p th:if="${misCompaneros.empty}" class="ayuda">No tienes publicaciones.
+        <a th:href="@{/companeros/nuevo}">Busca compañero de cuarto</a>.</p>
+    <table class="tabla" th:unless="${misCompaneros.empty}">
+        <thead><tr><th>Publicación</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="c : ${misCompaneros}">
+            <td><span th:text="${c.tipo.etiqueta}"></span><br>
+                <small th:text="${c.universidad.nombreCorto} + ' · ' + ${c.carrera}"></small></td>
+            <td th:text="${c.activo ? 'Publicado' : 'Pausado'}"></td>
+            <td class="acciones">
+                <form th:action="@{/companeros/{id}/estado(id=${c.id})}" method="post" class="en-linea">
+                    <button class="enlace" th:text="${c.activo ? 'Pausar' : 'Activar'}"></button></form>
+                <form th:action="@{/companeros/{id}/eliminar(id=${c.id})}" method="post" class="en-linea"
+                      onsubmit="return confirm('¿Eliminar esta publicación?')">
+                    <button class="enlace peligro">Eliminar</button></form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </main>
 </body>
 </html>

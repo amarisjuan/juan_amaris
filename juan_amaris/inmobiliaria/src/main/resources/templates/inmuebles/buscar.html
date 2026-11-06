@@ -46,6 +46,12 @@
             <option value="15">Hasta 15 min</option>
             <option value="30">Hasta 30 min</option>
         </select>
+        <select th:field="*{para}">
+            <option value="">Vivienda para…</option>
+            <option value="MUJER">Para mujer</option>
+            <option value="HOMBRE">Para hombre</option>
+        </select>
+        <label class="check"><input type="checkbox" th:field="*{mascotas}" value="true"> Acepta mascotas</label>
         <label class="check"><input type="checkbox" th:field="*{amoblado}" value="true"> Amoblado</label>
         <label class="check"><input type="checkbox" th:field="*{serviciosIncluidos}" value="true"> Servicios incluidos</label>
         <select th:field="*{orden}">

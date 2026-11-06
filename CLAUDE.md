@@ -23,6 +23,8 @@ alianzas con oficinas de bienestar universitario.
   aproximadas), universidad cercana, minutos a pie, amoblado, servicios incluidos, página `/estudiantes`.
 - Mapas con Leaflet (webjar) + OpenStreetMap: en `/estudiantes`, búsqueda, detalle y formulario
   (clic para ubicar; minutos a pie calculados solos).
+- Reglas de la vivienda (convivencia, mascotas, visitas, fumar, horario) con filtros; solo en arriendos.
+- Tablero "Busco compañero de cuarto" en `/companeros` (contacto solo con sesión iniciada, máx. 3 por usuario).
 - Base H2 en archivo por defecto (`./data`); perfil `mysql` opcional.
 - Datos demo: usuario `admin@inmobiliaria.co` / `admin123` (cambiar antes de producción).
 
@@ -30,20 +32,20 @@ alianzas con oficinas de bienestar universitario.
 ```bash
 cd juan_amaris/inmobiliaria
 ./mvnw spring-boot:run   # http://localhost:8080
-./mvnw test              # 9 pruebas con MockMvc
+./mvnw test              # 17 pruebas con MockMvc
 ```
 
 ## Cuidado (errores ya vistos)
 - En `<script th:inline="javascript">` no escribir `[[` en JavaScript normal: Thymeleaf lo toma
   como expresión. Separar con espacio: `[ [a, b], [c, d] ]`.
 - Los `@EntityGraph` deben incluir todas las relaciones que use la vista (`open-in-view=false`).
+- Columnas `boolean` nuevas en entidades existentes necesitan `@ColumnDefault`, si no, la base
+  existente no se actualiza (`ddl-auto=update` falla con "NULL not allowed").
 - Rutas públicas nuevas (estáticos, páginas) hay que agregarlas en `config/SeguridadConfig.java`.
 
 ## Próximos pasos sugeridos
-1. Perfil de estudiante y "busco compañero de cuarto".
-2. Reglas de la vivienda (solo mujeres/hombres, mascotas, horarios, visitas).
-3. Favoritos y alertas por correo/WhatsApp.
-4. Anuncios destacados pagos (pasarela: Wompi, ePayco o Mercado Pago).
-5. Verificación de propietarios.
-6. Producción: fotos en la nube (Cloudinary/S3), proveedor de mapas (MapTiler/Stadia),
+1. Favoritos y alertas por correo/WhatsApp.
+2. Anuncios destacados pagos (pasarela: Wompi, ePayco o Mercado Pago).
+3. Verificación de propietarios.
+4. Producción: fotos en la nube (Cloudinary/S3), proveedor de mapas (MapTiler/Stadia),
    política de tratamiento de datos (Ley 1581 de 2012), dominio .co y hosting.

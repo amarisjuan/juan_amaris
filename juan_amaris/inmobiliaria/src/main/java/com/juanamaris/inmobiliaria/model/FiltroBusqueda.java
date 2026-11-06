@@ -15,6 +15,14 @@ public class FiltroBusqueda {
     private Integer maxMinutos;
     private Boolean amoblado;
     private Boolean serviciosIncluidos;
+    /** "Busco vivienda para": excluye los inmuebles que no aceptan ese género. */
+    private Genero para;
+    private Boolean mascotas;
+
+    public Genero getPara() { return para; }
+    public void setPara(Genero para) { this.para = para; }
+    public Boolean getMascotas() { return mascotas; }
+    public void setMascotas(Boolean mascotas) { this.mascotas = mascotas; }
 
     public Long getUniversidad() { return universidad; }
     public void setUniversidad(Long universidad) { this.universidad = universidad; }

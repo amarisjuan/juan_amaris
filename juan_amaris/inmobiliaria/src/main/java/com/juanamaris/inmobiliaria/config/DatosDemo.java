@@ -20,9 +20,12 @@ public class DatosDemo implements CommandLineRunner {
     private final InmuebleRepository inmuebles;
     private final PasswordEncoder encoder;
     private final UniversidadRepository universidades;
+    private final com.juanamaris.inmobiliaria.repository.CompaneroRepository companeros;
 
     public DatosDemo(UsuarioRepository usuarios, InmuebleRepository inmuebles, PasswordEncoder encoder,
-                     UniversidadRepository universidades) {
+                     UniversidadRepository universidades,
+                     com.juanamaris.inmobiliaria.repository.CompaneroRepository companeros) {
+        this.companeros = companeros;
         this.universidades = universidades;
         this.usuarios = usuarios;
         this.inmuebles = inmuebles;
@@ -59,6 +62,44 @@ public class DatosDemo implements CommandLineRunner {
         Inmueble habBogota = crear(admin, "Habitación para estudiante con servicios incluidos", TipoInmueble.HABITACION, Operacion.ARRIENDO,
                 750_000L, "Bogotá", "Teusaquillo", 3, 14, 1, 1, 0);
         estudiantil(habBogota, "UNAL Bogotá", 15, true, true, 4.6330, -74.0760);
+        habBogota.setConvivencia(Convivencia.SOLO_MUJERES);
+        habBogota.setHorarioLlegada("Hasta las 11:00 p. m.");
+        habBogota.setOtrasReglas("Cocina compartida. Se hace aseo por turnos.");
+        inmuebles.save(habBogota);
+        aptoEstudio.setPermiteMascotas(true);
+        inmuebles.save(aptoEstudio);
+
+        Usuario laura = new Usuario();
+        laura.setNombre("Laura (ejemplo)");
+        laura.setEmail("laura@ejemplo.co");
+        laura.setCelular("3007654321");
+        laura.setPassword(encoder.encode("laura12345"));
+        usuarios.save(laura);
+        companero(laura, TipoBusquedaCompanero.BUSCO_CUARTO, "Uninorte", "Ingeniería Industrial", 3, Genero.MUJER,
+                Genero.MUJER, 900_000L, "Villa Santos", "Valledupar",
+                "Soy tranquila y ordenada. Busco compartir apartamento con otra estudiante cerca a Uninorte.");
+        companero(admin, TipoBusquedaCompanero.TENGO_CUARTO, "UNAL Bogotá", "Economía", 6, Genero.HOMBRE,
+                null, 700_000L, "Teusaquillo", "Ibagué",
+                "Tengo una habitación libre en mi apartamento a 10 minutos de la Nacional. Servicios incluidos.");
+    }
+
+    private void companero(Usuario autor, TipoBusquedaCompanero tipo, String sigla, String carrera, int semestre,
+                           Genero genero, Genero busco, long presupuesto, String barrio, String origen, String texto) {
+        universidades.findBySigla(sigla).ifPresent(u -> {
+            Companero c = new Companero();
+            c.setAutor(autor);
+            c.setTipo(tipo);
+            c.setUniversidad(u);
+            c.setCarrera(carrera);
+            c.setSemestre(semestre);
+            c.setGenero(genero);
+            c.setBuscoGenero(busco);
+            c.setPresupuesto(presupuesto);
+            c.setBarrio(barrio);
+            c.setCiudadOrigen(origen);
+            c.setDescripcion(texto);
+            companeros.save(c);
+        });
     }
 
     private void ubicar(Inmueble i, double lat, double lng) {

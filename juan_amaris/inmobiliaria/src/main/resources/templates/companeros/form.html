@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Publicar perfil de compañero')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto">
+    <h1>👥 Busco compañero de cuarto</h1>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+    <form class="formulario" method="post" th:action="@{/companeros/nuevo}" th:object="${companero}">
+        <label>¿Qué buscas?
+            <select th:field="*{tipo}">
+                <option value="">Elige…</option>
+                <option th:each="t : ${tiposBusqueda}" th:value="${t}" th:text="${t.etiqueta}"></option>
+            </select>
+            <span class="campo-error" th:errors="*{tipo}"></span></label>
+
+        <label>Universidad
+            <select name="universidad">
+                <option value="">Elige…</option>
+                <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
+                    <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombre}"
+                            th:selected="${companero.universidad != null and companero.universidad.id == u.id}"></option>
+                </optgroup>
+            </select>
+            <span class="campo-error" th:errors="*{universidad}"></span></label>
+
+        <div class="dos">
+            <label>Carrera <input th:field="*{carrera}" maxlength="80" placeholder="Ej: Medicina">
+                <span class="campo-error" th:errors="*{carrera}"></span></label>
+            <label>Semestre <input type="number" min="1" max="12" th:field="*{semestre}">
+                <span class="campo-error" th:errors="*{semestre}"></span></label>
+        </div>
+
+        <div class="dos">
+            <label>Soy
+                <select th:field="*{genero}">
+                    <option value="">Elige…</option>
+                    <option th:each="g : ${generos}" th:value="${g}" th:text="${g.etiqueta}"></option>
+                </select>
+                <span class="campo-error" th:errors="*{genero}"></span></label>
+            <label>Busco compañero(a)
+                <select th:field="*{buscoGenero}">
+                    <option value="">Me da igual</option>
+                    <option th:each="g : ${generos}" th:value="${g}" th:text="${g.etiqueta}"></option>
+                </select></label>
+        </div>
+
+        <label>Presupuesto mensual (o precio del cuarto si ya lo tienes), en pesos
+            <input type="number" min="1" th:field="*{presupuesto}" placeholder="Ej: 800000">
+            <span class="campo-error" th:errors="*{presupuesto}"></span></label>
+
+        <div class="dos">
+            <label>Barrio (opcional) <input th:field="*{barrio}" maxlength="80"></label>
+            <label>¿De qué ciudad vienes? (opcional) <input th:field="*{ciudadOrigen}" maxlength="60"></label>
+        </div>
+
+        <label>Cuéntales sobre ti
+            <textarea th:field="*{descripcion}" rows="5" maxlength="1000"
+                      placeholder="Horarios, si eres ordenado(a), si estudias de noche, si tienes mascota…"></textarea>
+            <span class="campo-error" th:errors="*{descripcion}"></span></label>
+
+        <p class="ayuda">Tu nombre y tu WhatsApp solo los verán las personas con sesión iniciada.</p>
+        <button type="submit" class="boton">Publicar</button>
+    </form>
+</main>
+</body>
+</html>

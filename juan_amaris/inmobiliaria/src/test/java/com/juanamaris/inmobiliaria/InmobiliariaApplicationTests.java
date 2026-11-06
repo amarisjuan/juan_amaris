@@ -134,4 +134,86 @@ class InmobiliariaApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Solo se permiten fotos")));
     }
+
+    // ---------- Reglas de la vivienda ----------
+
+    @Test
+    void filtroParaHombreOcultaLasDeSoloMujeres() throws Exception {
+        mvc.perform(get("/").param("ciudad", "Bogotá").param("para", "HOMBRE"))
+                .andExpect(content().string(not(containsString("Habitación para estudiante con servicios incluidos"))));
+        mvc.perform(get("/").param("ciudad", "Bogotá").param("para", "MUJER"))
+                .andExpect(content().string(containsString("Habitación para estudiante con servicios incluidos")))
+                .andExpect(content().string(containsString("Solo mujeres")));
+    }
+
+    @Test
+    void filtroMascotas() throws Exception {
+        mvc.perform(get("/").param("mascotas", "true"))
+                .andExpect(content().string(containsString("Apartaestudio amoblado cerca a universidades")))
+                .andExpect(content().string(not(containsString("Casa familiar con patio"))));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@inmobiliaria.co")
+    void publicarConReglas() throws Exception {
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Cuarto con reglas claras").param("operacion", "ARRIENDO")
+                        .param("tipo", "HABITACION").param("precio", "600000").param("ciudad", "Cali")
+                        .param("convivencia", "SOLO_HOMBRES").param("permiteMascotas", "true")
+                        .param("horarioLlegada", "Sin restricción").param("otrasReglas", "Nada de fiestas"))
+                .andExpect(status().is3xxRedirection());
+        mvc.perform(get("/").param("texto", "reglas claras"))
+                .andExpect(content().string(containsString("Solo hombres")));
+    }
+
+    // ---------- Compañeros de cuarto ----------
+
+    @Test
+    void tableroEsPublicoPeroElContactoRequiereSesion() throws Exception {
+        mvc.perform(get("/companeros"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Ingeniería Industrial")))
+                .andExpect(content().string(containsString("Inicia sesión para contactar")))
+                .andExpect(content().string(not(containsString("wa.me/573007654321"))));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@inmobiliaria.co")
+    void conSesionSeVeElWhatsapp() throws Exception {
+        mvc.perform(get("/companeros"))
+                .andExpect(content().string(containsString("wa.me/573007654321")));
+    }
+
+    @Test
+    void filtroSoyHombreOcultaQuienBuscaSoloMujeres() throws Exception {
+        mvc.perform(get("/companeros").param("soy", "HOMBRE"))
+                .andExpect(content().string(not(containsString("Ingeniería Industrial"))))
+                .andExpect(content().string(containsString("Economía")));
+    }
+
+    @Test
+    void publicarCompaneroRequiereSesion() throws Exception {
+        mvc.perform(get("/companeros/nuevo")).andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @WithMockUser(username = "laura@ejemplo.co")
+    void publicarCompaneroYLimiteDePublicaciones() throws Exception {
+        Long uis = universidades.findBySigla("UIS").orElseThrow().getId();
+        for (int n = 0; n < 2; n++) {   // Laura ya tiene 1 de ejemplo -> llega a 3
+            mvc.perform(post("/companeros/nuevo").with(csrf())
+                            .param("tipo", "BUSCO_CUARTO").param("universidad", uis.toString())
+                            .param("carrera", "Geología").param("semestre", "2").param("genero", "MUJER")
+                            .param("presupuesto", "650000").param("descripcion", "Estudiante de primer año"))
+                    .andExpect(redirectedUrl("/companeros"));
+        }
+        mvc.perform(get("/companeros").param("universidad", uis.toString()))
+                .andExpect(content().string(containsString("Geología")));
+        mvc.perform(post("/companeros/nuevo").with(csrf())
+                        .param("tipo", "BUSCO_CUARTO").param("universidad", uis.toString())
+                        .param("carrera", "Geología").param("genero", "MUJER")
+                        .param("presupuesto", "650000").param("descripcion", "Una más"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("máximo 3 publicaciones")));
+    }
 }
