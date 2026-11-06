@@ -602,4 +602,23 @@ class InmobiliariaApplicationTests {
                 "Un mismo barrio no se repite aunque cambie la escritura");
         mvc.perform(get("/")).andExpect(content().string(containsString("Chapinero Alto")));
     }
+
+    // ---------- Dirección privada del inmueble ----------
+
+    @Test
+    @WithMockUser(username = "admin@inmobiliaria.co")
+    void laDireccionEsPrivadaYSoloLaVeElDueno() throws Exception {
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Casa con dirección privada zz").param("operacion", "ARRIENDO").param("tipo", "CASA")
+                        .param("precio", "1200000").param("ciudad", "Barranquilla")
+                        .param("direccionPrivada", "Calle 98 # 52-14 DIRPRIV"))
+                .andExpect(status().is3xxRedirection());
+        var i = inmuebles.findAll().stream().filter(x -> "Casa con dirección privada zz".equals(x.getTitulo())).findFirst().orElseThrow();
+        // Ninguna página pública la muestra
+        mvc.perform(get("/inmuebles/" + i.getId())).andExpect(content().string(not(containsString("DIRPRIV"))));
+        mvc.perform(get("/")).andExpect(content().string(not(containsString("DIRPRIV"))));
+        mvc.perform(get("/companeros")).andExpect(content().string(not(containsString("DIRPRIV"))));
+        // Sí aparece para el dueño al editar
+        mvc.perform(get("/inmuebles/" + i.getId() + "/editar")).andExpect(content().string(containsString("DIRPRIV")));
+    }
 }

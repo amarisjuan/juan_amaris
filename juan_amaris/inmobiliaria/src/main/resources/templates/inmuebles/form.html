@@ -66,7 +66,7 @@
         <fieldset class="ubicacion-mapa">
             <legend><svg th:replace="~{fragmentos/base :: ic('pin')}"></svg> Ubicación en el mapa (recomendado)</legend>
             <p class="ayuda">Haz clic en el mapa donde está el inmueble. Puedes arrastrar el pin para ajustarlo.
-                Si eliges una universidad abajo, calculamos los minutos caminando.</p>
+                Si eliges una universidad abajo, calculamos la distancia hasta ella.</p>
             <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
                 <span><strong>Tu ubicación exacta no se publica.</strong> Los visitantes solo ven el barrio y una zona
                 aproximada de unos 400 m. La usamos para dibujar esa zona y calcular distancias. No escribas la dirección
@@ -76,6 +76,15 @@
                 <button type="button" class="boton secundario" id="mi-ubicacion">Usar mi ubicación actual</button>
                 <button type="button" class="enlace peligro" id="quitar-ubicacion">Quitar ubicación</button>
             </div>
+            <label class="direccion-privada">Dirección del inmueble
+                <span class="ayuda">Solo para ubicarlo en el mapa. <strong>No se publica.</strong> Puedes escribirla
+                    a mano o tomarla con "Usar mi ubicación actual".</span>
+                <div class="fila-direccion">
+                    <input th:field="*{direccionPrivada}" id="direccion-privada" maxlength="150"
+                           placeholder="Ej: Calle 45 # 23-10, Barranquilla">
+                    <button type="button" class="boton secundario" id="buscar-direccion">Ubicar en el mapa</button>
+                </div>
+                <span class="campo-error" th:errors="*{direccionPrivada}"></span></label>
             <input type="hidden" th:field="*{latitud}">
             <input type="hidden" th:field="*{longitud}">
             <span class="campo-error" th:errors="*{latitud}"></span>
@@ -198,13 +207,45 @@
                 $('mi-ubicacion').addEventListener('click', () => {
                     if (!navigator.geolocation) return alert('Tu navegador no permite obtener la ubicación');
                     navigator.geolocation.getCurrentPosition(
-                        pos => ponerPin(L.latLng(pos.coords.latitude, pos.coords.longitude), true),
+                        pos => {
+                            const punto = L.latLng(pos.coords.latitude, pos.coords.longitude);
+                            ponerPin(punto, true);
+                            // Si no hay dirección escrita, la completamos con la de tu ubicación actual
+                            const campo = $('direccion-privada');
+                            if (!campo.value.trim()) {
+                                fetch('https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&accept-language=es&lat='
+                                        + punto.lat + '&lon=' + punto.lng)
+                                    .then((r) => r.json())
+                                    .then((j) => {
+                                        const a = j.address || {};
+                                        const via = [a.road, a.house_number].filter(Boolean).join(' ');
+                                        const partes = [via, a.neighbourhood || a.suburb, a.city || a.town || a.village].filter(Boolean);
+                                        if (partes.length) campo.value = partes.join(', ');
+                                    })
+                                    .catch(() => {});
+                            }
+                        },
                         () => alert('No pudimos obtener tu ubicación. Haz clic en el mapa.'));
                 });
 
                 $('quitar-ubicacion').addEventListener('click', () => {
                     if (pin) { mapa.removeLayer(pin); pin = null; }
                     lat.value = ''; lng.value = '';
+                });
+
+                // Ubicar en el mapa la dirección escrita a mano (la búsqueda se hace en el navegador del dueño)
+                $('buscar-direccion').addEventListener('click', () => {
+                    const dir = $('direccion-privada').value.trim();
+                    if (!dir) { alert('Escribe la dirección del inmueble'); return; }
+                    const q = dir + (ciudad.value ? ', ' + ciudad.value : '') + ', Colombia';
+                    fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=co&accept-language=es&q='
+                            + encodeURIComponent(q))
+                        .then((r) => r.json())
+                        .then((j) => {
+                            if (!j.length) { alert('No encontramos esa dirección. Ajústala en el mapa haciendo clic o arrastrando el pin.'); return; }
+                            ponerPin(L.latLng(+j[0].lat, +j[0].lon), true);
+                        })
+                        .catch(() => alert('No pudimos buscar la dirección. Intenta de nuevo o haz clic en el mapa.'));
                 });
 
                 // Al editar: mostrar lo que ya estaba guardado

@@ -311,3 +311,8 @@ select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed
 @media (max-width:760px) { .filtros-estudiantes { grid-template-columns:1fr; } }
 .filtros-estudiantes { grid-template-columns:2fr 1fr 1fr auto; }
 @media (max-width:760px) { .filtros-estudiantes { grid-template-columns:1fr; } }
+
+/* --- Dirección del inmueble (privada) --- */
+.direccion-privada { gap:6px; }
+.fila-direccion { display:flex; gap:10px; flex-wrap:wrap; }
+.fila-direccion input { flex:1; min-width:220px; }

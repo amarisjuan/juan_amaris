@@ -135,6 +135,7 @@ public class InmuebleService {
         i.setPermiteVisitas(datos.isPermiteVisitas());
         i.setHorarioLlegada(datos.getHorarioLlegada());
         i.setOtrasReglas(datos.getOtrasReglas());
+        i.setDireccionPrivada(datos.getDireccionPrivada());
         i.setServiciosIncluidos(datos.isServiciosIncluidos());
         if (fotosABorrar != null) {
             for (String f : fotosABorrar) {

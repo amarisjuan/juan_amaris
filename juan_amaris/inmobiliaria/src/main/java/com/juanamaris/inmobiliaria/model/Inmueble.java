@@ -24,6 +24,13 @@ public class Inmueble {
     @Column(length = 3000)
     private String descripcion;
 
+    /**
+     * Dirección que escribe o toma el dueño para ubicar el inmueble. PRIVADA: nunca se muestra en páginas públicas,
+     * JSON ni enlaces (consulta legal 001 y 004). Solo la ve el dueño al editar y el administrador.
+     */
+    @Size(max = 150, message = "Máximo 150 caracteres")
+    private String direccionPrivada;
+
     @NotNull(message = "Elige el tipo")
     @Enumerated(EnumType.STRING)
     private TipoInmueble tipo;
@@ -168,6 +175,9 @@ public class Inmueble {
     public void setId(Long id) { this.id = id; }
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
+    public String getDireccionPrivada() { return direccionPrivada; }
+    public void setDireccionPrivada(String d) { this.direccionPrivada = d == null || d.isBlank() ? null : d.trim(); }
+
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     public TipoInmueble getTipo() { return tipo; }
