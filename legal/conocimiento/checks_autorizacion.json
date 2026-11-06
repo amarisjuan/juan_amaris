@@ -1,0 +1,55 @@
+{
+  "nota": "Rutas relativas a la raíz del portal (--raiz). patron: expresión regular que debe aparecer en el archivo. requiere: id de otro control que debe cumplirse primero.",
+  "checks": [
+    {
+      "id": "casilla_registro",
+      "archivo": "src/main/resources/templates/auth/registro.html",
+      "patron": "type=\"checkbox\"[^>]*name=\"aceptaPolitica\"[^>]*required|name=\"aceptaPolitica\"[^>]*type=\"checkbox\"[^>]*required",
+      "descripcion": "Casilla obligatoria, sin marcar por defecto, para aceptar la política de datos al registrarse",
+      "norma": "Ley 1581/2012 art. 9; Decreto 1377/2013 art. 7"
+    },
+    {
+      "id": "enlace_politica",
+      "archivo": "src/main/resources/templates/auth/registro.html",
+      "patron": "politica-de-datos",
+      "descripcion": "Enlace visible a la política de tratamiento antes de aceptar",
+      "norma": "Ley 1581/2012 art. 12"
+    },
+    {
+      "id": "casilla_no_premarcada",
+      "archivo": "src/main/resources/templates/auth/registro.html",
+      "patron": "^(?![\\s\\S]*name=\"aceptaPolitica\"[^>]*checked)",
+      "descripcion": "La casilla no viene marcada por defecto (la autorización debe ser una conducta inequívoca del titular)",
+      "norma": "Decreto 1377/2013 art. 7",
+      "requiere": "casilla_registro"
+    },
+    {
+      "id": "fecha_autorizacion",
+      "archivo": "src/main/java/com/juanamaris/inmobiliaria/model/Usuario.java",
+      "patron": "fechaAutorizacion",
+      "descripcion": "Se guarda la fecha y hora de la autorización (prueba)",
+      "norma": "Ley 1581/2012 art. 17 lit. b; Decreto 1377/2013 art. 8"
+    },
+    {
+      "id": "version_politica",
+      "archivo": "src/main/java/com/juanamaris/inmobiliaria/model/Usuario.java",
+      "patron": "versionPolitica",
+      "descripcion": "Se guarda la versión de la política aceptada (prueba de qué se autorizó)",
+      "norma": "Decreto 1377/2013 art. 8"
+    },
+    {
+      "id": "pagina_politica",
+      "archivo": "src/main/resources/templates/legal/politica_datos.html",
+      "patron": "Política de tratamiento",
+      "descripcion": "La política está publicada en el portal",
+      "norma": "Decreto 1377/2013 art. 13"
+    },
+    {
+      "id": "pie_enlaces_legales",
+      "archivo": "src/main/resources/templates/fragmentos/base.html",
+      "patron": "politica-de-datos",
+      "descripcion": "Enlace a la política en el pie de página de todo el sitio",
+      "norma": "Ley 1581/2012 art. 12"
+    }
+  ]
+}

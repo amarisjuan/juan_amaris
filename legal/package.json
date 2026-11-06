@@ -2,5 +2,8 @@
   "name": "legal-argenis",
   "private": true,
   "type": "module",
-  "description": "Scripts deterministas del agente legal Argenis"
+  "description": "Scripts deterministas del agente legal Argenis",
+  "dependencies": {
+    "undici": "^6.29.1"
+  }
 }

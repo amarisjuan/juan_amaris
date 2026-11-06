@@ -1,0 +1,21 @@
+{
+  "modalidad": "compartido",
+  "es_compartido": true,
+  "es_pension": false,
+  "arrendador": { "nombre": "PENDIENTE: nombre del arrendador", "documento": "PENDIENTE: cédula", "direccion": "PENDIENTE: dirección de notificaciones", "contratos_vigentes": 2 },
+  "arrendatario": { "nombre": "PENDIENTE: nombre del estudiante", "documento": "PENDIENTE: cédula", "direccion": "La del inmueble arrendado" },
+  "inmueble": { "direccion": "PENDIENTE: dirección", "ciudad": "Barranquilla", "descripcion_parte": "Una habitación con baño privado, con uso compartido de cocina, sala y zona de ropas" },
+  "canon": 900000,
+  "canon_letras": "novecientos mil pesos",
+  "valor_comercial": 250000000,
+  "avaluo_catastral": 140000000,
+  "deposito": 0,
+  "dia_pago": "los primeros cinco (5) días de cada mes",
+  "forma_pago": "transferencia a la cuenta que indique el arrendador por escrito",
+  "fecha_inicio": "2027-01-15",
+  "duracion_meses": 12,
+  "incremento_anual_pct": 5.1,
+  "servicios_incluidos": "agua, energía, gas e internet",
+  "garantia": "un codeudor con ingresos demostrables",
+  "reglas_convivencia": "Las reglas de la vivienda publicadas en el anuncio, que se anexan a este contrato."
+}

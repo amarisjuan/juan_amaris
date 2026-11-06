@@ -1,0 +1,21 @@
+{
+  "portal": {
+    "datos_recolectados": [
+      "Nombre, correo electrónico y número de celular al crear la cuenta.",
+      "Datos de los inmuebles publicados: ubicación aproximada o exacta, fotos, precio, características y reglas de la vivienda.",
+      "En el tablero de compañeros de cuarto: universidad, carrera, semestre, género, género con el que se desea convivir, presupuesto, barrio y ciudad de origen.",
+      "Datos técnicos de la navegación necesarios para la seguridad del sitio (por ejemplo, la sesión iniciada)."
+    ],
+    "finalidades": [
+      "Crear y administrar la cuenta del usuario y permitirle iniciar sesión.",
+      "Publicar los anuncios de inmuebles y los perfiles de compañero de cuarto que el usuario decida publicar.",
+      "Permitir que otros usuarios contacten al anunciante por WhatsApp o llamada, a iniciativa de quien está interesado.",
+      "Cumplir la obligación de los portales de contacto de identificar a quienes ofrecen inmuebles (Ley 1480 de 2011, art. 53).",
+      "Prevenir fraudes, anuncios falsos o discriminatorios, y atender requerimientos de autoridades.",
+      "Atender consultas, reclamos y solicitudes de los titulares."
+    ],
+    "datos_publicos_por_decision_del_titular": "El nombre, el celular (en los anuncios de inmuebles) y la información de los anuncios y perfiles se muestran a otros usuarios porque el titular decide publicarlos. En el tablero de compañeros, el WhatsApp solo se muestra a usuarios con sesión iniciada.",
+    "edad_minima": "18",
+    "encargados": "PENDIENTE: proveedor de alojamiento (hosting) y de almacenamiento de fotos, con su país"
+  }
+}

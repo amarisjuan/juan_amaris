@@ -1,0 +1,17 @@
+{
+  "empresa": {
+    "nombre": "PENDIENTE: nombre o razón social",
+    "nit": "PENDIENTE: NIT o cédula del responsable",
+    "domicilio": "PENDIENTE: ciudad de domicilio",
+    "direccion": "PENDIENTE: dirección física de notificaciones",
+    "correo_datos": "PENDIENTE: correo para consultas y reclamos de datos",
+    "telefono": "PENDIENTE: teléfono de contacto",
+    "sitio_web": "PENDIENTE: dominio del portal",
+    "area_pqr": "PENDIENTE: persona o área responsable de atender consultas y reclamos"
+  },
+  "politica": {
+    "version": "1.0",
+    "fecha_vigencia": "PENDIENTE: fecha en que entra en vigencia",
+    "vigencia_base_datos": "PENDIENTE: período de conservación (p. ej. mientras la cuenta esté activa y hasta 2 años después de cerrarla)"
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "investigado": "2026-11-06",
+  "nota": "estado: 'confirmado_oficial' = la frase clave se encontró en el texto oficial (Senado o compilación oficial de la Alcaldía de Bogotá) en la fecha 'verificado'. Confirma que la norma dice eso, no reemplaza la lectura completa del artículo. 'confirmado_secundaria' = solo en copias y fuentes secundarias. Se actualiza con execution/verificar_normas.mjs --actualizar-registro.",
+  "normas": [
+    {
+      "id": "ley1581_art14",
+      "norma": "Ley 1581 de 2012, art. 14",
+      "tema": "Consultas: respuesta en máximo 10 días hábiles, prorrogables hasta 5 días hábiles más informando el motivo.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1581_2012.html",
+      "frase_clave": "diez (10) dias habiles",
+      "fuentes": [
+        "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981",
+        "https://normograma.mintic.gov.co/mintic/compilacion/docs/ley_1581_2012.htm"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1581_art15",
+      "norma": "Ley 1581 de 2012, art. 15",
+      "tema": "Reclamos: respuesta en máximo 15 días hábiles, prorrogables hasta 8 días hábiles; leyenda 'reclamo en trámite' dentro de 2 días hábiles.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1581_2012.html",
+      "frase_clave": "quince (15) dias habiles",
+      "fuentes": [
+        "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1581_art23",
+      "norma": "Ley 1581 de 2012, art. 23",
+      "tema": "Multas de la SIC hasta 2.000 SMMLV, sucesivas mientras subsista el incumplimiento.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1581_2012.html",
+      "frase_clave": "dos mil (2.000) salarios minimos",
+      "fuentes": [
+        "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1581_art8_9_12",
+      "norma": "Ley 1581 de 2012, arts. 8, 9 y 12",
+      "tema": "Derechos de los titulares, autorización previa e informada, deber de informar al titular la finalidad y sus derechos.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1581_2012.html",
+      "frase_clave": "autorizacion previa",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "dec1377_art13",
+      "norma": "Decreto 1377 de 2013, art. 13 (compilado en el Decreto 1074 de 2015)",
+      "tema": "Contenido mínimo de la política de tratamiento: identificación del responsable, tratamiento y finalidad, derechos, área de PQR, procedimiento para ejercer derechos, fecha de vigencia y período de vigencia de la base de datos.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=53646",
+      "frase_clave": "periodo de vigencia de la base de datos",
+      "fuentes": [
+        "https://www.mincit.gov.co/mincit_files/mincit/dd/dd72f650-469d-4fb1-93cf-32c32e275c49.pdf",
+        "https://normativa.colpensiones.gov.co/colpens/docs/decreto_1074_2015_pr026.htm"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "dec1377_art14_15",
+      "norma": "Decreto 1377 de 2013, arts. 14 y 15",
+      "tema": "Aviso de privacidad y su contenido mínimo (responsable, tratamiento y finalidad, derechos, cómo consultar la política).",
+      "estado": "confirmado_oficial",
+      "url_oficial": "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=53646",
+      "frase_clave": "aviso de privacidad",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "dec090_2018",
+      "norma": "Decreto 090 de 2018",
+      "tema": "Registro Nacional de Bases de Datos (SIC): obligatorio para sociedades y ESAL con activos totales superiores a 100.000 UVT y personas jurídicas públicas.",
+      "estado": "confirmado_secundaria",
+      "url_oficial": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=85039",
+      "frase_clave": "100.000",
+      "fuentes": [
+        "https://sedeelectronica.sic.gov.co/sites/default/files/normatividad/032018/Proyecto_Circular_modifica_circular_unica-condiciones_del_RNBD.pdf"
+      ]
+    },
+    {
+      "id": "ley820_art2",
+      "norma": "Ley 820 de 2003, art. 2",
+      "tema": "Modalidades: lit. c) compartido (parte no independiente, se comparte el goce con el arrendador u otros arrendatarios); lit. d) pensión (parte no independiente con servicios adicionales, término inferior a 1 año, terminación con aviso de 10 días).",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_0820_2003.html",
+      "frase_clave": "parte no independiente",
+      "fuentes": [
+        "https://jurinfo.jep.gov.co/normograma/compilacion/docs/ley_0820_2003.htm"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley820_art5",
+      "norma": "Ley 820 de 2003, art. 5",
+      "tema": "Término: el que acuerden las partes; a falta de estipulación, un (1) año.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_0820_2003.html",
+      "frase_clave": "termino de un (1) ano",
+      "fuentes": [
+        "https://bogota.gov.co/sites/default/files/inline-files/ley-820-de-2003.pdf"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley820_art16",
+      "norma": "Ley 820 de 2003, art. 16",
+      "tema": "Prohibición de depósitos en dinero efectivo u otras cauciones reales en arrendamiento de vivienda urbana.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_0820_2003.html",
+      "frase_clave": "no se podran exigir depositos en dinero efectivo",
+      "fuentes": [
+        "https://jurinfo.jep.gov.co/normograma/compilacion/docs/ley_0820_2003.htm",
+        "https://www.gerencie.com/contrato-de-arrendamiento-de-vivienda-urbana.html"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley820_art18",
+      "norma": "Ley 820 de 2003, art. 18",
+      "tema": "Renta máxima: 1% del valor comercial; el valor comercial no puede exceder 2 veces el avalúo catastral vigente.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_0820_2003.html",
+      "frase_clave": "uno por ciento (1%)",
+      "fuentes": [
+        "https://jurinfo.jep.gov.co/normograma/compilacion/docs/ley_0820_2003.htm",
+        "https://actualicese.com/canon-de-arrendamiento-de-vivienda-2026/"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley820_art20",
+      "norma": "Ley 820 de 2003, art. 20",
+      "tema": "Reajuste: cada 12 meses de ejecución, máximo el 100% del IPC del año anterior; se debe informar al arrendatario el monto y la fecha.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_0820_2003.html",
+      "frase_clave": "indice de precios al consumidor",
+      "fuentes": [
+        "https://totalbienes.com/legal/contrato-de-arrendamiento-ley-820"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley820_art14_17_22_24",
+      "norma": "Ley 820 de 2003, arts. 14, 17, 22 a 24",
+      "tema": "Mérito ejecutivo del contrato (14), subarriendo y cesión (17), causales y forma de terminación (22 a 24).",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_0820_2003.html",
+      "frase_clave": "subarriendo",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley820_art28",
+      "norma": "Ley 820 de 2003, art. 28; Decreto 51 de 2004 (compilado en el Decreto 1077 de 2015)",
+      "tema": "Matrícula de arrendadores: quien arriende o intermedie habitualmente vivienda urbana en municipios de más de 15.000 habitantes; el decreto incluye a quien celebre más de 5 contratos.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_0820_2003.html",
+      "frase_clave": "debera matricularse",
+      "fuentes": [
+        "https://www.habitatbogota.gov.co/sites/default/files/ABC%20DE%20ARRENDADORES.pdf"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1480_art53",
+      "norma": "Ley 1480 de 2011, art. 53 (y Ley 2439 de 2024, que adicionó la definición de portal de contacto)",
+      "tema": "Portales de contacto: exigir a los oferentes información de identificación y llevar registro con, al menos, nombre o razón social, documento de identificación, dirección física de notificaciones y teléfonos.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1480_2011_pr001.html",
+      "frase_clave": "portales de contacto",
+      "fuentes": [
+        "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=44306",
+        "https://www.sic.gov.co/sites/default/files/concepto-boletin-juridico/20257928.pdf"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1480_art30",
+      "norma": "Ley 1480 de 2011, arts. 29 y 30",
+      "tema": "Fuerza vinculante de la publicidad y prohibición de publicidad engañosa.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1480_2011.html",
+      "frase_clave": "publicidad enganosa",
+      "fuentes": [],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley2439_2024",
+      "norma": "Ley 2439 de 2024",
+      "tema": "Reforma del Estatuto del Consumidor para comercio electrónico (define portal de contacto, modifica art. 50 y 59).",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_2439_2024.html",
+      "frase_clave": "portal de contacto",
+      "fuentes": [
+        "https://www.hklaw.com/en/insights/publications/2025/01/ley-2439-de-2024-modificaciones-al-estatuto-del-consumidor-en-colombia"
+      ],
+      "verificado": "2026-11-06"
+    },
+    {
+      "id": "ley1482_1752",
+      "norma": "Ley 1482 de 2011 modificada por la Ley 1752 de 2015 (Código Penal arts. 134A y 134B)",
+      "tema": "Actos de discriminación por raza, etnia, religión, nacionalidad, ideología política o filosófica, sexo, orientación sexual o discapacidad.",
+      "estado": "confirmado_oficial",
+      "url_oficial": "http://www.secretariasenado.gov.co/senado/basedoc/ley_1752_2015.html",
+      "frase_clave": "discapacidad",
+      "fuentes": [
+        "https://www.cancilleria.gov.co/sites/default/files/Normograma/docs/pdf/ley_1482_2011.pdf",
+        "https://normograma.icfes.gov.co/docs/pdf/ley_1752_2015.pdf"
+      ],
+      "verificado": "2026-11-06"
+    }
+  ]
+}
