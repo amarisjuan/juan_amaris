@@ -19,7 +19,8 @@
         })();
     </script>
 
-    <section th:each="g : ${universidadesPorCiudad}" class="ciudad-universidades">
+    <p class="filtro-ciudades"><input id="buscar-ciudad" type="search" placeholder="Busca tu ciudad o municipio" aria-label="Buscar ciudad"></p>
+    <section th:each="g : ${universidadesPorCiudad}" class="ciudad-universidades" th:attr="data-ciudad=${g.key}">
         <h2 th:text="${g.key}">Ciudad</h2>
         <div class="universidades">
             <a th:each="u : ${g.value}" class="universidad"
@@ -43,6 +44,15 @@
         <p>Publícalo gratis e indica la universidad: los estudiantes lo encontrarán al instante.</p>
         <a class="boton" th:href="@{/publicar}">Publicar para estudiantes</a>
     </section>
+<script>
+    document.getElementById('buscar-ciudad').addEventListener('input', (e) => {
+        const quitar = (t) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const q = quitar(e.target.value.trim());
+        document.querySelectorAll('.ciudad-universidades').forEach((sec) => {
+            sec.hidden = q !== '' && !quitar(sec.dataset.ciudad || '').includes(q);
+        });
+    });
+</script>
 </main>
 <footer th:replace="~{fragmentos/base :: pie}"></footer>
 </body>

@@ -14,13 +14,17 @@
             </select>
             <span class="campo-error" th:errors="*{tipo}"></span></label>
 
-        <label>Universidad
-            <select name="universidad">
-                <option value="">Elige…</option>
-                <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
-                    <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombre}"
-                            th:selected="${companero.universidad != null and companero.universidad.id == u.id}"></option>
+        <label>Ciudad donde estudias
+            <select id="sel-ciudad" name="ciudad">
+                <option value="">Elige la ciudad…</option>
+                <optgroup th:each="d : ${municipios}" th:label="${d.key}">
+                    <option th:each="m : ${d.value}" th:value="${m.nombre()}" th:text="${m.nombre()}"></option>
                 </optgroup>
+            </select></label>
+        <label>Universidad
+            <select id="sel-universidad" name="universidad"
+                    th:attr="data-seleccionada=${companero.universidad != null ? companero.universidad.id : ''}">
+                <option value="">Primero elige la ciudad</option>
             </select>
             <span class="campo-error" th:errors="*{universidad}"></span></label>
 
@@ -63,6 +67,15 @@
         <p class="ayuda">Tu nombre y tu WhatsApp solo los verán las personas con sesión iniciada.</p>
         <button type="submit" class="boton">Publicar</button>
     </form>
+<script th:src="@{/js/geo.js}"></script>
+<script th:inline="javascript">
+    Geo.enlazar({
+        ciudad: document.getElementById('sel-ciudad'),
+        universidad: document.getElementById('sel-universidad'),
+        universidades: /*[[${universidadesGeo}]]*/ {},
+        textoVacio: 'Elige la universidad'
+    });
+</script>
 </main>
 </body>
 </html>

@@ -24,9 +24,14 @@ public class BusquedaController {
     private final UniversidadService universidades;
     private final UbicacionPrivadaService ubicacion;
     private final ActividadService actividad;
+    private final com.juanamaris.inmobiliaria.service.GeografiaService geografia;
+    private final com.juanamaris.inmobiliaria.service.BarrioService barriosService;
 
     public BusquedaController(InmuebleService service, UniversidadService universidades, UbicacionPrivadaService ubicacion,
-                              ActividadService actividad) {
+                              ActividadService actividad, com.juanamaris.inmobiliaria.service.GeografiaService geografia,
+                              com.juanamaris.inmobiliaria.service.BarrioService barriosService) {
+        this.geografia = geografia;
+        this.barriosService = barriosService;
         this.ubicacion = ubicacion;
         this.actividad = actividad;
         this.service = service;
@@ -43,7 +48,10 @@ public class BusquedaController {
         model.addAttribute("puntosInmuebles",
                 resultados.getContent().stream().filter(Inmueble::isZonaPublicaLista)
                         .map(i -> PuntoMapa.zona(i, ubicacion.getRadio())).toList());
-        model.addAttribute("ciudades", service.ciudades());
+        model.addAttribute("municipios", geografia.porDepartamento());
+        model.addAttribute("universidadesGeo", universidades.mapaPorCiudad());
+        model.addAttribute("barriosGeo", barriosService.mapaPorCiudad());
+        model.addAttribute("universidadesFiltro", universidades.de(filtro.getCiudad()));
         model.addAttribute("tipos", TipoInmueble.values());
         model.addAttribute("operaciones", Operacion.values());
         model.addAttribute("convivencias", com.juanamaris.inmobiliaria.model.Convivencia.values());

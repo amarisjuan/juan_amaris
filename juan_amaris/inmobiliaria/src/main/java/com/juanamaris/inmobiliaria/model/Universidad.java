@@ -16,6 +16,9 @@ public class Universidad {
     /** Nombre corto con el que la gente la busca, ej. "Uninorte". */
     private String sigla;
 
+    /** Sitio web oficial (SNIES), si lo tenemos. */
+    private String web;
+
     @Column(nullable = false)
     private String ciudad;
 
@@ -34,6 +37,12 @@ public class Universidad {
         this.latitud = latitud;
         this.longitud = longitud;
     }
+
+    /** Ubicación del centro del municipio (no del campus): se muestra como aproximada. */
+    public void ubicarAproximada(Double latitud, Double longitud) { this.latitud = latitud; this.longitud = longitud; }
+
+    public String getWeb() { return web; }
+    public void setWeb(String web) { this.web = web == null || web.isBlank() ? null : web.trim(); }
 
     public Double getLatitud() { return latitud; }
     public Double getLongitud() { return longitud; }

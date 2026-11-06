@@ -14,15 +14,18 @@
             <option value="">Arriendo o venta</option>
             <option th:each="o : ${operaciones}" th:value="${o}" th:text="${o.etiqueta}"></option>
         </select>
-        <input list="lista-ciudades" th:field="*{ciudad}" placeholder="Ciudad">
-        <datalist id="lista-ciudades">
-            <option th:each="c : ${ciudades}" th:value="${c}"></option>
-        </datalist>
+<select id="sel-ciudad" th:field="*{ciudad}">
+            <option value="">Todo Colombia</option>
+            <optgroup th:each="d : ${municipios}" th:label="${d.key}">
+                <option th:each="m : ${d.value}" th:value="${m.nombre()}" th:text="${m.nombre()}"></option>
+            </optgroup>
+        </select>
         <select th:field="*{tipo}">
             <option value="">Tipo de inmueble</option>
             <option th:each="t : ${tipos}" th:value="${t}" th:text="${t.etiqueta}"></option>
         </select>
-        <input type="text" th:field="*{texto}" placeholder="Barrio o palabra clave">
+        <input type="text" th:field="*{texto}" list="lista-barrios" placeholder="Barrio o palabra clave">
+        <datalist id="lista-barrios"></datalist>
         <input type="number" min="0" step="50000" th:field="*{precioMin}" placeholder="Precio mínimo">
         <input type="number" min="0" step="50000" th:field="*{precioMax}" placeholder="Precio máximo">
         <select th:field="*{habitacionesMin}">
@@ -33,11 +36,9 @@
             <option value="">Estrato</option>
             <option th:each="n : ${#numbers.sequence(1,6)}" th:value="${n}" th:text="'Estrato ' + ${n}"></option>
         </select>
-        <select th:field="*{universidad}">
-            <option value="">Cerca a universidad</option>
-            <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
-                <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
-            </optgroup>
+        <select id="sel-universidad" th:field="*{universidad}">
+            <option value="">Primero elige la ciudad</option>
+            <option th:each="u : ${universidadesFiltro}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
         </select>
         <select th:field="*{maxMinutos}">
             <option value="">Distancia a pie</option>
@@ -93,6 +94,17 @@
         <span th:text="'Página ' + ${resultados.number + 1} + ' de ' + ${resultados.totalPages}"></span>
         <a th:if="${resultados.hasNext()}" th:href="@{${urlPaginas + (resultados.number + 1)}}">Siguiente →</a>
     </nav>
+<script th:src="@{/js/geo.js}"></script>
+<script th:inline="javascript">
+    Geo.enlazar({
+        ciudad: document.getElementById('sel-ciudad'),
+        universidad: document.getElementById('sel-universidad'),
+        listaBarrios: document.getElementById('lista-barrios'),
+        universidades: /*[[${universidadesGeo}]]*/ {},
+        barrios: /*[[${barriosGeo}]]*/ {},
+        textoVacio: 'Cerca a universidad (opcional)'
+    });
+</script>
 </main>
 <footer th:replace="~{fragmentos/base :: pie}"></footer>
 </body>

@@ -44,6 +44,14 @@ alianzas con oficinas de bienestar universitario.
   `/anunciantes/{id}`. **Reportes** confidenciales (`/reportar`, umbral 3 cuentas graves en 30 días oculta en revisión),
   **bloqueos** por correo y cédula (`/admin/reportes`, `/admin/bloqueos`), **aviso antiestafa** antes de WhatsApp o llamada
   y página `/seguridad` (consulta 003).
+- **Datos oficiales** en `juan_amaris/inmobiliaria/src/main/resources/datos/`: `municipios.csv` (1.103 municipios,
+  DIVIPOLA/MinSalud) e `instituciones.csv` (361 instituciones activas, SNIES/MEN, en 82 municipios). Se regeneran con
+  `juan/execution/importar_datos_oficiales.mjs`. Al arrancar, `ImportadorUniversidades` agrega las que falten sin duplicar
+  las ya catalogadas (`CatalogoUniversidades`). Las nuevas usan el centro del municipio como ubicación (aproximada).
+- **Selectores encadenados** (`static/js/geo.js`): primero la ciudad; la universidad solo muestra las de esa ciudad;
+  los barrios se sugieren de `barrios` (se aprenden de las publicaciones). La universidad de un inmueble debe estar
+  en la misma ciudad (`PublicacionController.validarUbicacion`).
+- **Pendiente:** barrios oficiales por ciudad (la fuente OpenStreetMap/Overpass no está permitida en el entorno actual).
 - Base H2 en archivo por defecto (`./data`); perfil `mysql` opcional.
 - Datos demo: usuario `admin@inmobiliaria.co` / `admin123` (cambiar antes de producción).
 
@@ -51,7 +59,7 @@ alianzas con oficinas de bienestar universitario.
 ```bash
 cd juan_amaris/inmobiliaria
 ./mvnw spring-boot:run   # http://localhost:8080
-./mvnw test              # 34 pruebas con MockMvc
+./mvnw test              # 39 pruebas con MockMvc
 ```
 
 ## Cuidado (errores ya vistos)

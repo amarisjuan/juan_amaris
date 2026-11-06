@@ -269,3 +269,8 @@ fieldset.estudiantes legend .ic { color:var(--acento-texto); }
 .formulario.fila > * { flex:1; min-width:160px; }
 td.peligro { color:var(--error); font-weight:600; }
 .pie a { color:var(--acento); }
+
+/* --- Selectores de ciudad, universidad y barrio --- */
+.filtro-ciudades { margin:14px 0 0; }
+.filtro-ciudades input { max-width:360px; }
+select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed; }

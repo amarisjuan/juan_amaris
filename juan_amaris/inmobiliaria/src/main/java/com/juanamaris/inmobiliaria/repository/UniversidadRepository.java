@@ -12,6 +12,8 @@ public interface UniversidadRepository extends JpaRepository<Universidad, Long> 
 
     Optional<Universidad> findBySigla(String sigla);
 
+    Optional<Universidad> findByNombre(String nombre);
+
     /** [universidadId, cantidad de inmuebles activos cerca]. */
     @Query("select i.universidadCercana.id, count(i) from Inmueble i "
             + "where i.activo = true and i.universidadCercana is not null group by i.universidadCercana.id")

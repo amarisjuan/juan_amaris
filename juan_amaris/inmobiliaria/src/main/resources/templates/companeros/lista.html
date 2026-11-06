@@ -12,15 +12,15 @@
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
 
     <form class="filtros" th:action="@{/companeros}" method="get" th:object="${filtro}">
-        <select th:field="*{universidad}">
-            <option value="">Universidad</option>
-            <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
-                <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
+        <select id="sel-ciudad" th:field="*{ciudad}">
+            <option value="">Todo Colombia</option>
+            <optgroup th:each="d : ${municipios}" th:label="${d.key}">
+                <option th:each="m : ${d.value}" th:value="${m.nombre()}" th:text="${m.nombre()}"></option>
             </optgroup>
         </select>
-        <select th:field="*{ciudad}">
-            <option value="">Ciudad</option>
-            <option th:each="g : ${universidadesPorCiudad}" th:value="${g.key}" th:text="${g.key}"></option>
+        <select id="sel-universidad" th:field="*{universidad}">
+            <option value="">Primero elige la ciudad</option>
+            <option th:each="u : ${universidadesFiltro}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
         </select>
         <select th:field="*{tipo}">
             <option value="">Todas las publicaciones</option>
@@ -73,6 +73,15 @@
         <span th:text="'Página ' + ${resultados.number + 1} + ' de ' + ${resultados.totalPages}"></span>
         <a th:if="${resultados.hasNext()}" th:href="@{${urlPaginas + (resultados.number + 1)}}">Siguiente →</a>
     </nav>
+<script th:src="@{/js/geo.js}"></script>
+<script th:inline="javascript">
+    Geo.enlazar({
+        ciudad: document.getElementById('sel-ciudad'),
+        universidad: document.getElementById('sel-universidad'),
+        universidades: /*[[${universidadesGeo}]]*/ {},
+        textoVacio: 'Cualquier universidad'
+    });
+</script>
 </main>
 <footer th:replace="~{fragmentos/base :: pie}"></footer>
 </body>

@@ -37,10 +37,16 @@
 
         <div class="dos">
             <label>Ciudad
-                <input th:field="*{ciudad}" placeholder="Ej: Barranquilla">
+                <select id="sel-ciudad" th:field="*{ciudad}">
+                    <option value="">Elige la ciudad…</option>
+                    <optgroup th:each="d : ${municipios}" th:label="${d.key}">
+                        <option th:each="m : ${d.value}" th:value="${m.nombre()}" th:text="${m.nombre()}"></option>
+                    </optgroup>
+                </select>
                 <span class="campo-error" th:errors="*{ciudad}"></span></label>
             <label>Barrio
-                <input th:field="*{barrio}" placeholder="Ej: El Prado">
+                <input th:field="*{barrio}" list="lista-barrios" placeholder="Ej: El Prado">
+                <datalist id="lista-barrios"></datalist>
                 <span class="campo-error" th:errors="*{barrio}"></span></label>
         </div>
 
@@ -80,13 +86,12 @@
             <p class="ayuda">Si queda cerca a una universidad, los estudiantes te encontrarán más fácil.</p>
             <div class="dos">
                 <label>Universidad cercana
-                    <select name="universidadCercana" id="universidadCercana">
+                    <select name="universidadCercana" id="universidadCercana"
+                            th:attr="data-seleccionada=${inmueble.universidadCercana != null ? inmueble.universidadCercana.id : ''}">
                         <option value="">Ninguna</option>
-                        <optgroup th:each="g : ${universidadesPorCiudad}" th:label="${g.key}">
-                            <option th:each="u : ${g.value}" th:value="${u.id}" th:text="${u.nombre}"
-                                    th:selected="${inmueble.universidadCercana != null and inmueble.universidadCercana.id == u.id}"></option>
-                        </optgroup>
-                    </select></label>
+                    </select>
+                    <span class="ayuda">Solo aparecen las universidades de la ciudad del inmueble.</span>
+                    <span class="campo-error" th:errors="*{universidadCercana}"></span></label>
                 <label>Minutos caminando
                     <input type="number" min="1" max="120" th:field="*{minutosAPie}" placeholder="Ej: 10">
                     <span class="campo-error" th:errors="*{minutosAPie}"></span></label>
@@ -138,7 +143,7 @@
                 const unis = /*[[${puntosUniversidades}]]*/ [];
                 const $ = id => document.getElementById(id);
                 const lat = $('latitud'), lng = $('longitud'), minutos = $('minutosAPie');
-                const selUni = $('universidadCercana'), ciudad = $('ciudad');
+                const selUni = $('universidadCercana'), ciudad = $('sel-ciudad');
                 const mapa = Mapas.crear('mapa-form');
                 let pin = null, pinUni = null, minutosAuto = !minutos.value;
 
@@ -210,6 +215,17 @@
 
         <button type="submit" class="boton" th:text="${inmueble.id == null ? 'Publicar' : 'Guardar cambios'}"></button>
     </form>
+<script th:src="@{/js/geo.js}"></script>
+<script th:inline="javascript">
+    Geo.enlazar({
+        ciudad: document.getElementById('sel-ciudad'),
+        universidad: document.getElementById('universidadCercana'),
+        listaBarrios: document.getElementById('lista-barrios'),
+        universidades: /*[[${universidadesGeo}]]*/ {},
+        barrios: /*[[${barriosGeo}]]*/ {},
+        textoVacio: 'Ninguna'
+    });
+</script>
 </main>
 </body>
 </html>

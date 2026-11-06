@@ -27,10 +27,16 @@ public class PublicacionController {
     private final UniversidadService universidades;
     private final com.juanamaris.inmobiliaria.service.CompaneroService companeros;
     private final com.juanamaris.inmobiliaria.service.RegistroAnuncianteService registros;
+    private final com.juanamaris.inmobiliaria.service.GeografiaService geografia;
+    private final com.juanamaris.inmobiliaria.service.BarrioService barrios;
 
     public PublicacionController(InmuebleService inmuebles, UsuarioService usuarios, UniversidadService universidades,
                                  com.juanamaris.inmobiliaria.service.CompaneroService companeros,
-                                 com.juanamaris.inmobiliaria.service.RegistroAnuncianteService registros) {
+                                 com.juanamaris.inmobiliaria.service.RegistroAnuncianteService registros,
+                                 com.juanamaris.inmobiliaria.service.GeografiaService geografia,
+                                 com.juanamaris.inmobiliaria.service.BarrioService barrios) {
+        this.geografia = geografia;
+        this.barrios = barrios;
         this.registros = registros;
         this.companeros = companeros;
         this.universidades = universidades;
@@ -52,6 +58,24 @@ public class PublicacionController {
         model.addAttribute("generos", com.juanamaris.inmobiliaria.model.Genero.values());
         model.addAttribute("universidadesPorCiudad", universidades.porCiudad());
         model.addAttribute("puntosUniversidades", universidades.puntos());
+        model.addAttribute("municipios", geografia.porDepartamento());
+        model.addAttribute("universidadesGeo", universidades.mapaPorCiudad());
+        model.addAttribute("barriosGeo", barrios.mapaPorCiudad());
+    }
+
+    /** La ciudad debe ser un municipio de Colombia y la universidad cercana debe estar en esa misma ciudad. */
+    private void validarUbicacion(Inmueble i, BindingResult errores) {
+        var m = geografia.buscar(i.getCiudad());
+        if (m.isEmpty()) {
+            errores.rejectValue("ciudad", "ciudad", "Elige la ciudad de la lista");
+        } else {
+            i.setCiudad(m.get().nombre());
+        }
+        var u = i.getUniversidadCercana();
+        if (u != null && m.isPresent() && !u.getCiudad().equalsIgnoreCase(m.get().nombre())) {
+            errores.rejectValue("universidadCercana", "ciudad",
+                    "Esa universidad está en " + u.getCiudad() + ". Elige una universidad de " + m.get().nombre() + ".");
+        }
     }
 
     @GetMapping("/mis-inmuebles")
@@ -82,9 +106,11 @@ public class PublicacionController {
                            @AuthenticationPrincipal UserDetails yo, Model model, RedirectAttributes flash) {
         if (faltaRegistro(yo, flash)) return "redirect:/mi-registro";
         validarSinDireccion(inmueble, errores);
+        validarUbicacion(inmueble, errores);
         if (errores.hasErrors()) return "inmuebles/form";
         try {
             Inmueble guardado = inmuebles.publicar(inmueble, nuevasFotos, usuario(yo));
+            barrios.registrar(guardado.getCiudad(), guardado.getBarrio());
             flash.addFlashAttribute("ok", "¡Tu inmueble ya está publicado!");
             return "redirect:/inmuebles/" + guardado.getId();
         } catch (IllegalArgumentException e) {
@@ -106,6 +132,7 @@ public class PublicacionController {
                              @AuthenticationPrincipal UserDetails yo, Model model, RedirectAttributes flash) {
         Usuario u = usuario(yo);
         validarSinDireccion(inmueble, errores);
+        validarUbicacion(inmueble, errores);
         if (errores.hasErrors()) {
             inmueble.setId(id);
             inmueble.setFotos(inmuebles.paraEditar(id, u).getFotos());
@@ -113,6 +140,7 @@ public class PublicacionController {
         }
         try {
             inmuebles.actualizar(id, inmueble, nuevasFotos, borrarFotos, u);
+            barrios.registrar(inmueble.getCiudad(), inmueble.getBarrio());
             flash.addFlashAttribute("ok", "Cambios guardados");
             return "redirect:/mis-inmuebles";
         } catch (IllegalArgumentException e) {

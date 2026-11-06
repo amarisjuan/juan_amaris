@@ -202,15 +202,15 @@ class InmobiliariaApplicationTests {
         Long uis = universidades.findBySigla("UIS").orElseThrow().getId();
         for (int n = 0; n < 2; n++) {   // Laura ya tiene 1 de ejemplo -> llega a 3
             mvc.perform(post("/companeros/nuevo").with(csrf())
-                            .param("tipo", "BUSCO_CUARTO").param("universidad", uis.toString())
+                            .param("tipo", "BUSCO_CUARTO").param("universidad", uis.toString()).param("ciudad", "Bucaramanga")
                             .param("carrera", "Geología").param("semestre", "2").param("genero", "MUJER")
                             .param("presupuesto", "650000").param("descripcion", "Estudiante de primer año"))
                     .andExpect(redirectedUrl("/companeros"));
         }
-        mvc.perform(get("/companeros").param("universidad", uis.toString()))
+        mvc.perform(get("/companeros").param("universidad", uis.toString()).param("ciudad", "Bucaramanga"))
                 .andExpect(content().string(containsString("Geología")));
         mvc.perform(post("/companeros/nuevo").with(csrf())
-                        .param("tipo", "BUSCO_CUARTO").param("universidad", uis.toString())
+                        .param("tipo", "BUSCO_CUARTO").param("universidad", uis.toString()).param("ciudad", "Bucaramanga")
                         .param("carrera", "Geología").param("genero", "MUJER")
                         .param("presupuesto", "650000").param("descripcion", "Una más"))
                 .andExpect(status().isOk())
@@ -532,5 +532,74 @@ class InmobiliariaApplicationTests {
                 .andExpect(redirectedUrl("/login?bloqueado"));
         org.junit.jupiter.api.Assertions.assertTrue(usuariosRepo.findByEmailIgnoreCase("otra.cuenta@test.co").orElseThrow().isBloqueado());
         mvc.perform(get("/admin/bloqueos").with(admin)).andExpect(content().string(containsString("98765432")));
+    }
+
+    // ---------- Municipios, universidades por ciudad y barrios ----------
+
+    @Autowired com.juanamaris.inmobiliaria.service.GeografiaService geografia;
+    @Autowired com.juanamaris.inmobiliaria.service.UniversidadService universidadesService;
+    @Autowired com.juanamaris.inmobiliaria.service.BarrioService barriosService;
+
+    @Test
+    void hayTodosLosMunicipiosYSeReconocenPorNombreComun() {
+        org.junit.jupiter.api.Assertions.assertTrue(geografia.todos().size() > 1000, "Deben cargarse los municipios de DIVIPOLA");
+        org.junit.jupiter.api.Assertions.assertEquals("Cali", geografia.buscar("santiago de cali").orElseThrow().nombre());
+        org.junit.jupiter.api.Assertions.assertEquals("Cali", geografia.buscar("CALI").orElseThrow().nombre());
+        org.junit.jupiter.api.Assertions.assertTrue(geografia.buscar("Montería").isPresent());
+        org.junit.jupiter.api.Assertions.assertTrue(geografia.buscar("Ciudad Inventada").isEmpty());
+    }
+
+    @Test
+    void universidadesDeOtrasCiudadesSeImportan() {
+        var cali = universidadesService.de("Cali");
+        org.junit.jupiter.api.Assertions.assertTrue(cali.stream().anyMatch(u -> u.getNombre().contains("Universidad del Valle")),
+                "Debe estar la Universidad del Valle en Cali");
+        org.junit.jupiter.api.Assertions.assertTrue(cali.stream().noneMatch(u -> u.getNombre().contains("Universidad del Norte")),
+                "Las universidades de Cali no pueden incluir las de Barranquilla");
+        org.junit.jupiter.api.Assertions.assertFalse(universidadesService.de("Barranquilla").isEmpty());
+        // Las universidades ya catalogadas no se duplican
+        long uninorte = universidadesService.de("Barranquilla").stream().filter(u -> u.getNombre().equals("Universidad del Norte")).count();
+        org.junit.jupiter.api.Assertions.assertEquals(1, uninorte);
+    }
+
+    @Test
+    void elFiltroMuestraSoloLasUniversidadesDeLaCiudadElegida() throws Exception {
+        String html = mvc.perform(get("/").param("ciudad", "Cali")).andReturn().getResponse().getContentAsString();
+        String menu = html.substring(html.indexOf("id=\"sel-universidad\""), html.indexOf("</select>", html.indexOf("id=\"sel-universidad\"")));
+        org.junit.jupiter.api.Assertions.assertTrue(menu.contains("Univalle") || menu.contains("Universidad del Valle"));
+        org.junit.jupiter.api.Assertions.assertFalse(menu.contains("Uninorte"), "No deben aparecer universidades de otra ciudad");
+    }
+
+    @Test
+    @WithMockUser(username = "admin@inmobiliaria.co")
+    void ciudadDebeSerDeLaListaYLaUniversidadDeLaMismaCiudad() throws Exception {
+        Long uninorte = universidades.findBySigla("Uninorte").orElseThrow().getId();
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Casa con ciudad inventada").param("operacion", "ARRIENDO").param("tipo", "CASA")
+                        .param("precio", "900000").param("ciudad", "Ciudad Inventada"))
+                .andExpect(content().string(containsString("Elige la ciudad de la lista")));
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Casa en Cali con universidad de Barranquilla").param("operacion", "ARRIENDO").param("tipo", "CASA")
+                        .param("precio", "900000").param("ciudad", "Cali").param("universidadCercana", uninorte.toString())
+                        .param("minutosAPie", "10"))
+                .andExpect(content().string(containsString("Elige una universidad de")));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@inmobiliaria.co")
+    void losBarriosSeAprendenDeLasPublicaciones() throws Exception {
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Apartamento en Chapinero Alto").param("operacion", "ARRIENDO").param("tipo", "APARTAMENTO")
+                        .param("precio", "1800000").param("ciudad", "Bogotá").param("barrio", "  chapinero   ALTO "))
+                .andExpect(status().is3xxRedirection());
+        mvc.perform(multipart("/publicar").with(csrf())
+                        .param("titulo", "Otro en Chapinero Alto").param("operacion", "VENTA").param("tipo", "CASA")
+                        .param("precio", "300000000").param("ciudad", "Bogotá").param("barrio", "Chapinero Alto"))
+                .andExpect(status().is3xxRedirection());
+        var barrios = barriosService.mapaPorCiudad().get("Bogotá");
+        org.junit.jupiter.api.Assertions.assertNotNull(barrios);
+        org.junit.jupiter.api.Assertions.assertEquals(1, barrios.stream().filter(b -> b.equals("Chapinero Alto")).count(),
+                "Un mismo barrio no se repite aunque cambie la escritura");
+        mvc.perform(get("/")).andExpect(content().string(containsString("Chapinero Alto")));
     }
 }
