@@ -10,6 +10,8 @@ la paleta corporativa (Azul Puerto `#0B4A6F` + Ámbar Arena `#E9A23B`). Ver `jua
 - `juan_amaris/inventario/` → proyecto anterior de inventario (no tocar salvo que se pida).
 - `legal/` → espacio de trabajo de **Argenis**, el agente legal (`.claude/agents/argenis.md`).
   Sus reglas propias están en `legal/CLAUDE.md`. Todo lo legal se le delega a él.
+- `juan/` → espacio de trabajo de **Juan**, desarrollador y fundador (`.claude/agents/juan.md`).
+  Sus reglas propias están en `juan/CLAUDE.md`. Desarrollo del portal y decisiones de producto.
 
 ## Idea de negocio (decidida)
 Inmobiliaria propia en Colombia donde **las personas suben sus inmuebles y otras los buscan**.

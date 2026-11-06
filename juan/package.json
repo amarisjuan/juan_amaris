@@ -1,0 +1,6 @@
+{
+  "name": "dev-juan",
+  "private": true,
+  "type": "module",
+  "description": "Scripts deterministas del agente Juan (desarrollo y fundación)"
+}
