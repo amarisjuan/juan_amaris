@@ -3,7 +3,7 @@
 <head th:fragment="head(titulo)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${titulo} + ' | Inmobiliaria'">Inmobiliaria</title>
+    <title th:text="${titulo} + ' | Nidal Inmuebles'">Nidal Inmuebles</title>
     <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
     <meta name="theme-color" content="#0B4A6F">
     <link rel="stylesheet" th:href="@{/webjars/leaflet/1.9.4/dist/leaflet.css}">
@@ -13,7 +13,7 @@
 </head>
 <body>
 <header th:fragment="menu" class="menu">
-    <a class="marca" th:href="@{/}"><img th:src="@{/img/logo.svg}" alt="" width="36" height="36"> Inmobiliaria</a>
+    <a class="marca" th:href="@{/}"><img th:src="@{/img/logo.svg}" alt="" width="36" height="36"> Nidal Inmuebles</a>
     <nav>
         <a th:href="@{/}">Buscar</a>
         <a th:href="@{/estudiantes}"><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg> Estudiantes</a>
