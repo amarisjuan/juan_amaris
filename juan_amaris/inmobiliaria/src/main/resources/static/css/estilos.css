@@ -286,3 +286,17 @@ select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed
 .mapa-bajo { height:320px; }
 .pin-pequeno { border-width:1px; box-shadow:0 1px 3px rgba(10,37,64,.35); }
 .pin-pequeno svg { width:13px; height:13px; }
+
+/* --- Menú superior ordenado: mismo tamaño, alineación y estilo para enlaces y botones --- */
+.menu { padding:10px 20px; gap:10px 24px; }
+.menu nav { gap:8px 20px; align-items:center; justify-content:flex-end; }
+.menu nav > a, .menu nav form, .menu nav button.enlace {
+    font-family:inherit; font-size:1rem; font-weight:500; line-height:1.2; color:var(--marca);
+    display:inline-flex; align-items:center; gap:6px; margin:0; padding:6px 0; background:none; border:0; text-decoration:none;
+}
+.menu nav form { padding:0; }
+.menu nav button.enlace { cursor:pointer; }
+.menu nav > a:hover, .menu nav button.enlace:hover { color:var(--marca-700); text-decoration:underline; }
+.menu nav > a.boton.acento { padding:9px 16px; border-radius:var(--radio-sm); color:var(--marca-900) !important; text-decoration:none !important; }
+.menu nav .ic { width:18px; height:18px; flex:0 0 18px; display:block; }
+.menu .marca img { display:block; }
