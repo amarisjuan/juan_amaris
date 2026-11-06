@@ -56,7 +56,7 @@ class InmobiliariaApplicationTests {
 
         mvc.perform(get("/").param("universidad", udea.toString()).param("amoblado", "true"))
                 .andExpect(content().string(containsString("Habitación junto a la UdeA")))
-                .andExpect(content().string(containsString("5 min a pie de ")));
+                .andExpect(content().string(containsString("Cerca de ")));
 
         // El detalle muestra la universidad y el mapa
         String html = mvc.perform(get("/").param("universidad", udea.toString()))
@@ -269,7 +269,7 @@ class InmobiliariaApplicationTests {
         org.junit.jupiter.api.Assertions.assertTrue(html1.contains("\"radio\":400"));
         org.junit.jupiter.api.Assertions.assertTrue(html1.contains("Ubicación aproximada"));
         // Minutos redondeados de 5 en 5 (8 -> 10) y distancia redondeada
-        org.junit.jupiter.api.Assertions.assertTrue(html1.contains("Unos 10 minutos a pie de"));
+        org.junit.jupiter.api.Assertions.assertTrue(html1.contains("Cerca de </span><strong>Universidad del Norte"));
         org.junit.jupiter.api.Assertions.assertTrue(html1.contains("en línea recta de Universidad del Norte"));
     }
 

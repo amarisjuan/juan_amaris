@@ -18,7 +18,7 @@
             <h1 th:text="${i.titulo}"></h1>
             <p class="ubicacion" th:text="${i.barrio != null ? i.barrio + ', ' + i.ciudad : i.ciudad}"></p>
             <p class="estudiante grande" th:if="${i.universidadCercana}"><svg th:replace="~{fragmentos/base :: ic('gorro')}"></svg>
-                <span th:text="${i.minutosAPieAprox != null ? 'Unos ' + i.minutosAPieAprox + ' minutos a pie de ' : 'Cerca a '}"></span><strong
+                <span th:text="${i.universidadCercana != null ? 'Cerca de ' : ''}"></span><strong
                         th:text="${i.universidadCercana.nombre}"></strong></p>
             <ul class="caracteristicas">
                 <li class="si" th:if="${i.amoblado}"><svg th:replace="~{fragmentos/base :: ic('si')}"></svg> Amoblado</li>

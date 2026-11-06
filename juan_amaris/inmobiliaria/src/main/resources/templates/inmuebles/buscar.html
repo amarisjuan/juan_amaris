@@ -41,11 +41,11 @@
             <option th:each="u : ${universidadesFiltro}" th:value="${u.id}" th:text="${u.nombreCorto}"></option>
         </select>
         <select th:field="*{maxMinutos}">
-            <option value="">Distancia a pie</option>
-            <option value="5">Hasta 5 min</option>
-            <option value="10">Hasta 10 min</option>
-            <option value="15">Hasta 15 min</option>
-            <option value="30">Hasta 30 min</option>
+            <option value="">Qué tan cerca</option>
+            <option value="5">Hasta 5 minutos</option>
+            <option value="10">Hasta 10 minutos</option>
+            <option value="15">Hasta 15 minutos</option>
+            <option value="30">Hasta 30 minutos</option>
         </select>
         <select th:field="*{para}">
             <option value="">Vivienda para…</option>
