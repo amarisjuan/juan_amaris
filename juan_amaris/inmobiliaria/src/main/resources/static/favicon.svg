@@ -1,6 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="Logo">
-  <rect width="40" height="40" rx="10" fill="#0B4A6F"/>
-  <path d="M9 20.5 20 11l11 9.5" fill="none" stroke="#E9A23B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M13.5 19.5V30h13V19.5" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
-  <rect x="18" y="23.5" width="4" height="6.5" rx="1" fill="#E9A23B"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="Nidal Inmuebles">
+  <!-- Logo Nidal Inmuebles: techo sobre un nido (hogar y protección) -->
+  <rect width="80" height="80" rx="18" fill="#0B4A6F"/>
+  <path d="M18 40 40 22l22 18" fill="none" stroke="#E9A23B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22 48c4 10 32 10 36 0" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+  <path d="M26 54c5 7 23 7 28 0" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity=".7"/>
 </svg>
