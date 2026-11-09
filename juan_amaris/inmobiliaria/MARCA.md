@@ -38,6 +38,10 @@ Estados: éxito `#1E6B3E`, error `#B42318`, aviso `#7A4E00`, WhatsApp `#107C41`.
 
 **Regla:** nunca texto blanco sobre Ámbar Arena (no se lee). Sobre ámbar siempre va Azul Noche.
 
+## Eslogan
+**Encuentra tu nido.** (elegido el 2026-11-09). Va en la portada del sitio, en el pie de página y al final de
+videos y anuncios, junto al logo. Conecta con el nombre (Nidal = nido) y con el dibujo del logo.
+
 ## Logo
 `src/main/resources/static/img/logo.svg` (elegido el 2026-11-09): **techo sobre un nido**. Cuadrado redondeado
 Azul Puerto, techo en Ámbar Arena y un nido en blanco (dos arcos). "Nidal" suena a nido: el techo protege el hogar.
