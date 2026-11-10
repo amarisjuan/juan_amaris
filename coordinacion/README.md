@@ -1,6 +1,7 @@
 # Coordinación entre agentes
 
-Carpeta compartida entre **Juan** (desarrollo y fundación, `juan/`) y **Argenis** (legal, `legal/`).
+Carpeta compartida entre **Juan** (desarrollo y fundación, `juan/`), **Argenis** (legal, `legal/`) y
+**JDoor** (ciberseguridad, `jdoor/`).
 
 ## Cuándo consulta Juan a Argenis
 Antes de construir o cambiar algo que toque:
@@ -19,3 +20,7 @@ Antes de construir o cambiar algo que toque:
 4. Juan implementa en el portal cumpliendo los requisitos, y Argenis verifica cuando haya un script para hacerlo.
 
 Argenis no es abogado: sus conceptos son orientación y lo importante debe revisarlo un abogado.
+
+## Seguridad (JDoor)
+JDoor revisa el portal y deja cada revisión en `coordinacion/seguridad/NNN-tema.md` con los hallazgos por severidad.
+Juan corrige; lo que toque datos personales o normas se consulta con Argenis. El usuario confirma la prioridad.

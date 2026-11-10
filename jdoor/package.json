@@ -1,0 +1,6 @@
+{
+  "name": "seguridad-jdoor",
+  "private": true,
+  "type": "module",
+  "description": "Scripts deterministas del agente JDoor (ciberseguridad)"
+}
