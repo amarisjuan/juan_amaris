@@ -25,6 +25,11 @@ alianzas con oficinas de bienestar universitario.
 
 ## Lo que ya está hecho (inmobiliaria)
 - Registro/login (correo + celular colombiano), contraseñas BCrypt, CSRF.
+- **Recuperar contraseña por correo** (`/recuperar`, `/restablecer`, `RecuperacionService`): enlace de un solo uso,
+  30 min, máx. 3 por hora, solo se guarda el hash SHA-256, misma respuesta exista o no la cuenta, al cambiarla se cierran
+  las demás sesiones (`SesionBloqueada`) y llega un aviso. Correos por **Brevo** (SMTP, `CorreoService`, plantillas en
+  `templates/correo/`). Credenciales en `juan_amaris/inmobiliaria/.env` (ver `.env.example`, no se sube); sin ellas el
+  enlace sale en la consola.
 - Publicar, editar, pausar y eliminar inmuebles con hasta 10 fotos (se guardan en `uploads/`).
 - Búsqueda pública con filtros (operación, ciudad, tipo, barrio, precio, habitaciones, estrato),
   orden y paginación.
@@ -62,7 +67,7 @@ alianzas con oficinas de bienestar universitario.
 ```bash
 cd juan_amaris/inmobiliaria
 ./mvnw spring-boot:run   # http://localhost:8080
-./mvnw test              # 43 pruebas con MockMvc
+./mvnw test              # 47 pruebas con MockMvc
 ```
 
 ## Cuidado (errores ya vistos)

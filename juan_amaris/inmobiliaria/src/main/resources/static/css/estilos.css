@@ -409,3 +409,5 @@ select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed
 .tabla td.cambio { color:#1B7A47; font-weight:600; }
 .tabla { font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: reduce) { .punto-vivo { animation:none; } }
+
+.olvido { margin:-4px 0 4px; text-align:right; font-size:.92rem; }

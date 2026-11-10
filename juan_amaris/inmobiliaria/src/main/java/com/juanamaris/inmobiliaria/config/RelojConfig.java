@@ -6,6 +6,7 @@ import java.time.Clock;
 import java.time.ZoneId;
 
 @Configuration
+@org.springframework.scheduling.annotation.EnableScheduling
 public class RelojConfig {
     /** Los conteos diarios se cortan a medianoche en hora de Colombia. */
     @Bean

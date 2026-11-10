@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Recuperar contraseña')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto">
+    <h1>Recuperar contraseña</h1>
+    <th:block th:if="${enviado}">
+        <p class="alerta ok"><svg th:replace="~{fragmentos/base :: ic('si')}"></svg>
+            <span>Si el correo está registrado, te enviamos un enlace para crear una contraseña nueva.
+            Revisa tu bandeja de entrada y la carpeta de spam. El enlace vence en 30 minutos.</span></p>
+        <p><a th:href="@{/login}">Volver a ingresar</a></p>
+    </th:block>
+    <th:block th:unless="${enviado}">
+        <p>Escribe el correo con el que creaste tu cuenta y te enviaremos un enlace para crear una contraseña nueva.</p>
+        <form class="formulario" th:action="@{/recuperar}" method="post">
+            <label>Correo <input type="email" name="email" required autofocus autocomplete="email"></label>
+            <button class="boton" type="submit">Enviar enlace</button>
+        </form>
+        <p><a th:href="@{/login}">Volver a ingresar</a></p>
+    </th:block>
+</main>
+</body>
+</html>

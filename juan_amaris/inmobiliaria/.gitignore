@@ -35,3 +35,6 @@ build/
 ### Fotos subidas por usuarios ###
 uploads/
 data/
+
+### Claves (correo, etc.) ###
+.env

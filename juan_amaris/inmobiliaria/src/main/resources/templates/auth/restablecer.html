@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Nueva contraseña')}"></head>
+<body>
+<header th:replace="~{fragmentos/base :: menu}"></header>
+<main class="angosto">
+    <h1>Crea una contraseña nueva</h1>
+    <th:block th:if="${valido}">
+        <p class="alerta error" th:if="${error}" th:text="${error}"></p>
+        <form class="formulario" th:action="@{/restablecer}" method="post">
+            <input type="hidden" name="codigo" th:value="${codigo}">
+            <label>Contraseña nueva (mínimo 8 caracteres)
+                <input type="password" name="clave" minlength="8" maxlength="64" required autofocus autocomplete="new-password"></label>
+            <label>Repite la contraseña
+                <input type="password" name="clave2" minlength="8" maxlength="64" required autocomplete="new-password"></label>
+            <button class="boton" type="submit">Guardar contraseña</button>
+        </form>
+        <p class="ayuda">Al guardarla se cerrará la sesión en los demás dispositivos donde hayas ingresado.</p>
+    </th:block>
+    <th:block th:unless="${valido}">
+        <p class="alerta error"><svg th:replace="~{fragmentos/base :: ic('alerta')}"></svg>
+            <span>Este enlace ya no es válido: venció o ya se usó. Pide uno nuevo.</span></p>
+        <p><a class="boton" th:href="@{/recuperar}">Pedir un enlace nuevo</a></p>
+    </th:block>
+</main>
+</body>
+</html>

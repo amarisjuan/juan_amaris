@@ -47,6 +47,12 @@ public class Usuario {
 
     private java.time.LocalDateTime fechaRegistro;
 
+    /** Última vez que se cambió la contraseña: las sesiones abiertas antes de esa hora se cierran. */
+    private java.time.LocalDateTime credencialesCambiadasEn;
+
+    public java.time.LocalDateTime getCredencialesCambiadasEn() { return credencialesCambiadasEn; }
+    public void setCredencialesCambiadasEn(java.time.LocalDateTime v) { this.credencialesCambiadasEn = v; }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNombre() { return nombre; }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"></head>
+<body style="margin:0;background:#F4F7FA;font-family:Arial,Helvetica,sans-serif;color:#0A2540;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F7FA;padding:24px 12px;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #DCE5EC;">
+    <tr><td style="background:#0B4A6F;padding:18px 24px;border-bottom:4px solid #E9A23B;">
+        <span style="color:#FFFFFF;font-size:20px;font-weight:bold;">Nidal Inmuebles</span></td></tr>
+    <tr><td style="padding:28px 24px 8px;">
+        <p style="margin:0 0 14px;font-size:16px;">Hola<span th:if="${nombre != ''}" th:text="' ' + ${nombre}"></span>,</p>
+        <p style="margin:0 0 20px;font-size:15px;line-height:1.5;">Recibimos una solicitud para cambiar la contraseña de tu cuenta.
+            Para crear una nueva, usa este botón:</p>
+        <p style="margin:0 0 22px;"><a th:href="${enlace}" style="display:inline-block;background:#E9A23B;color:#0A2540;text-decoration:none;font-weight:bold;padding:12px 22px;border-radius:8px;">Crear contraseña nueva</a></p>
+        <p style="margin:0 0 8px;font-size:13px;color:#4A6072;line-height:1.5;">El enlace vence en <span th:text="${minutos}">30</span> minutos y sirve una sola vez.</p>
+        <p style="margin:0 0 20px;font-size:13px;color:#4A6072;line-height:1.5;">Si no fuiste tú, ignora este correo: tu contraseña no cambia.
+            Nidal Inmuebles nunca te pedirá tu contraseña por correo, WhatsApp ni llamada.</p>
+        <p style="margin:0 0 4px;font-size:12px;color:#7A8D9C;">Si el botón no funciona, copia esta dirección en el navegador:</p>
+        <p style="margin:0 0 24px;font-size:12px;color:#0B4A6F;word-break:break-all;" th:text="${enlace}"></p>
+    </td></tr>
+    <tr><td style="background:#F4F7FA;padding:14px 24px;font-size:12px;color:#7A8D9C;">Nidal Inmuebles · Tu nido, tu hogar.</td></tr>
+</table>
+</td></tr></table>
+</body>
+</html>

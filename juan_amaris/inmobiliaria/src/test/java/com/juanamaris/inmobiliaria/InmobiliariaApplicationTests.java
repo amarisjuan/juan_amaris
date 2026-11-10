@@ -12,11 +12,14 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(properties = {
         "spring.datasource.url=jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
-        "app.uploads.dir=target/test-uploads"})
+        "app.uploads.dir=target/test-uploads",
+        // Las pruebas nunca envían correos reales, aunque exista un .env con credenciales.
+        "spring.mail.username="})
 @AutoConfigureMockMvc
 class InmobiliariaApplicationTests {
 
@@ -664,5 +667,85 @@ class InmobiliariaApplicationTests {
         inmuebles.saveAndFlush(inm);
         String varias = mvc.perform(get("/inmuebles/" + inm.getId())).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         org.junit.jupiter.api.Assertions.assertTrue(varias.contains("galeria n5") && varias.contains("Ver las 7 fotos"));
+    }
+
+    @Autowired com.juanamaris.inmobiliaria.service.RecuperacionService recuperacion;
+    @Autowired com.juanamaris.inmobiliaria.repository.TokenRecuperacionRepository tokensRecuperacion;
+
+    private com.juanamaris.inmobiliaria.model.Usuario cuentaParaRecuperar(String email) {
+        var u = new com.juanamaris.inmobiliaria.model.Usuario();
+        u.setNombres("Rosa"); u.setApellidos("Prueba Recuperar"); u.setNombre("Rosa Prueba Recuperar");
+        u.setEmail(email); u.setCelular("3001112233"); u.setRol("USER");
+        u.setPassword(encoder.encode("vieja-clave-1"));
+        return usuariosRepo.save(u);
+    }
+
+    @Test
+    void recuperarContrasenaNoRevelaSiElCorreoExiste() throws Exception {
+        cuentaParaRecuperar("existe.recuperar@test.co");
+        for (String correo : new String[] {"existe.recuperar@test.co", "no-existe-nunca@test.co"}) {
+            mvc.perform(post("/recuperar").with(csrf()).param("email", correo))
+                    .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/recuperar"))
+                    .andExpect(flash().attribute("enviado", true));
+        }
+        mvc.perform(get("/recuperar")).andExpect(status().isOk()).andExpect(content().string(containsString("Enviar enlace")));
+        mvc.perform(get("/login")).andExpect(content().string(containsString("¿Olvidaste tu contraseña?")));
+    }
+
+    @Test
+    void elEnlaceCambiaLaContrasenaUnaSolaVezYSoloSeGuardaElHash() throws Exception {
+        var u = cuentaParaRecuperar("cambia.recuperar@test.co");
+        String codigo = recuperacion.solicitar("Cambia.Recuperar@test.co").orElseThrow();
+        org.junit.jupiter.api.Assertions.assertTrue(tokensRecuperacion.findAll().stream().noneMatch(t -> t.getHash().equals(codigo)),
+                "El código no se guarda tal cual");
+        mvc.perform(get("/restablecer").param("codigo", codigo)).andExpect(status().isOk())
+                .andExpect(header().string("Referrer-Policy", "no-referrer"))
+                .andExpect(content().string(containsString("Guardar contraseña")));
+        // Contraseñas distintas: no cambia
+        mvc.perform(post("/restablecer").with(csrf()).param("codigo", codigo).param("clave", "nueva-clave-1").param("clave2", "otra-clave-2"))
+                .andExpect(status().isOk()).andExpect(content().string(containsString("no coinciden")));
+        mvc.perform(post("/restablecer").with(csrf()).param("codigo", codigo).param("clave", "nueva-clave-1").param("clave2", "nueva-clave-1"))
+                .andExpect(redirectedUrl("/login"));
+        var actualizado = usuariosRepo.findById(u.getId()).orElseThrow();
+        org.junit.jupiter.api.Assertions.assertTrue(encoder.matches("nueva-clave-1", actualizado.getPassword()));
+        org.junit.jupiter.api.Assertions.assertNotNull(actualizado.getCredencialesCambiadasEn());
+        // Segunda vez con el mismo enlace: ya no sirve
+        mvc.perform(post("/restablecer").with(csrf()).param("codigo", codigo).param("clave", "tercera-clave-3").param("clave2", "tercera-clave-3"))
+                .andExpect(status().isOk()).andExpect(content().string(containsString("ya no es válido")));
+        org.junit.jupiter.api.Assertions.assertTrue(encoder.matches("nueva-clave-1", usuariosRepo.findById(u.getId()).orElseThrow().getPassword()));
+        // Se puede ingresar con la nueva
+        mvc.perform(formLogin("/login").user("email", "cambia.recuperar@test.co").password("nueva-clave-1"))
+                .andExpect(redirectedUrl("/mis-inmuebles"));
+    }
+
+    @Test
+    void elEnlaceVenceYHayLimitePorHora() throws Exception {
+        var cuenta = cuentaParaRecuperar("limite.recuperar@test.co");
+        String primero = recuperacion.solicitar("limite.recuperar@test.co").orElseThrow();
+        String segundo = recuperacion.solicitar("limite.recuperar@test.co").orElseThrow();
+        org.junit.jupiter.api.Assertions.assertFalse(recuperacion.valido(primero), "Solo vale el enlace más reciente");
+        org.junit.jupiter.api.Assertions.assertTrue(recuperacion.valido(segundo));
+        String tercero = recuperacion.solicitar("limite.recuperar@test.co").orElseThrow();
+        org.junit.jupiter.api.Assertions.assertTrue(recuperacion.solicitar("limite.recuperar@test.co").isEmpty(), "Máximo 3 por hora");
+        // Vencido: deja de servir
+        var t = tokensRecuperacion.findAll().stream().filter(x -> x.getUsadoEn() == null
+                && x.getUsuario().getId().equals(cuenta.getId())).findFirst().orElseThrow();
+        t.setVenceEn(java.time.LocalDateTime.now().minusYears(1));
+        tokensRecuperacion.save(t);
+        org.junit.jupiter.api.Assertions.assertFalse(recuperacion.valido(tercero), "Un enlace vencido no sirve");
+        mvc.perform(get("/restablecer").param("codigo", "codigo-inventado-que-no-existe-123456"))
+                .andExpect(content().string(containsString("ya no es válido")));
+    }
+
+    @Test
+    void cambiarLaContrasenaCierraLasSesionesAbiertas() throws Exception {
+        var u = cuentaParaRecuperar("sesiones.recuperar@test.co");
+        var login = mvc.perform(formLogin("/login").user("email", "sesiones.recuperar@test.co").password("vieja-clave-1"))
+                .andExpect(redirectedUrl("/mis-inmuebles")).andReturn();
+        var sesion = (org.springframework.mock.web.MockHttpSession) login.getRequest().getSession(false);
+        mvc.perform(get("/mis-inmuebles").session(sesion)).andExpect(status().isOk());
+        String codigo = recuperacion.solicitar("sesiones.recuperar@test.co").orElseThrow();
+        org.junit.jupiter.api.Assertions.assertTrue(recuperacion.restablecer(codigo, "clave-nueva-99"));
+        mvc.perform(get("/mis-inmuebles").session(sesion)).andExpect(redirectedUrl("/login?sesion"));
     }
 }
