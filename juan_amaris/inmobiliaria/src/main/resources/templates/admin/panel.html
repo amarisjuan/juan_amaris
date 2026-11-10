@@ -4,11 +4,10 @@
 <body>
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main class="panel">
+    <nav th:replace="~{fragmentos/base :: adminNav('panel')}"></nav>
     <div class="panel-titulo">
         <h1>Panel del administrador</h1>
-        <p class="ayuda">Actualizado al <span th:text="${#temporals.format(hoy, 'd ''de'' MMMM yyyy', new java.util.Locale('es','CO'))}"></span> ·
-            <a th:href="@{/admin/reportes}">Reportes</a> · <a th:href="@{/admin/bloqueos}">Bloqueos</a> ·
-            <a th:href="@{/admin/anunciantes}">Registro de anunciantes</a></p>
+        <p class="ayuda">Actualizado al <span th:text="${#temporals.format(hoy, 'd ''de'' MMMM yyyy', new java.util.Locale('es','CO'))}"></span></p>
         <p class="alerta aviso" th:if="${reportesPendientes > 0}"><svg th:replace="~{fragmentos/base :: ic('bandera')}"></svg>
             <span><strong th:text="${reportesPendientes} + ' reportes pendientes de revisión.'"></strong>
             <a th:href="@{/admin/reportes}">Revisarlos</a></span></p>

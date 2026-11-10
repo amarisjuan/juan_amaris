@@ -335,3 +335,15 @@ select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed
 .mapa-boton-ubicacion svg { width:18px; height:18px; }
 .mapa-boton-ubicacion.buscando svg { animation: ubicando 1s linear infinite; color:#1A73E8; }
 @keyframes ubicando { to { transform: rotate(360deg); } }
+
+/* Navegación del panel del administrador */
+.admin-nav { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 20px; padding:6px; background:var(--marca-100, #E6F0F6);
+    border-radius:12px; }
+.admin-nav a { display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:8px; font-weight:600;
+    color:#0B4A6F; text-decoration:none; background:#fff; border:1px solid rgba(11,74,111,.15); }
+.admin-nav a:hover { background:#0B4A6F; color:#fff; }
+.admin-nav a.activo { background:#0B4A6F; color:#fff; border-color:#0B4A6F; box-shadow:inset 0 -3px 0 #E9A23B; }
+.admin-nav .ic { width:18px; height:18px; }
+.admin-nav-cuenta { min-width:22px; padding:1px 7px; border-radius:999px; background:#E9A23B; color:#0A2540; font-size:.8rem;
+    text-align:center; }
+@media (max-width: 600px) { .admin-nav a { flex:1 1 calc(50% - 8px); justify-content:center; padding:10px 8px; } }

@@ -4,7 +4,7 @@
 <body>
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main class="panel">
-    <p><a th:href="@{/admin}">&larr; Volver al panel</a> · <a th:href="@{/admin/bloqueos}">Bloqueos</a></p>
+    <nav th:replace="~{fragmentos/base :: adminNav('reportes')}"></nav>
     <h1>Personas reportadas</h1>
     <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
         <span>Confidencial. Los reportes no se muestran en el sitio y no se le dice al reportado quién lo reportó.

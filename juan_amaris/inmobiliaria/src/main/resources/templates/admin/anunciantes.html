@@ -3,8 +3,8 @@
 <head th:replace="~{fragmentos/base :: head('Registro de anunciantes')}"></head>
 <body>
 <header th:replace="~{fragmentos/base :: menu}"></header>
-<main>
-    <p><a th:href="@{/admin}">&larr; Volver al panel</a></p>
+<main class="panel">
+    <nav th:replace="~{fragmentos/base :: adminNav('anunciantes')}"></nav>
     <h1>Registro de anunciantes</h1>
     <p class="alerta aviso"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
         <span>Información confidencial (Ley 1480 de 2011, art. 53). No la copies, no la compartas y entrégala solo a

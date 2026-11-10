@@ -4,7 +4,7 @@
 <body>
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main class="panel">
-    <p><a th:href="@{/admin}">&larr; Volver al panel</a> · <a th:href="@{/admin/reportes}">Reportes</a></p>
+    <nav th:replace="~{fragmentos/base :: adminNav('bloqueos')}"></nav>
     <h1>Correos y cédulas bloqueados</h1>
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
     <p class="ayuda">Un correo bloqueado no puede crear cuentas ni ingresar. Un documento bloqueado no puede registrarse como

@@ -43,7 +43,6 @@ public class AdminController {
         model.addAttribute("sinResultados", panel.busquedas(TipoEvento.BUSQUEDA_SIN_RESULTADOS, 15));
         model.addAttribute("masBuscado", panel.busquedas(TipoEvento.BUSQUEDA, 10));
         model.addAttribute("hoy", panel.hoy());
-        model.addAttribute("reportesPendientes", reportes.pendientes());
         return "admin/panel";
     }
 
@@ -154,5 +153,10 @@ public class AdminController {
     public String anunciantes(Model model) {
         model.addAttribute("registros", registros.todos());
         return "admin/anunciantes";
+    }
+    /** Cantidad de reportes pendientes para la pestaña "Reportes" en todas las páginas del panel. */
+    @org.springframework.web.bind.annotation.ModelAttribute("reportesPendientes")
+    public long reportesPendientes() {
+        return reportes.pendientes();
     }
 }

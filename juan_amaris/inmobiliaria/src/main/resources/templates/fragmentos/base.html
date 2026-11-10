@@ -68,6 +68,18 @@
     </a>
 </th:block>
 
+<nav th:fragment="adminNav(activo)" class="admin-nav" aria-label="Secciones del administrador">
+    <a th:href="@{/admin}" th:classappend="${activo == 'panel'} ? 'activo'" th:attr="aria-current=${activo == 'panel'} ? 'page'">
+        <svg th:replace="~{fragmentos/base :: ic('lista')}"></svg><span>Resumen</span></a>
+    <a th:href="@{/admin/reportes}" th:classappend="${activo == 'reportes'} ? 'activo'" th:attr="aria-current=${activo == 'reportes'} ? 'page'">
+        <svg th:replace="~{fragmentos/base :: ic('bandera')}"></svg><span>Reportes</span>
+        <b class="admin-nav-cuenta" th:if="${reportesPendientes != null and reportesPendientes > 0}" th:text="${reportesPendientes}"></b></a>
+    <a th:href="@{/admin/bloqueos}" th:classappend="${activo == 'bloqueos'} ? 'activo'" th:attr="aria-current=${activo == 'bloqueos'} ? 'page'">
+        <svg th:replace="~{fragmentos/base :: ic('no')}"></svg><span>Bloqueos</span></a>
+    <a th:href="@{/admin/anunciantes}" th:classappend="${activo == 'anunciantes'} ? 'activo'" th:attr="aria-current=${activo == 'anunciantes'} ? 'page'">
+        <svg th:replace="~{fragmentos/base :: ic('personas')}"></svg><span>Registro de anunciantes</span></a>
+</nav>
+
 <svg th:fragment="ic(n)" class="ic" aria-hidden="true"><use th:href="@{'/img/iconos.svg#' + ${n}}"></use></svg>
 
 <!-- Aviso antiestafa (consulta legal 003). "No cobramos" es cierto mientras el portal no cobre: cambiarlo si se activa un cobro. -->
