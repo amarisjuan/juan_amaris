@@ -47,6 +47,16 @@ public class UbicacionPrivadaService {
         i.setZonaPublica(redondear(i.getLatitud() + dLat), redondear(i.getLongitud() + dLng));
     }
 
+    /**
+     * true si la zona guardada sigue siendo válida con la configuración actual: el punto real queda dentro
+     * del círculo y no en su centro. Si se reduce el radio, las zonas antiguas pueden dejar de serlo.
+     */
+    public boolean zonaValida(Inmueble i) {
+        if (!i.isUbicado() || !i.isZonaPublicaLista()) return false;
+        double d = metros(i.getLatitud(), i.getLongitud(), i.getLatitudPublica(), i.getLongitudPublica());
+        return d >= min * 0.9 && d <= max * 1.05;
+    }
+
     /** Recalcula la zona solo si la ubicación exacta cambió (o si falta). */
     public void actualizarSiCambio(Inmueble i, Double latAnterior, Double lngAnterior) {
         boolean cambio = !Objects.equals(latAnterior, i.getLatitud()) || !Objects.equals(lngAnterior, i.getLongitud());

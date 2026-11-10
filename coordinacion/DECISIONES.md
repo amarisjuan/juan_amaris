@@ -3,6 +3,11 @@
 Registro de decisiones de producto con efecto legal. Más recientes arriba.
 Formato: fecha, decisión, razón, consulta relacionada, quién la confirmó.
 
+- **2026-11-10 — Zona aproximada del inmueble de 400 m a 300 m.** El usuario la pidió más pequeña; 300 m es el mínimo
+  que Argenis recomendó para ciudad en la consulta 001 (300 a 500 m), así que no se baja más. Desplazamiento del
+  centro: 80 a 220 m. Las zonas antiguas que quedaban fuera de rango se recalculan al arrancar.
+  **Consulta:** `consultas/001-direccion-exacta-de-los-inmuebles.md`. **Confirmó:** el usuario (fundador).
+
 - **2026-11-06 — Nombre público "Laura M.", reportes confidenciales, bloqueo por correo y cédula, aviso antiestafa.**
   **Razón:** prevenir estafas y suplantaciones sin exponer datos de más (Ley 1581 art. 4) ni repetir acusaciones sin pruebas (C.P. art. 222); el anunciante puede responder (Constitución art. 29).
   **Consulta:** `consultas/003-nombre-del-anunciante-reportes-y-avisos-antiestafa.md`. **Confirmó:** el usuario (fundador), siguiendo la recomendación de Argenis.

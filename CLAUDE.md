@@ -33,7 +33,7 @@ alianzas con oficinas de bienestar universitario.
 - Reglas de la vivienda (convivencia, mascotas, visitas, fumar, horario) con filtros; solo en arriendos.
 - Tablero "Busco compañero de cuarto" en `/companeros` (contacto solo con sesión iniciada, máx. 3 por usuario).
 - **Privacidad de la ubicación** (decisión 2026-11-06, `coordinacion/consultas/001`): no se publica la dirección
-  exacta; el mapa muestra una zona de 400 m guardada (`UbicacionPrivadaService`), minutos y distancias redondeados,
+  exacta; el mapa muestra una zona de 300 m guardada (mínimo recomendado; no bajar) (`UbicacionPrivadaService`), minutos y distancias redondeados,
   direcciones bloqueadas en los textos (`DetectorDirecciones`) y fotos sin EXIF/GPS (`LimpiadorMetadatos`).
 - **Registro privado de anunciantes** (Ley 1480 art. 53): documento y dirección de notificaciones, obligatorio antes
   de publicar (`/mi-registro`); solo visible en `/admin/anunciantes`.
@@ -59,7 +59,7 @@ alianzas con oficinas de bienestar universitario.
 ```bash
 cd juan_amaris/inmobiliaria
 ./mvnw spring-boot:run   # http://localhost:8080
-./mvnw test              # 39 pruebas con MockMvc
+./mvnw test              # 41 pruebas con MockMvc
 ```
 
 ## Cuidado (errores ya vistos)

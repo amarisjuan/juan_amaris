@@ -27,7 +27,7 @@ public class MigracionZonasPublicas implements CommandLineRunner {
     @Transactional
     public void run(String... args) {
         var pendientes = inmuebles.findAll().stream()
-                .filter(i -> i.isUbicado() && !i.isZonaPublicaLista()).toList();
+                .filter(i -> i.isUbicado() && !ubicacion.zonaValida(i)).toList();
         pendientes.forEach(ubicacion::asignarZona);
         inmuebles.saveAll(pendientes);
         if (!pendientes.isEmpty()) log.info("Zona pública calculada para {} inmuebles", pendientes.size());

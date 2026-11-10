@@ -262,11 +262,11 @@ class InmobiliariaApplicationTests {
         String html2 = mvc.perform(get("/inmuebles/" + i.getId())).andReturn().getResponse().getContentAsString();
         double[] zona = coordenadasDelMapa(html1, i.getId());
         double distancia = metros(zona[0], zona[1], i.getLatitud(), i.getLongitud());
-        org.junit.jupiter.api.Assertions.assertTrue(distancia >= 90 && distancia <= 310,
-                "El centro de la zona debe estar desplazado entre 100 y 300 m; está a " + distancia);
+        org.junit.jupiter.api.Assertions.assertTrue(distancia >= 70 && distancia <= 235,
+                "El centro de la zona debe estar desplazado entre 80 y 220 m; está a " + distancia);
         org.junit.jupiter.api.Assertions.assertArrayEquals(zona, coordenadasDelMapa(html2, i.getId()),
                 "La zona no puede cambiar entre visitas");
-        org.junit.jupiter.api.Assertions.assertTrue(html1.contains("\"radio\":400"));
+        org.junit.jupiter.api.Assertions.assertTrue(html1.contains("\"radio\":300"));
         org.junit.jupiter.api.Assertions.assertTrue(html1.contains("Ubicación aproximada"));
         // Minutos redondeados de 5 en 5 (8 -> 10) y distancia redondeada
         org.junit.jupiter.api.Assertions.assertTrue(html1.contains("Cerca de </span><strong>Universidad del Norte"));
@@ -620,5 +620,24 @@ class InmobiliariaApplicationTests {
         mvc.perform(get("/companeros")).andExpect(content().string(not(containsString("DIRPRIV"))));
         // Sí aparece para el dueño al editar
         mvc.perform(get("/inmuebles/" + i.getId() + "/editar")).andExpect(content().string(containsString("DIRPRIV")));
+    }
+
+    // ---------- Zonas antiguas se ajustan al nuevo tamaño ----------
+
+    @Autowired com.juanamaris.inmobiliaria.service.UbicacionPrivadaService ubicacionPrivada;
+    @Autowired com.juanamaris.inmobiliaria.config.MigracionZonasPublicas migracionZonas;
+
+    @Test
+    void lasZonasAntiguasMuyAlejadasSeRecalculanAlArrancar() throws Exception {
+        var dueno = crearUsuario("zona.vieja@test.co");
+        var i = crearInmueble(dueno, "Casa con zona antigua");
+        i.setLatitud(10.98); i.setLongitud(-74.80);
+        i.setZonaPublica(10.98 + 290 / 111_320d, -74.80);   // desplazada 290 m, como con la configuración anterior
+        inmuebles.save(i);
+        org.junit.jupiter.api.Assertions.assertFalse(ubicacionPrivada.zonaValida(i));
+        migracionZonas.run();
+        var actualizado = inmuebles.findById(i.getId()).orElseThrow();
+        org.junit.jupiter.api.Assertions.assertTrue(ubicacionPrivada.zonaValida(actualizado),
+                "Tras la migración el punto real debe quedar dentro de la zona de 300 m");
     }
 }
