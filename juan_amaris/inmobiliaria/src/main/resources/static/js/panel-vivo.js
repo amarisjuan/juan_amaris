@@ -18,7 +18,24 @@
         Graficas.columnas('g-contactos', d.contactos, 'contactos');
     }
 
-    // Resalta un instante las cifras que cambiaron.
+    const fmt = (n) => n.toLocaleString('es-CO');
+    const numero = (t) => /^[\d.]+$/.test(t) ? Number(t.replace(/\./g, '')) : null;
+    const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // La cifra sube (o baja) contando, en menos de un segundo.
+    function contar(e, desde, hasta) {
+        if (quieto) { e.textContent = fmt(hasta); return; }
+        const inicio = performance.now(), dur = 700;
+        const paso = (t) => {
+            const k = Math.min(1, (t - inicio) / dur), suave = 1 - Math.pow(1 - k, 3);
+            e.textContent = fmt(Math.round(desde + (hasta - desde) * suave));
+            if (k < 1) requestAnimationFrame(paso);
+        };
+        e.textContent = fmt(desde);
+        requestAnimationFrame(paso);
+    }
+
+    // Cifras actuales, para saber cuáles cambiaron.
     function cifras(raiz) { return [...raiz.querySelectorAll('.tile strong, .tabla td')].map((e) => e.textContent.trim()); }
 
     let ocupado = false, temporizador = null;
@@ -37,9 +54,21 @@
             caja.querySelectorAll('details').forEach((d, i) => { d.open = !!abiertos[i]; });
             const despues = [...caja.querySelectorAll('.tile strong, .tabla td')];
             despues.forEach((e, i) => {
-                if (antes[i] !== undefined && antes[i] !== e.textContent.trim()) {
+                const viejo = antes[i], actual = e.textContent.trim();
+                if (viejo === undefined || viejo === actual) return;
+                const a = numero(viejo), b = numero(actual);
+                if (e.tagName === 'STRONG' && a !== null && b !== null) {
+                    contar(e, a, b);
+                    const d = document.createElement('span');
+                    d.className = 'delta ' + (b > a ? 'sube' : 'baja');
+                    d.textContent = (b > a ? '+' : '\u2212') + fmt(Math.abs(b - a));
+                    d.title = 'Cambio desde la última actualización';
+                    e.after(d);
+                    setTimeout(() => d.classList.add('sale'), 5000);
+                    setTimeout(() => d.remove(), 5600);
+                } else {
                     e.classList.add('cambio');
-                    setTimeout(() => e.classList.remove('cambio'), 2500);
+                    setTimeout(() => e.classList.remove('cambio'), 1800);
                 }
             });
             graficas();

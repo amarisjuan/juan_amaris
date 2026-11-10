@@ -354,5 +354,14 @@ select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed
     animation: latido 2s infinite; }
 .sin-conexion .punto-vivo { background:#E9A23B; animation:none; }
 @keyframes latido { 0% { box-shadow:0 0 0 0 rgba(30,158,90,.5); } 70% { box-shadow:0 0 0 8px rgba(30,158,90,0); } 100% { box-shadow:0 0 0 0 rgba(30,158,90,0); } }
-.tile strong.cambio, .tabla td.cambio { background:#FDF1DC; border-radius:6px; transition:background .3s; }
+.tile { position:relative; }
+.tile .delta { position:absolute; top:12px; right:12px; padding:2px 8px; border-radius:999px; font-size:.78rem; font-weight:600;
+    animation: entra-delta .3s ease-out; transition: opacity .5s; }
+.tile .delta.sube { background:#E3F4EA; color:#1B7A47; }
+.tile .delta.baja { background:#FBE9E7; color:#A33A2B; }
+.tile .delta.sale { opacity:0; }
+@keyframes entra-delta { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+.tabla td { transition: color .6s; }
+.tabla td.cambio { color:#1B7A47; font-weight:600; }
+.tabla { font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: reduce) { .punto-vivo { animation:none; } }
