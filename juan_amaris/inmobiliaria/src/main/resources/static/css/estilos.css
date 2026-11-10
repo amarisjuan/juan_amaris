@@ -316,3 +316,20 @@ select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed
 .direccion-privada { gap:6px; }
 .fila-direccion { display:flex; gap:10px; flex-wrap:wrap; }
 .fila-direccion input { flex:1; min-width:220px; }
+
+/* --- Mapa de resultados: etiquetas de precio, tarjeta y botón "Mi ubicación" --- */
+.marcador-precio { background:none; border:0; }
+.marcador-precio span { display:inline-block; transform:translate(-50%, -50%); white-space:nowrap; background:var(--marca);
+    color:#fff; font:700 12.5px/1 "Inter","Segoe UI",system-ui,sans-serif; padding:6px 9px; border-radius:999px;
+    border:2px solid #fff; box-shadow:0 2px 6px rgba(10,37,64,.35); cursor:pointer; }
+.marcador-precio:hover span, .leaflet-marker-icon.marcador-precio:focus span { background:var(--acento); color:var(--marca-900); }
+.tarjeta-mapa { display:flex; flex-direction:column; gap:4px; }
+.tarjeta-mapa img { width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:4px; }
+.tarjeta-mapa strong { color:var(--marca-900); font-size:14px; line-height:1.3; }
+.tarjeta-mapa-precio { font-weight:700; color:var(--marca); }
+.tarjeta-mapa small { color:var(--gris); }
+.tarjeta-mapa .boton { margin-top:6px; text-align:center; padding:7px 10px; font-size:13px; }
+.mapa-boton-ubicacion { width:34px; height:34px; background:#fff; border:2px solid rgba(0,0,0,.2); border-radius:4px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--marca); padding:0; }
+.mapa-boton-ubicacion:hover { background:var(--marca-100); }
+.mapa-boton-ubicacion svg { width:18px; height:18px; }

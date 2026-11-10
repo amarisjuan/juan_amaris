@@ -62,6 +62,69 @@ const Mapas = (() => {
         }).bindPopup(popup(p)).addTo(mapa);
     }
 
+    /** Precio corto para la etiqueta del mapa: $900 mil, $2,8 M. */
+    function precioCorto(n) {
+        if (n == null) return '';
+        if (n >= 1e6) return '$' + (Math.round(n / 1e5) / 10).toString().replace('.', ',').replace(/,0$/, '') + ' M';
+        return '$' + Math.round(n / 1000) + ' mil';
+    }
+
+    /** Tarjeta del inmueble: foto, título, precio y botón a la publicación (sin HTML del usuario). */
+    function tarjeta(p) {
+        const div = document.createElement('div');
+        div.className = 'tarjeta-mapa';
+        if (p.foto) {
+            const img = document.createElement('img');
+            img.src = p.foto; img.alt = ''; img.loading = 'lazy';
+            div.append(img);
+        }
+        const t = document.createElement('strong'); t.textContent = p.titulo;
+        const pr = document.createElement('span'); pr.className = 'tarjeta-mapa-precio'; pr.textContent = p.detalle;
+        const z = document.createElement('small'); z.textContent = 'Zona aproximada';
+        const a = document.createElement('a'); a.href = p.url; a.className = 'boton'; a.textContent = 'Ver publicación';
+        div.append(t, pr, z, a);
+        return div;
+    }
+
+    /** Inmueble en el mapa de resultados: zona aproximada + etiqueta con el precio que abre la tarjeta. */
+    function inmueble(mapa, p) {
+        L.circle([p.lat, p.lng], { radius: p.radio, color: '#0B4A6F', weight: 1, fillColor: '#0B4A6F',
+            fillOpacity: 0.10, interactive: false }).addTo(mapa);
+        const etiqueta = document.createElement('span');
+        etiqueta.textContent = precioCorto(p.precio);
+        const icono = L.divIcon({ className: 'marcador-precio', html: etiqueta, iconSize: null, iconAnchor: [0, 0] });
+        return L.marker([p.lat, p.lng], { icon: icono, title: p.titulo, riseOnHover: true })
+            .bindPopup(tarjeta(p), { minWidth: 220, maxWidth: 260 }).addTo(mapa);
+    }
+
+    /** Botón "Mi ubicación": muestra un punto azul donde está la persona. La ubicación no sale del navegador. */
+    function botonMiUbicacion(mapa) {
+        const Control = L.Control.extend({
+            options: { position: 'topleft' },
+            onAdd() {
+                const b = L.DomUtil.create('button', 'mapa-boton-ubicacion');
+                b.type = 'button';
+                b.title = 'Mostrar mi ubicación';
+                b.setAttribute('aria-label', 'Mostrar mi ubicación');
+                b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">'
+                    + '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>';
+                L.DomEvent.disableClickPropagation(b);
+                L.DomEvent.on(b, 'click', () => mapa.locate({ setView: true, maxZoom: 15, enableHighAccuracy: true }));
+                return b;
+            }
+        });
+        new Control().addTo(mapa);
+        let punto = null, precision = null;
+        mapa.on('locationfound', (e) => {
+            if (punto) { punto.remove(); precision.remove(); }
+            precision = L.circle(e.latlng, { radius: e.accuracy, color: '#1A73E8', weight: 1, fillColor: '#1A73E8',
+                fillOpacity: 0.12, interactive: false }).addTo(mapa);
+            punto = L.circleMarker(e.latlng, { radius: 8, color: '#FFFFFF', weight: 3, fillColor: '#1A73E8', fillOpacity: 1 })
+                .bindTooltip('Estás aquí').addTo(mapa);
+        });
+        mapa.on('locationerror', () => alert('No pudimos obtener tu ubicación. Revisa que el navegador tenga permiso para usarla.'));
+    }
+
     function ajustar(mapa, marcadores, zoomUno) {
         if (!marcadores.length) return;
         if (marcadores.length === 1) mapa.setView(marcadores[0].getLatLng(), zoomUno || 15);
@@ -79,5 +142,5 @@ const Mapas = (() => {
 
     const textoDistancia = m => m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km';
 
-    return { crear, marcar, zona, ajustar, ICONO_UNI_PEQUENO, metros, minutosCaminando, textoDistancia, ICONO_CASA, ICONO_UNI };
+    return { crear, marcar, zona, inmueble, botonMiUbicacion, ajustar, ICONO_UNI_PEQUENO, metros, minutosCaminando, textoDistancia, ICONO_CASA, ICONO_UNI };
 })();

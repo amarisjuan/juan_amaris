@@ -52,6 +52,7 @@
                         const casa = /*[[${puntoInmueble}]]*/ null;
                         const uni = /*[[${puntoUniversidad}]]*/ null;
                         const mapa = Mapas.crear('mapa-detalle');
+                        Mapas.botonMiUbicacion(mapa);
                         const marcas = [Mapas.zona(mapa, casa)];
                         if (uni) marcas.push(Mapas.marcar(mapa, uni, 'uni'));
                         Mapas.ajustar(mapa, marcas, 15);

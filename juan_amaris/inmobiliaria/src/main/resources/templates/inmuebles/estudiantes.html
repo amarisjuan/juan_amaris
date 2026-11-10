@@ -48,6 +48,7 @@
         (() => {
             const unis = /*[[${puntosUniversidades}]]*/ [];
             const mapa = Mapas.crear('mapa-universidades');
+            Mapas.botonMiUbicacion(mapa);
             const marcas = {};
             unis.forEach((u) => { marcas[u.id] = Mapas.marcar(mapa, u, 'uni-pequeno'); });
             mapa.setView([4.6, -74.1], 5); // Colombia completa
