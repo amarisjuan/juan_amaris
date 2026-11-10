@@ -650,4 +650,19 @@ class InmobiliariaApplicationTests {
                 "Los inmuebles sin universidad cercana no van en este mapa");
         org.junit.jupiter.api.Assertions.assertTrue(html.contains("\"radio\":300"));
     }
+
+    @Test
+    @org.springframework.transaction.annotation.Transactional
+    void elDetalleMuestraLaGaleriaConUnaYConVariasFotos() throws Exception {
+        var inm = inmuebles.findAll().stream().filter(x -> x.isActivo() && !x.isEnRevision()).findFirst().orElseThrow();
+        inm.getFotos().clear();
+        inm.getFotos().add("prueba-1.jpg");
+        inmuebles.saveAndFlush(inm);
+        String una = mvc.perform(get("/inmuebles/" + inm.getId())).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        org.junit.jupiter.api.Assertions.assertTrue(una.contains("galeria n1") && una.contains("galeria-fondo"));
+        for (int k = 2; k <= 7; k++) inm.getFotos().add("prueba-" + k + ".jpg");
+        inmuebles.saveAndFlush(inm);
+        String varias = mvc.perform(get("/inmuebles/" + inm.getId())).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        org.junit.jupiter.api.Assertions.assertTrue(varias.contains("galeria n5") && varias.contains("Ver las 7 fotos"));
+    }
 }

@@ -59,7 +59,7 @@ alianzas con oficinas de bienestar universitario.
 ```bash
 cd juan_amaris/inmobiliaria
 ./mvnw spring-boot:run   # http://localhost:8080
-./mvnw test              # 42 pruebas con MockMvc
+./mvnw test              # 43 pruebas con MockMvc
 ```
 
 ## Cuidado (errores ya vistos)

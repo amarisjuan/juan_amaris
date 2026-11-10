@@ -7,9 +7,27 @@
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
     <a th:replace="~{fragmentos/base :: volver('/', 'Volver a la búsqueda')}"></a>
 
-    <div class="galeria" th:if="${!i.fotos.empty}">
-        <img th:each="f : ${i.fotos}" th:src="@{/fotos/{f}(f=${f})}" alt="Foto del inmueble">
+    <div class="galeria" th:if="${!i.fotos.empty}" th:with="n=${i.fotos.size()}"
+         th:classappend="${'n' + (n > 5 ? 5 : n)}" th:attr="data-total=${n}">
+        <button type="button" class="galeria-foto" th:each="f, st : ${i.fotos}" th:if="${st.index < 5}"
+                th:attr="data-indice=${st.index}, aria-label=${'Ver foto ' + (st.index + 1) + ' de ' + n}">
+            <img th:src="@{/fotos/{f}(f=${f})}" th:alt="${'Foto ' + (st.index + 1) + ' del inmueble'}"
+                 th:attr="loading=${st.index == 0 ? 'eager' : 'lazy'}">
+            <span class="galeria-fondo" th:if="${n == 1}" th:with="u=@{/fotos/{f}(f=${f})}" th:style="|background-image:url('${u}')|"></span>
+        </button>
+        <button type="button" class="galeria-todas" data-indice="0" th:if="${n > 1}">
+            <svg th:replace="~{fragmentos/base :: ic('lista')}"></svg>
+            <span th:text="${'Ver las ' + n + ' fotos'}"></span></button>
+        <template class="galeria-lista"><img th:each="f : ${i.fotos}" th:src="@{/fotos/{f}(f=${f})}" alt=""></template>
     </div>
+    <dialog class="visor" aria-label="Fotos del inmueble">
+        <button type="button" class="visor-cerrar" aria-label="Cerrar"><svg th:replace="~{fragmentos/base :: ic('no')}"></svg></button>
+        <button type="button" class="visor-ant" aria-label="Foto anterior"><svg th:replace="~{fragmentos/base :: ic('atras')}"></svg></button>
+        <img class="visor-img" alt="">
+        <button type="button" class="visor-sig" aria-label="Foto siguiente"><svg th:replace="~{fragmentos/base :: ic('atras')}"></svg></button>
+        <span class="visor-cuenta"></span>
+    </dialog>
+    <script th:src="@{/js/galeria.js}" defer></script>
     <div class="galeria vacia" th:if="${i.fotos.empty}"><svg th:replace="~{fragmentos/base :: ic('casa')}"></svg> Este inmueble aún no tiene fotos</div>
 
     <div class="detalle-columnas">
