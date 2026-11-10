@@ -41,6 +41,14 @@ public class CorreoService {
         this.plantillas = plantillas;
     }
 
+    /** Al arrancar, dice en la consola si el correo está listo (sin mostrar la clave). */
+    @org.springframework.context.event.EventListener(org.springframework.boot.context.event.ApplicationReadyEvent.class)
+    public void avisarEstado() {
+        if (configurado()) log.info("Correo: Brevo configurado. Remitente: {}", remitente);
+        else log.warn("Correo: NO configurado (falta el archivo .env con BREVO_SMTP_USUARIO y BREVO_SMTP_CLAVE en {}). "
+                + "Los enlaces de recuperación saldrán aquí en la consola.", new java.io.File(".").getAbsoluteFile().getParent());
+    }
+
     public boolean configurado() { return usuarioSmtp != null && !usuarioSmtp.isBlank(); }
 
     /** Arma el correo con la plantilla templates/correo/{plantilla}.html y lo envía en segundo plano. */
