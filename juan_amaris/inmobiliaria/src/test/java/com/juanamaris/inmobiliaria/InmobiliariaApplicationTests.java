@@ -640,4 +640,14 @@ class InmobiliariaApplicationTests {
         org.junit.jupiter.api.Assertions.assertTrue(ubicacionPrivada.zonaValida(actualizado),
                 "Tras la migración el punto real debe quedar dentro de la zona de 300 m");
     }
+
+    @Test
+    void elMapaDeEstudiantesMuestraInmueblesCercaDeUniversidades() throws Exception {
+        String html = mvc.perform(get("/estudiantes")).andReturn().getResponse().getContentAsString();
+        org.junit.jupiter.api.Assertions.assertTrue(html.contains("Habitaci\\u00F3n amoblada a pasos de Uninorte")
+                || html.contains("Habitación amoblada a pasos de Uninorte"), "Debe incluir inmuebles cerca de universidades");
+        org.junit.jupiter.api.Assertions.assertFalse(html.contains("Casa familiar con patio"),
+                "Los inmuebles sin universidad cercana no van en este mapa");
+        org.junit.jupiter.api.Assertions.assertTrue(html.contains("\"radio\":300"));
+    }
 }

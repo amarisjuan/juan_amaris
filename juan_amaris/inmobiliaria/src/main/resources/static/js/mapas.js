@@ -88,13 +88,15 @@ const Mapas = (() => {
 
     /** Inmueble en el mapa de resultados: zona aproximada + etiqueta con el precio que abre la tarjeta. */
     function inmueble(mapa, p) {
-        L.circle([p.lat, p.lng], { radius: p.radio, color: '#0B4A6F', weight: 1, fillColor: '#0B4A6F',
+        const circulo = L.circle([p.lat, p.lng], { radius: p.radio, color: '#0B4A6F', weight: 1, fillColor: '#0B4A6F',
             fillOpacity: 0.10, interactive: false }).addTo(mapa);
         const etiqueta = document.createElement('span');
         etiqueta.textContent = precioCorto(p.precio);
         const icono = L.divIcon({ className: 'marcador-precio', html: etiqueta, iconSize: null, iconAnchor: [0, 0] });
-        return L.marker([p.lat, p.lng], { icon: icono, title: p.titulo, riseOnHover: true })
+        const marca = L.marker([p.lat, p.lng], { icon: icono, title: p.titulo, riseOnHover: true })
             .bindPopup(tarjeta(p), { minWidth: 220, maxWidth: 260 }).addTo(mapa);
+        marca.zona = circulo; // para ocultar o mostrar la zona junto con la etiqueta
+        return marca;
     }
 
     /** Botón "Mi ubicación": muestra un punto azul donde está la persona. La ubicación no sale del navegador. */

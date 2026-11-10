@@ -33,6 +33,24 @@ public class InmuebleService {
         this.maxFotos = maxFotos;
     }
 
+    /**
+     * Inmuebles visibles marcados cerca de una universidad, listos para el mapa de estudiantes.
+     * Solo la zona pública aproximada (PuntoMapa.zona), nunca la ubicación exacta.
+     */
+    @Transactional(readOnly = true)
+    public List<java.util.Map<String, Object>> paraMapaEstudiantes(int radio) {
+        return repo.findAll(InmuebleSpecs.buscar(new FiltroBusqueda())).stream()
+                .filter(i -> i.getUniversidadCercana() != null && i.isZonaPublicaLista())
+                .map(i -> {
+                    java.util.Map<String, Object> m = new java.util.HashMap<>();
+                    m.put("punto", com.juanamaris.inmobiliaria.model.PuntoMapa.zona(i, radio));
+                    m.put("ciudad", i.getCiudad());
+                    m.put("depto", i.getUniversidadCercana().getDepartamento() == null ? "" : i.getUniversidadCercana().getDepartamento());
+                    m.put("universidad", i.getUniversidadCercana().getNombre());
+                    return m;
+                }).toList();
+    }
+
     @Transactional(readOnly = true)
     public Page<Inmueble> buscar(FiltroBusqueda filtro, int pagina) {
         Sort orden = switch (filtro.getOrden() == null ? "" : filtro.getOrden()) {

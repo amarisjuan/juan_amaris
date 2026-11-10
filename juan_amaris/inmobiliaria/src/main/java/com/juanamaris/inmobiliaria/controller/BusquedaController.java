@@ -98,6 +98,7 @@ public class BusquedaController {
         model.addAttribute("conteos", universidades.inmueblesCercanos());
         model.addAttribute("puntosUniversidades", universidades.puntos());
         model.addAttribute("departamentos", universidades.departamentos());
+        model.addAttribute("inmueblesMapa", service.paraMapaEstudiantes(ubicacion.getRadio()));
         return "inmuebles/estudiantes";
     }
 

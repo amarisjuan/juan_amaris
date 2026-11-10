@@ -10,7 +10,8 @@
     </section>
 
     <div id="mapa-universidades" class="mapa mapa-bajo"></div>
-    <p class="ayuda centrado">Toca una universidad en el mapa para ver los arriendos cerca.</p>
+    <p class="ayuda centrado">Los gorritos son universidades y las etiquetas con precio son inmuebles cerca de ellas.
+        Toca cualquiera para ver más.</p>
 
     <div class="filtros-estudiantes" role="search">
         <input id="buscar-univ" type="search" placeholder="Busca una universidad o una ciudad" aria-label="Buscar universidad o ciudad">
@@ -51,6 +52,9 @@
             Mapas.botonMiUbicacion(mapa);
             const marcas = {};
             unis.forEach((u) => { marcas[u.id] = Mapas.marcar(mapa, u, 'uni-pequeno'); });
+            // Inmuebles cerca de universidades (zona aproximada + etiqueta de precio)
+            const inmuebles = /*[[${inmueblesMapa}]]*/ [];
+            inmuebles.forEach((x) => { x.marca = Mapas.inmueble(mapa, x.punto); });
             mapa.setView([4.6, -74.1], 5); // Colombia completa
 
             const quitar = (t) => (t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -97,6 +101,12 @@
                         if (marca) { coincide ? marca.addTo(mapa) : mapa.removeLayer(marca); }
                     });
                     sec.hidden = !algunaVisible;
+                });
+                // Los inmuebles siguen los mismos filtros de departamento, ciudad y texto
+                inmuebles.forEach((x) => {
+                    const ve = (!dep || x.depto === dep) && (!ciu || x.ciudad === ciu)
+                        && (!texto || quitar(x.ciudad).includes(texto) || quitar(x.universidad).includes(texto));
+                    [x.marca, x.marca.zona].forEach((capa) => { ve ? capa.addTo(mapa) : mapa.removeLayer(capa); });
                 });
                 conteo.textContent = visibles + (visibles === 1 ? ' universidad' : ' universidades');
                 sinResultados.hidden = visibles > 0;
