@@ -3,6 +3,12 @@
 Registro de decisiones de producto con efecto legal. Más recientes arriba.
 Formato: fecha, decisión, razón, consulta relacionada, quién la confirmó.
 
+- **2026-11-10 — Zona aproximada del inmueble a 200 m (reemplaza la de 300 m del mismo día).** El usuario la pidió
+  más pequeña (propuso 100 m y luego aceptó 200 m). **Está por debajo de lo que recomendó Argenis** (300 a 500 m,
+  consulta 001): es más fácil adivinar la casa. Desplazamiento del centro: 50 a 140 m. **Pendiente:** que Argenis
+  revise el riesgo y si hace falta compensarlo (por ejemplo, 300 m en municipios pequeños).
+  **Confirmó:** el usuario (fundador), informado del riesgo.
+
 - **2026-11-10 — Zona aproximada del inmueble de 400 m a 300 m.** El usuario la pidió más pequeña; 300 m es el mínimo
   que Argenis recomendó para ciudad en la consulta 001 (300 a 500 m), así que no se baja más. Desplazamiento del
   centro: 80 a 220 m. Las zonas antiguas que quedaban fuera de rango se recalculan al arrancar.
