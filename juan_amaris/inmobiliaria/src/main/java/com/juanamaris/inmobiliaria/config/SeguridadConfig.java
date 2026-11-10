@@ -15,7 +15,21 @@ public class SeguridadConfig {
     public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, java.time.Clock reloj) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, java.time.Clock reloj,
+                                           com.juanamaris.inmobiliaria.service.IntentosIngreso intentos) throws Exception {
+        // Antes de revisar la contraseña: si hay demasiados intentos fallidos, ni se intenta.
+        http.addFilterBefore(new org.springframework.web.filter.OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest req, jakarta.servlet.http.HttpServletResponse res,
+                                            jakarta.servlet.FilterChain cadena) throws jakarta.servlet.ServletException, java.io.IOException {
+                if ("POST".equals(req.getMethod()) && (req.getContextPath() + "/login").equals(req.getRequestURI())
+                        && intentos.bloqueado(req.getParameter("email"), req.getRemoteAddr())) {
+                    res.sendRedirect(req.getContextPath() + "/login?intentos");
+                    return;
+                }
+                cadena.doFilter(req, res);
+            }
+        }, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
         http.authorizeHttpRequests(auth -> auth
                         // Cualquiera puede buscar y ver inmuebles
                         .requestMatchers(HttpMethod.GET, "/", "/estudiantes", "/companeros", "/inmuebles/{id:\\d+}", "/fotos/**",
@@ -38,12 +52,17 @@ public class SeguridadConfig {
                                     org.springframework.security.core.Authentication auth)
                                     throws java.io.IOException, jakarta.servlet.ServletException {
                                 req.getSession().setAttribute(SesionBloqueada.INGRESO, java.time.LocalDateTime.now(reloj));
+                                intentos.exito(auth.getName());
                                 super.onAuthenticationSuccess(req, res, auth);
                             }
                         })
                         // Cuenta bloqueada: mensaje propio, sin revelar el motivo
-                        .failureHandler((req, res, ex) -> res.sendRedirect(req.getContextPath()
-                                + (ex instanceof org.springframework.security.authentication.DisabledException ? "/login?bloqueado" : "/login?error")))
+                        .failureHandler((req, res, ex) -> {
+                            boolean deshabilitada = ex instanceof org.springframework.security.authentication.DisabledException;
+                            if (!deshabilitada) intentos.fallo(req.getParameter("email"), req.getRemoteAddr());
+                            res.sendRedirect(req.getContextPath() + (deshabilitada ? "/login?bloqueado"
+                                    : intentos.bloqueado(req.getParameter("email"), req.getRemoteAddr()) ? "/login?intentos" : "/login?error"));
+                        })
                         .permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/").permitAll());
         return http.build();

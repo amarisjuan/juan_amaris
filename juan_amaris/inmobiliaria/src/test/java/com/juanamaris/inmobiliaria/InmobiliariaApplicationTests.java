@@ -748,4 +748,36 @@ class InmobiliariaApplicationTests {
         org.junit.jupiter.api.Assertions.assertTrue(recuperacion.restablecer(codigo, "clave-nueva-99"));
         mvc.perform(get("/mis-inmuebles").session(sesion)).andExpect(redirectedUrl("/login?sesion"));
     }
+
+    @Test
+    void cincoIntentosFallidosPausanElIngresoAunqueLaClaveSeaCorrecta() throws Exception {
+        cuentaParaRecuperar("intentos.login@test.co");
+        for (int k = 1; k <= 4; k++) {
+            mvc.perform(formLogin("/login").user("email", "intentos.login@test.co").password("equivocada-" + k))
+                    .andExpect(redirectedUrl("/login?error"));
+        }
+        mvc.perform(formLogin("/login").user("email", "intentos.login@test.co").password("equivocada-5"))
+                .andExpect(redirectedUrl("/login?intentos"));
+        mvc.perform(formLogin("/login").user("email", "intentos.login@test.co").password("vieja-clave-1"))
+                .andExpect(redirectedUrl("/login?intentos"));
+        // Igual para un correo que no existe (no revela cuáles existen)
+        for (int k = 1; k <= 5; k++) mvc.perform(formLogin("/login").user("email", "nadie.existe@test.co").password("x-" + k));
+        mvc.perform(formLogin("/login").user("email", "nadie.existe@test.co").password("x"))
+                .andExpect(redirectedUrl("/login?intentos"));
+        mvc.perform(get("/login").param("intentos", "")).andExpect(content().string(containsString("espera 15 minutos")));
+    }
+
+    @Test
+    void noSeAceptanContrasenasComunesNiElPropioCorreo() throws Exception {
+        for (String clave : new String[] {"12345678", "Contraseña123", "aaaaaaaaaa", "comun.registro@test.co"}) {
+            mvc.perform(post("/registro").with(csrf()).param("nombres", "Pepe").param("apellidos", "Prueba Clave")
+                            .param("email", "comun.registro@test.co").param("celular", "3004445566").param("clave", clave))
+                    .andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.anyOf(
+                            containsString("muy común"), containsString("no puede ser tu correo"))));
+        }
+        org.junit.jupiter.api.Assertions.assertFalse(usuariosRepo.findByEmailIgnoreCase("comun.registro@test.co").isPresent());
+        mvc.perform(post("/registro").with(csrf()).param("nombres", "Pepe").param("apellidos", "Prueba Clave")
+                .param("email", "comun.registro@test.co").param("celular", "3004445566").param("clave", "tres palabras faciles"))
+                .andExpect(redirectedUrl("/login"));
+    }
 }

@@ -12,7 +12,12 @@ public class RecuperacionController {
 
     private final RecuperacionService recuperacion;
 
-    public RecuperacionController(RecuperacionService recuperacion) { this.recuperacion = recuperacion; }
+    private final com.juanamaris.inmobiliaria.service.ValidadorContrasena validador;
+
+    public RecuperacionController(RecuperacionService recuperacion, com.juanamaris.inmobiliaria.service.ValidadorContrasena validador) {
+        this.recuperacion = recuperacion;
+        this.validador = validador;
+    }
 
     @GetMapping("/recuperar")
     public String formulario() { return "auth/recuperar"; }
@@ -41,10 +46,8 @@ public class RecuperacionController {
                           HttpServletResponse res) {
         res.setHeader("Referrer-Policy", "no-referrer");
         res.setHeader("Cache-Control", "no-store");
-        String error = null;
-        if (clave.length() < 8) error = "La contraseña debe tener mínimo 8 caracteres.";
-        else if (clave.length() > 64) error = "La contraseña puede tener máximo 64 caracteres.";
-        else if (!clave.equals(clave2)) error = "Las dos contraseñas no coinciden.";
+        String error = validador.revisar(clave, recuperacion.correoDe(codigo));
+        if (error == null && !clave.equals(clave2)) error = "Las dos contraseñas no coinciden.";
         if (error != null) {
             model.addAttribute("codigo", codigo);
             model.addAttribute("valido", recuperacion.valido(codigo));

@@ -30,6 +30,9 @@ alianzas con oficinas de bienestar universitario.
   las demás sesiones (`SesionBloqueada`) y llega un aviso. Correos por **Brevo** (SMTP, `CorreoService`, plantillas en
   `templates/correo/`). Credenciales en `juan_amaris/inmobiliaria/.env` (ver `.env.example`, no se sube); sin ellas el
   enlace sale en la consola.
+- **Seguridad del ingreso** (JDoor): máx. 5 intentos fallidos por cuenta y 30 por IP en 15 min (`IntentosIngreso`, en memoria),
+  sesión de 30 min, cookie HttpOnly/SameSite=Lax (`APP_COOKIE_SEGURA=true` en producción), contraseñas 8-64 sin las
+  comunes de `datos/contrasenas_comunes.txt` (`ValidadorContrasena`). Spring Boot 3.5.16 + Tomcat 10.1.61.
 - Publicar, editar, pausar y eliminar inmuebles con hasta 10 fotos (se guardan en `uploads/`).
 - Búsqueda pública con filtros (operación, ciudad, tipo, barrio, precio, habitaciones, estrato),
   orden y paginación.
@@ -67,7 +70,7 @@ alianzas con oficinas de bienestar universitario.
 ```bash
 cd juan_amaris/inmobiliaria
 ./mvnw spring-boot:run   # http://localhost:8080
-./mvnw test              # 47 pruebas con MockMvc
+./mvnw test              # 49 pruebas con MockMvc
 ```
 
 ## Cuidado (errores ya vistos)

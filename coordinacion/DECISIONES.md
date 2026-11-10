@@ -18,6 +18,15 @@ Formato: fecha, decisión, razón, consulta relacionada, quién la confirmó.
   centro: 80 a 220 m. Las zonas antiguas que quedaban fuera de rango se recalculan al arrancar.
   **Consulta:** `consultas/001-direccion-exacta-de-los-inmuebles.md`. **Confirmó:** el usuario (fundador).
 
+- **2026-11-10 — Seguridad del ingreso y actualización de dependencias (recomendaciones de JDoor).**
+  Spring Boot 3.5.6 a 3.5.16 y Tomcat 10.1.61 (fallas conocidas en Thymeleaf, Spring Security y Tomcat). Recuperación de
+  contraseña por correo con Brevo. Límite de 5 intentos fallidos por cuenta y 30 por IP en 15 min, sesión que se cierra a
+  los 30 min sin uso, cookie HttpOnly y SameSite=Lax (Secure en producción), contraseñas de 8 a 64 caracteres sin
+  contraseñas comunes ni el propio correo.
+  **Razón:** informe de preparación de JDoor (`jdoor/.tmp/preparacion_web.md`), OWASP ASVS y NIST 800-63B.
+  **Pendiente:** migrar a Spring Boot 4 (la rama 3.5 ya no recibe arreglos gratuitos), revisión completa de JDoor y
+  consulta a Argenis sobre el plazo para reportar incidentes a la SIC. **Confirmó:** el usuario (fundador).
+
 - **2026-11-06 — Nombre público "Laura M.", reportes confidenciales, bloqueo por correo y cédula, aviso antiestafa.**
   **Razón:** prevenir estafas y suplantaciones sin exponer datos de más (Ley 1581 art. 4) ni repetir acusaciones sin pruebas (C.P. art. 222); el anunciante puede responder (Constitución art. 29).
   **Consulta:** `consultas/003-nombre-del-anunciante-reportes-y-avisos-antiestafa.md`. **Confirmó:** el usuario (fundador), siguiendo la recomendación de Argenis.

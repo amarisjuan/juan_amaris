@@ -16,9 +16,13 @@ public class AuthController {
     private final UsuarioService usuarios;
     private final com.juanamaris.inmobiliaria.service.BloqueoService bloqueos;
 
-    public AuthController(UsuarioService usuarios, com.juanamaris.inmobiliaria.service.BloqueoService bloqueos) {
+    private final com.juanamaris.inmobiliaria.service.ValidadorContrasena validador;
+
+    public AuthController(UsuarioService usuarios, com.juanamaris.inmobiliaria.service.BloqueoService bloqueos,
+                          com.juanamaris.inmobiliaria.service.ValidadorContrasena validador) {
         this.usuarios = usuarios;
         this.bloqueos = bloqueos;
+        this.validador = validador;
     }
 
     @InitBinder("usuario")
@@ -38,9 +42,8 @@ public class AuthController {
     @PostMapping("/registro")
     public String registrar(@Valid @ModelAttribute Usuario usuario, BindingResult errores,
                             @RequestParam String clave, RedirectAttributes flash) {
-        if (clave.length() < 8) {
-            errores.reject("clave", "La contraseña debe tener mínimo 8 caracteres");
-        }
+        String problemaClave = validador.revisar(clave, usuario.getEmail());
+        if (problemaClave != null) errores.reject("clave", problemaClave);
         if (!errores.hasFieldErrors("email") && bloqueos.correoBloqueado(usuario.getEmail())) {
             errores.rejectValue("email", "bloqueado", "No es posible crear una cuenta con este correo.");
         }

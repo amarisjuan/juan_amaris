@@ -7,6 +7,8 @@
     <h1>Ingresar</h1>
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
     <p class="alerta error" th:if="${param.error}">Correo o contraseña incorrectos.</p>
+    <p class="alerta aviso" th:if="${param.intentos}">Hubo demasiados intentos fallidos. Por seguridad, espera 15 minutos
+        para volver a intentar, o <a th:href="@{/recuperar}">crea una contraseña nueva</a>.</p>
     <p class="alerta ok" th:if="${param.logout}">Cerraste sesión.</p>
     <p class="alerta aviso" th:if="${param.sesion}">Tu contraseña se cambió, así que cerramos esta sesión. Ingresa con la contraseña nueva.</p>
     <p class="alerta error" th:if="${param.bloqueado}">Esta cuenta está bloqueada por incumplir los términos de uso.

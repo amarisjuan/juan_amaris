@@ -19,7 +19,7 @@
             <span class="campo-error" th:errors="*{email}"></span></label>
         <label>Celular (WhatsApp) <input th:field="*{celular}" placeholder="3001234567" required>
             <span class="campo-error" th:errors="*{celular}"></span></label>
-        <label>Contraseña (mínimo 8 caracteres) <input type="password" name="clave" minlength="8" required></label>
+        <label>Contraseña (mínimo 8 caracteres) <input type="password" name="clave" minlength="8" maxlength="64" required autocomplete="new-password"></label>
         <button class="boton" type="submit">Crear cuenta</button>
     </form>
     <p>¿Ya tienes cuenta? <a th:href="@{/login}">Ingresa</a></p>

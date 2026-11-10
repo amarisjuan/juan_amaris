@@ -82,6 +82,12 @@ public class RecuperacionService {
         return buscar(codigo).map(t -> t.vigente(ahora()) && !t.getUsuario().isBloqueado()).orElse(false);
     }
 
+    /** Correo de la cuenta del enlace (para no permitir que la contraseña sea el propio correo). */
+    @Transactional(readOnly = true)
+    public String correoDe(String codigo) {
+        return buscar(codigo).map(t -> t.getUsuario().getEmail()).orElse(null);
+    }
+
     private Optional<TokenRecuperacion> buscar(String codigo) {
         if (codigo == null || codigo.length() < 20 || codigo.length() > 100) return Optional.empty();
         return tokens.findByHash(hash(codigo));
