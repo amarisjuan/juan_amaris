@@ -100,7 +100,10 @@ const Mapas = (() => {
     }
 
     /** Botón "Mi ubicación": muestra un punto azul donde está la persona. La ubicación no sale del navegador. */
+    // Ubicación en dos pasos: primero una posición rápida (red o la última conocida, casi instantánea)
+    // y después se afina con el GPS sin volver a mover el mapa. Así el usuario no espera 10-20 s.
     function botonMiUbicacion(mapa) {
+        let boton = null, punto = null, precision = null, vigilancia = null, corte = null, centrado = false;
         const Control = L.Control.extend({
             options: { position: 'topleft' },
             onAdd() {
@@ -111,20 +114,52 @@ const Mapas = (() => {
                 b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">'
                     + '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>';
                 L.DomEvent.disableClickPropagation(b);
-                L.DomEvent.on(b, 'click', () => mapa.locate({ setView: true, maxZoom: 15, enableHighAccuracy: true }));
+                L.DomEvent.on(b, 'click', buscar);
+                boton = b;
                 return b;
             }
         });
         new Control().addTo(mapa);
-        let punto = null, precision = null;
-        mapa.on('locationfound', (e) => {
-            if (punto) { punto.remove(); precision.remove(); }
-            precision = L.circle(e.latlng, { radius: e.accuracy, color: '#1A73E8', weight: 1, fillColor: '#1A73E8',
-                fillOpacity: 0.12, interactive: false }).addTo(mapa);
-            punto = L.circleMarker(e.latlng, { radius: 8, color: '#FFFFFF', weight: 3, fillColor: '#1A73E8', fillOpacity: 1 })
-                .bindTooltip('Estás aquí').addTo(mapa);
-        });
-        mapa.on('locationerror', () => alert('No pudimos obtener tu ubicación. Revisa que el navegador tenga permiso para usarla.'));
+
+        function dibujar(pos) {
+            const ll = L.latLng(pos.coords.latitude, pos.coords.longitude), acc = pos.coords.accuracy || 50;
+            if (punto) { punto.setLatLng(ll); precision.setLatLng(ll).setRadius(acc); }
+            else {
+                precision = L.circle(ll, { radius: acc, color: '#1A73E8', weight: 1, fillColor: '#1A73E8',
+                    fillOpacity: 0.12, interactive: false }).addTo(mapa);
+                punto = L.circleMarker(ll, { radius: 8, color: '#FFFFFF', weight: 3, fillColor: '#1A73E8', fillOpacity: 1 })
+                    .bindTooltip('Estás aquí').addTo(mapa);
+            }
+            if (!centrado) { mapa.setView(ll, Math.max(mapa.getZoom(), 15)); centrado = true; }
+            boton.classList.remove('buscando');
+            mapa.fire('locationfound', { latlng: ll, accuracy: acc });
+        }
+
+        function parar() {
+            if (vigilancia !== null) navigator.geolocation.clearWatch(vigilancia);
+            clearTimeout(corte); vigilancia = null;
+        }
+
+        function buscar() {
+            if (!navigator.geolocation) { alert('Tu navegador no permite obtener la ubicación.'); return; }
+            parar(); centrado = false;
+            if (punto) { mapa.setView(punto.getLatLng(), Math.max(mapa.getZoom(), 15)); centrado = true; }
+            boton.classList.add('buscando');
+            // Paso 1: rápido (acepta una posición de hasta 5 minutos o la de la red).
+            navigator.geolocation.getCurrentPosition(dibujar, () => {}, { enableHighAccuracy: false, maximumAge: 300000, timeout: 4000 });
+            // Paso 2: precisa con GPS; se actualiza el punto azul y se apaga a los 20 s o al llegar a 30 m.
+            vigilancia = navigator.geolocation.watchPosition((pos) => {
+                dibujar(pos);
+                if (pos.coords.accuracy <= 30) parar();
+            }, (err) => {
+                boton.classList.remove('buscando');
+                if (!punto) alert(err.code === 1
+                    ? 'Para mostrar tu ubicación, permite el acceso a la ubicación en el navegador.'
+                    : 'No pudimos obtener tu ubicación. Inténtalo de nuevo en unos segundos.');
+                parar();
+            }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+            corte = setTimeout(() => { parar(); boton.classList.remove('buscando'); }, 20000);
+        }
     }
 
     function ajustar(mapa, marcadores, zoomUno) {

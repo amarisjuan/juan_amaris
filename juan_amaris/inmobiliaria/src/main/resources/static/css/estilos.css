@@ -333,3 +333,5 @@ select:disabled { background:var(--fondo); color:var(--gris); cursor:not-allowed
     display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--marca); padding:0; }
 .mapa-boton-ubicacion:hover { background:var(--marca-100); }
 .mapa-boton-ubicacion svg { width:18px; height:18px; }
+.mapa-boton-ubicacion.buscando svg { animation: ubicando 1s linear infinite; color:#1A73E8; }
+@keyframes ubicando { to { transform: rotate(360deg); } }
