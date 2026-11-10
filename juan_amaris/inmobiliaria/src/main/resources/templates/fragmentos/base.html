@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/webjars/leaflet/1.9.4/dist/leaflet.css}">
     <script th:src="@{/webjars/leaflet/1.9.4/dist/leaflet.js}"></script>
     <script th:src="@{/js/mapas.js}"></script>
+    <script th:src="@{/js/volver.js}" defer></script>
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
@@ -79,6 +80,9 @@
     <a th:href="@{/admin/anunciantes}" th:classappend="${activo == 'anunciantes'} ? 'activo'" th:attr="aria-current=${activo == 'anunciantes'} ? 'page'">
         <svg th:replace="~{fragmentos/base :: ic('personas')}"></svg><span>Registro de anunciantes</span></a>
 </nav>
+
+<a th:fragment="volver(url, texto)" th:href="@{${url}}" class="volver" data-volver>
+    <svg th:replace="~{fragmentos/base :: ic('atras')}"></svg><span th:text="${texto}"></span></a>
 
 <svg th:fragment="ic(n)" class="ic" aria-hidden="true"><use th:href="@{'/img/iconos.svg#' + ${n}}"></use></svg>
 

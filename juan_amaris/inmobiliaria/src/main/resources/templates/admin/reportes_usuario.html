@@ -5,7 +5,7 @@
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main class="panel">
     <nav th:replace="~{fragmentos/base :: adminNav('reportes')}"></nav>
-    <p><a th:href="@{/admin/reportes}">&larr; Volver a reportes</a></p>
+    <a th:replace="~{fragmentos/base :: volver('/admin/reportes', 'Volver a reportes')}"></a>
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
     <h1 th:text="${usuario.nombre}"></h1>
     <p class="ayuda">

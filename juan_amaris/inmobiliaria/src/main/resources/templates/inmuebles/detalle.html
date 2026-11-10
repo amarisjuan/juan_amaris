@@ -5,7 +5,7 @@
 <header th:replace="~{fragmentos/base :: menu}"></header>
 <main class="detalle" th:with="i=${inmueble}">
     <div th:replace="~{fragmentos/base :: mensajes}"></div>
-    <a th:href="@{/}" class="volver">← Volver a la búsqueda</a>
+    <a th:replace="~{fragmentos/base :: volver('/', 'Volver a la búsqueda')}"></a>
 
     <div class="galeria" th:if="${!i.fotos.empty}">
         <img th:each="f : ${i.fotos}" th:src="@{/fotos/{f}(f=${f})}" alt="Foto del inmueble">

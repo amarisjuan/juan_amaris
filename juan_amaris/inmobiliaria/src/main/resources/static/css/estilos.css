@@ -147,7 +147,12 @@ fieldset.estudiantes legend .ic { color:var(--acento-texto); }
 .contacto { background:var(--blanco); border:1px solid var(--borde); border-top:4px solid var(--acento); border-radius:var(--radio);
             padding:18px; align-self:start; display:flex; flex-direction:column; gap:10px; position:sticky; top:16px; }
 .contacto .boton { text-align:center; }
-.volver { display:inline-block; margin:6px 0; }
+.volver { display:inline-flex; align-items:center; gap:8px; margin:4px 0 16px; padding:9px 16px 9px 12px;
+    background:var(--blanco); color:var(--marca-900, #0B4A6F); border:1px solid rgba(11,74,111,.25); border-radius:999px;
+    font-weight:600; text-decoration:none; box-shadow:0 1px 2px rgba(10,37,64,.06); transition:background .15s, color .15s, border-color .15s; }
+.volver .ic { width:18px; height:18px; transition:transform .15s; }
+.volver:hover, .volver:focus-visible { background:#0B4A6F; color:#fff; border-color:#0B4A6F; }
+.volver:hover .ic { transform:translateX(-3px); }
 
 /* --- Mensajes --- */
 .alerta { padding:10px 14px; border-radius:var(--radio-sm); display:flex; gap:8px; align-items:flex-start; }
