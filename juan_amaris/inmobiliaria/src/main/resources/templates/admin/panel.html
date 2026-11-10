@@ -7,11 +7,14 @@
     <nav th:replace="~{fragmentos/base :: adminNav('panel')}"></nav>
     <div class="panel-titulo">
         <h1>Panel del administrador</h1>
-        <p class="ayuda">Actualizado al <span th:text="${#temporals.format(hoy, 'd ''de'' MMMM yyyy', new java.util.Locale('es','CO'))}"></span></p>
+        <p class="ayuda en-vivo" id="estado-vivo"><span class="punto-vivo" aria-hidden="true"></span>
+            <span id="texto-vivo">En vivo</span> · <span th:text="${#temporals.format(hoy, 'd ''de'' MMMM yyyy', new java.util.Locale('es','CO'))}"></span>
+            · actualizado a las <span id="hora-vivo"></span></p>
+    </div>
+    <div id="panel-vivo">
         <p class="alerta aviso" th:if="${reportesPendientes > 0}"><svg th:replace="~{fragmentos/base :: ic('bandera')}"></svg>
             <span><strong th:text="${reportesPendientes} + ' reportes pendientes de revisión.'"></strong>
             <a th:href="@{/admin/reportes}">Revisarlos</a></span></p>
-    </div>
 
     <section th:with="p=${periodos[2]}">
         <h2>Últimos 30 días</h2>
@@ -69,10 +72,8 @@
             </tr></tbody>
         </table>
     </details>
-    <script th:src="@{/js/graficas.js}"></script>
-    <script th:inline="javascript">
-        Graficas.columnas('g-visitas', /*[[${serieVisitas}]]*/ [], 'visitas');
-        Graficas.columnas('g-contactos', /*[[${serieContactos}]]*/ [], 'contactos');
+    <script type="application/json" class="datos-graficas" th:inline="javascript">
+        { "visitas": /*[[${serieVisitas}]]*/ [], "contactos": /*[[${serieContactos}]]*/ [] }
     </script>
 
     <section class="dos-columnas">
@@ -121,9 +122,13 @@
         </div>
     </section>
 
+    </div>
+
     <p class="ayuda nota-privacidad"><svg th:replace="~{fragmentos/base :: ic('candado')}"></svg>
         Los contactos cuentan los clics en "WhatsApp" y "Llamar"; no confirman que hubo conversación. Las estadísticas
         son totales por día: no se guarda la IP ni quién visitó o hizo clic.</p>
 </main>
+<script th:src="@{/js/graficas.js}"></script>
+<script th:src="@{/js/panel-vivo.js}"></script>
 </body>
 </html>

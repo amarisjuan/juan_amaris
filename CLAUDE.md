@@ -38,7 +38,7 @@ alianzas con oficinas de bienestar universitario.
 - **Registro privado de anunciantes** (Ley 1480 art. 53): documento y dirección de notificaciones, obligatorio antes
   de publicar (`/mi-registro`); solo visible en `/admin/anunciantes`.
 - **Panel del administrador** (`/admin`, rol ADMIN): visitas, visitantes aproximados, contactos (los botones pasan por
-  `/contacto/...`), inmuebles más y menos contactados, búsquedas sin resultados. Conteos diarios sin IP
+  `/contacto/...`), inmuebles más y menos contactados, búsquedas sin resultados; se actualiza solo cada 15 s (`static/js/panel-vivo.js`). Conteos diarios sin IP
   (`ActividadService`). Consulta 002 a Argenis pendiente.
 - **Nombre público** "Laura M." (`Usuario.getNombrePublico()`; nunca `nombre` en vistas públicas) y perfil público
   `/anunciantes/{id}`. **Reportes** confidenciales (`/reportar`, umbral 3 cuentas graves en 30 días oculta en revisión),
@@ -59,7 +59,7 @@ alianzas con oficinas de bienestar universitario.
 ```bash
 cd juan_amaris/inmobiliaria
 ./mvnw spring-boot:run   # http://localhost:8080
-./mvnw test              # 41 pruebas con MockMvc
+./mvnw test              # 42 pruebas con MockMvc
 ```
 
 ## Cuidado (errores ya vistos)
